@@ -5,79 +5,215 @@ using FishNet.Object;
 using FishNet.Connection;
 using UnityEngine.InputSystem;
 using NaughtyAttributes;
+using FishNet.Object.Synchronizing;
 
 /*************************************************
 Brandon Koederitz
 1/24/2025
 1/24/2025
-Networks a brush object to be visually updated for all users.
+Handles sending and recieving pen inputs across a network to allow for syncronized
+drawing.
 FishNet
 ***************************************************/
 
 namespace GraffitiGala.Networking
 {
+    [RequireComponent(typeof(PlayerInput))]
     public class NetworkedBrush : NetworkBehaviour
     {
+        public delegate void OnPenMove(Vector2 position);
         #region vars
+        [SerializeField, ReadOnly] private bool isPressedTest;
+        [SerializeField, ReadOnly] private float pressureTest;
 
+        private const string PRESSURE_ACTION_NAME = "Pressure";
+        private const string PRESS_ACTION_NAME = "Press";
+        private const string MOVE_ACTION_NAME = "Move";
+
+        private readonly SyncVar<float> pressure = new();
+        private readonly SyncVar<bool> isPressed = new();
+
+        private InputAction pressureAction;
+        private InputAction pressAction;
+        private InputAction moveAction;
+        #endregion
+
+        #region Properties
+        public float Pressure
+        {
+            get
+            {
+                return pressure.Value;
+            }
+            private set
+            {
+                // Only allow an object owned by this client to change the
+                // pressure value.
+                if(base.IsOwner)
+                {
+                    pressure.Value = value;
+                }
+                
+            }
+        }
+
+        public bool IsPressed
+        {
+            get
+            {
+                return isPressed.Value;
+            }
+            private set
+            {
+                // Only allow ann objecct owned by this client to change the
+                // IsPressed value.
+                isPressed.Value = value;
+            }
+        }
+
+        public OnPenMove PenMove { get; set; }
         #endregion
 
         #region Methods
         /// <summary>
         /// Sets up this as a networked object.
         /// </summary>
-        public override void OnStartNetwork()
+        public override void OnStartClient()
         {
-            base.OnStartNetwork();
+            base.OnStartClient();
 
+            PlayerInput playerInput = GetComponent<PlayerInput>();
+            if(base.IsOwner)
+            {
+                // Set up InputActions and input functions.
+                pressAction = playerInput.currentActionMap.FindAction(PRESS_ACTION_NAME);
+                pressureAction = playerInput.currentActionMap.FindAction(PRESSURE_ACTION_NAME);
+                moveAction = playerInput.currentActionMap.FindAction(MOVE_ACTION_NAME);
+
+                pressAction.started += PressAction_Started;
+                pressAction.canceled += PressAction_Canceled;
+                pressureAction.performed += PressureAction_Performed;
+                moveAction.performed += MoveAction_Performed;
+            }
+            else
+            {
+                // If this object is not owned by this client, then disable
+                // it's PlayerInput
+                playerInput.enabled = false;
+                return;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (base.IsOwner)
+            {
+                // Unsubscribe input functions.
+                pressAction.started -= PressAction_Started;
+                pressAction.canceled -= PressAction_Canceled;
+                pressureAction.performed -= PressureAction_Performed;
+            }
+        }
+
+        // Done purely for testing purposes to display pressure and isPressed values
+        // in the inspector.
+        private void Update()
+        {
+            isPressedTest = IsPressed;
+            pressureTest = Pressure;
         }
 
         /// <summary>
-        /// Tests if this object can send and recieve RPCs across the network correctly.
+        /// Handles the player touching the pen to the tablet.
         /// </summary>
-        [Button]
-        private void SendTestRPC()
+        private void PressAction_Started(InputAction.CallbackContext obj)
         {
-            SendInput();
+            IsPressed = true;
         }
 
         /// <summary>
-        /// Tests if this object's transform will automatically sync correctly
-        /// with the NetworkTransform component.
+        /// Handles the player removing the pen from the tablet.
         /// </summary>
-        [Button]
-        private void TestTransformMovement()
+        /// <param name="obj"></param>
+        private void PressAction_Canceled(InputAction.CallbackContext obj)
         {
-            transform.position = transform.position + Vector3.down;
+            IsPressed = false;
         }
 
-        //TODO: Need to fill in params for send and recieve input when we know what
-        //kind of information we will need to send across the server.
+        /// <summary>
+        /// Handles a change in the player's pen position.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void MoveAction_Performed(InputAction.CallbackContext obj)
+        {
+            if(base.IsOwner)
+            {
+                SendPenMove(moveAction.ReadValue<Vector2>());
+            }
+        }
 
         /// <summary>
-        /// Sends a given 
+        /// Updates the synced pressure value whenever it changes.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void PressureAction_Performed(InputAction.CallbackContext obj)
+        {
+            // Updates the pressure value;.
+            Pressure = pressureAction.ReadValue<float>();
+        }
+
+        /// <summary>
+        /// Notifies the server that this client's pen is moving.
         /// </summary>
         [ServerRpc]
-        public void SendInput()
+        private void SendPenMove(Vector2 position)
         {
-            RecieveInput();
+            RecievePenMove(position);
         }
 
-        /*RPC Notes:
-         * When a server RPC calls an Observer RPC, only the object that the Observer 
-         * RPC is being called on will trigger.  It does not act like an event or
-         * message broadcasting to all Network Observers.
-         */
         /// <summary>
-        /// Handles this networked object recieving an input from the server sent
-        /// by the player.
+        /// Recieved by client objects when the server is notified that
+        /// an owned client's pen is moving.
         /// </summary>
         [ObserversRpc]
-        public void RecieveInput()
+        private void RecievePenMove(Vector2 position)
         {
-            //recievingObject.transform.position = recievingObject.transform.position + Vector3.up;
-            // Here to test if the networked objects are recieving RPCs correctly.
-            transform.position = transform.position + Vector3.up;
+            // Call the assigned PenMove Delegate. This will be set by a separate
+            // Drawing script to handle drawing.
+            if (PenMove != null)
+            {
+                PenMove(position);
+            }
+            // Testing code
+            Debug.Log("Mouse position of " + name + " is: " + position);
+        }
+
+        /// <summary>
+        /// Tests networking by changing the sprite's color across all clients.
+        /// </summary>
+        [ServerRpc, Button]
+        private void SendTest()
+        {
+            RecieveTest(Random.ColorHSV());
+        }
+
+        [ObserversRpc]
+        private void RecieveTest(Color setColor)
+        {
+            GetComponent<SpriteRenderer>().color = setColor; ;
+        }
+
+        /// <summary>
+        /// Tests that NetworkTransform is working by changing the transform 
+        /// local position;
+        /// </summary>
+        [Button]
+        private void TestTransform()
+        {
+            if(this.IsOwner)
+            {
+                transform.position += Vector3.up;
+            }
         }
         #endregion
     }
