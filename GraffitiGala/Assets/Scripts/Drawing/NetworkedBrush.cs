@@ -22,7 +22,7 @@ namespace GraffitiGala.Drawing
         #region CONSTS
         private const string PRESSURE_ACTION_NAME = "Pressure";
         private const string PRESS_ACTION_NAME = "Press";
-        private const string MOVE_ACTION_NAME = "Move";
+        private const string POSITION_ACTION_NAME = "Position";
         #endregion
 
         #region vars
@@ -139,7 +139,7 @@ namespace GraffitiGala.Drawing
                 // Set up InputActions and input functions.
                 pressAction = playerInput.currentActionMap.FindAction(PRESS_ACTION_NAME);
                 pressureAction = playerInput.currentActionMap.FindAction(PRESSURE_ACTION_NAME);
-                positionAction = playerInput.currentActionMap.FindAction(MOVE_ACTION_NAME);
+                positionAction = playerInput.currentActionMap.FindAction(POSITION_ACTION_NAME);
 
                 pressAction.started += PressAction_Started;
                 pressAction.canceled += PressAction_Canceled;
@@ -174,7 +174,7 @@ namespace GraffitiGala.Drawing
         {
             // Change this brush's state to drawing.
             state = new DrawingState();
-            Debug.Log("Drawing");
+            //Debug.Log("Drawing");
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace GraffitiGala.Drawing
         {
             // Change this brush's state to not drawing.
             state = new NotDrawingState();
-            Debug.Log("Not Drawing");
+            //Debug.Log("Not Drawing");
         }
 
         /// <summary>
@@ -233,9 +233,12 @@ namespace GraffitiGala.Drawing
             // Instantiate the paint object for the client.
             BrushTexture spawnedPaint = Instantiate(objToSpawn, position, rotation) as BrushTexture;
             // Modifies the instantiated paint object based on color and pressure.
-            spawnedPaint.ConfigurePaint(color, pressure);
+            // Done purely to make the paint appear correctl on the server side.
+            spawnedPaint.PreconfigurePaint(color, pressure);
             // Spawn the created paint object for all other clients.
             ServerManager.Spawn(spawnedPaint.gameObject, owner);
+            // Configures the spawned paint objects so they look the same across the network.
+            spawnedPaint.ConfigurePaint(color, pressure);
             // Add the newly spawned object to this component's synced list of spawned objects.
             drawnObjects.Add(spawnedPaint.gameObject);
         }
@@ -285,7 +288,7 @@ namespace GraffitiGala.Drawing
             testObjects.AddRange(drawnObjects);
         }
 
-        [Button, ServerRpc]
+        [Button, ServerRpc(RequireOwnership = false)]
         private void ClearDrawing()
         {
             testObjects.Clear();

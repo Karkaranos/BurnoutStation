@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 458932035270573479}
   - component: {fileID: 2065818687396840806}
   - component: {fileID: 6113815423177307856}
+  - component: {fileID: 2587463706572442200}
   m_Layer: 0
   m_Name: TestBrushTexture
   m_TagString: Untagged
@@ -103,7 +104,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 0}
+  - {fileID: 6113815423177307856}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -150,7 +151,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50bf777b78fcfb14e969aeda5623117d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 2065818687396840806}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 2065818687396840806}
   spriteRenderer: {fileID: 458932035270573479}
+--- !u!114 &2587463706572442200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5984776616319102306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c71fd7f855ec523429999fc4e14a1928, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _overrideType: 3
+  _updateHostVisibility: 1
+  _observerConditions: []

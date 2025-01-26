@@ -1,5 +1,5 @@
 {
-    "name": "BrushActions",
+    "name": "MainActions",
     "maps": [
         {
             "name": "Brush",
@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Move",
+                    "name": "Position",
                     "type": "Value",
                     "id": "47409376-3cd1-4d4e-9048-09376b8b383a",
                     "expectedControlType": "Vector2",
@@ -74,7 +74,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Position",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -85,7 +85,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Position",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

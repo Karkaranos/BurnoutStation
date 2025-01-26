@@ -11,25 +11,31 @@ public class FollowMouse2D : MonoBehaviour
     private bool mousePressed;
 
     private InputAction mousePress;
+    private InputAction mousePosition;
     public PlayerInput playerInput;
 
 
-    private void Start()
+    private void Awake()
     {
         mousePressed = false;
         SetupActions();
 
     }
 
-
-
     private void SetupActions()
     {
         playerInput.currentActionMap.Enable();  //Enable action map
         mousePress = playerInput.currentActionMap.FindAction("Press");
+        mousePosition = playerInput.currentActionMap.FindAction("Position");
         mousePress.started += Mouse_pressed;
         mousePress.canceled += Mouse_press_canceled;
 
+    }
+
+    private void OnDestroy()
+    {
+        mousePress.started -= Mouse_pressed;
+        mousePress.canceled -= Mouse_press_canceled;
     }
 
     private void Mouse_pressed(InputAction.CallbackContext obj)
@@ -47,7 +53,7 @@ public class FollowMouse2D : MonoBehaviour
     {
         if (mousePressed)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(mousePosition.ReadValue<Vector2>());
 
             // Calculate the point on the plane at the desired z position
             Vector3 targetPosition = ray.GetPoint(zPosition); // Get the world position at the fixed z
