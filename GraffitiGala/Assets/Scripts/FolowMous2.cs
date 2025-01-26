@@ -26,7 +26,7 @@ public class FollowMouse2D : MonoBehaviour
     private void SetupActions()
     {
         playerInput.currentActionMap.Enable();  //Enable action map
-        mousePress = playerInput.currentActionMap.FindAction("MousePress");
+        mousePress = playerInput.currentActionMap.FindAction("Press");
         mousePress.started += Mouse_pressed;
         mousePress.canceled += Mouse_press_canceled;
 
