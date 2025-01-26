@@ -53,9 +53,9 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 8432188840679166690}
   _networkObjectCache: {fileID: 8432188840679166690}
-  brushTexture: {fileID: 5984776616319102306, guid: 3d7e4f3626b5f544f84176537d7c921b, type: 3}
-  brushColor: {r: 1, g: 1, b: 1, a: 1}
-  drawBuffer: 0.3
+  brushTexturePrefab: {fileID: 6113815423177307856, guid: 3d7e4f3626b5f544f84176537d7c921b, type: 3}
+  brushColor: {r: 1, g: 0, b: 0.07258654, a: 1}
+  drawBuffer: 0.1
   testObjects: []
 --- !u!114 &8432188840679166690
 MonoBehaviour:
@@ -101,7 +101,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 6
+  <PrefabId>k__BackingField: 7
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 12696516699901806279
   <SceneId>k__BackingField: 0

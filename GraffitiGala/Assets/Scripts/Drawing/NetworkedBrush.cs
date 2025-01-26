@@ -28,8 +28,8 @@ namespace GraffitiGala.Drawing
         #region vars
         [Header("Brush Settings")]
         [SerializeField, Tooltip("The paint prefab to spawn.  Use different types" +
-            " of pain prefabs to create different brush textures.")]
-        internal GameObject brushTexture;
+            " of paint prefabs to create different brush textures.")]
+        internal BrushTexture brushTexturePrefab;
         [SerializeField, Tooltip("The color of this brush.")]
         private Color brushColor;
         [SerializeField, Tooltip("The distance away from where the last paint object" +
@@ -41,7 +41,7 @@ namespace GraffitiGala.Drawing
         // Inputs
         private InputAction pressureAction;
         private InputAction pressAction;
-        private InputAction moveAction;
+        private InputAction positionAction;
 
         // List of spawned game objects.
         private readonly SyncList<GameObject> drawnObjects = new();
@@ -60,7 +60,7 @@ namespace GraffitiGala.Drawing
         /// </summary>
         private abstract class DrawState
         {
-            internal abstract void HandleBrushMove(NetworkedBrush brush);
+            internal abstract void HandleBrushMove(NetworkedBrush brush, InputAction positionAction);
 
             /// <summary>
             /// Checks to see if two vectors are within a certain range of each other
@@ -85,7 +85,7 @@ namespace GraffitiGala.Drawing
         /// </summary>
         private class NotDrawingState : DrawState
         {
-            internal override void HandleBrushMove(NetworkedBrush brush)
+            internal override void HandleBrushMove(NetworkedBrush brush, InputAction positionAction)
             {
                 // Do Nothing.
             }
@@ -106,13 +106,13 @@ namespace GraffitiGala.Drawing
             /// tell the brush comnponent to draw some new prefabs.
             /// </summary>
             /// <param name="brush">The NetworkBrush component that is in the drawstate.</param>
-            /// <param name="moveAction">
+            /// <param name="positionAction">
             /// The InputAction that handles the pointer position (pen or mouse)
             /// Used to find where to draw.
             /// </param>
-            internal override void HandleBrushMove(NetworkedBrush brush)
+            internal override void HandleBrushMove(NetworkedBrush brush, InputAction positionAction)
             {
-                Vector2 currentPosition = brush.transform.position;
+                Vector2 currentPosition = Camera.main.ScreenToWorldPoint(positionAction.ReadValue<Vector2>());
 
                 // If the current position is far enough away from the last position
                 // that an object was spawned at, spawn a new paint object.
@@ -139,12 +139,12 @@ namespace GraffitiGala.Drawing
                 // Set up InputActions and input functions.
                 pressAction = playerInput.currentActionMap.FindAction(PRESS_ACTION_NAME);
                 pressureAction = playerInput.currentActionMap.FindAction(PRESSURE_ACTION_NAME);
-                moveAction = playerInput.currentActionMap.FindAction(MOVE_ACTION_NAME);
+                positionAction = playerInput.currentActionMap.FindAction(MOVE_ACTION_NAME);
 
                 pressAction.started += PressAction_Started;
                 pressAction.canceled += PressAction_Canceled;
                 //pressureAction.performed += PressureAction_Performed;
-                moveAction.performed += MoveAction_Performed;
+                positionAction.performed += MoveAction_Performed;
             }
             else
             {
@@ -194,7 +194,7 @@ namespace GraffitiGala.Drawing
         private void MoveAction_Performed(InputAction.CallbackContext obj)
         {
             /// Tells the current state to handle a movement in the brush.
-            state.HandleBrushMove(this);
+            state.HandleBrushMove(this, positionAction);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace GraffitiGala.Drawing
         internal void Draw(Vector3 position, Quaternion rotation)
         {
             float pressure = pressureAction.ReadValue<float>();
-            DrawOnServer(brushTexture, position, rotation, this.Owner, brushColor, pressure);
+            DrawOnServer(brushTexturePrefab, position, rotation, this.Owner, brushColor, pressure);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace GraffitiGala.Drawing
         /// </param>
         [ServerRpc]
         private void DrawOnServer(
-            GameObject objToSpawn, 
+            BrushTexture objToSpawn, 
             Vector3 position, 
             Quaternion rotation, 
             NetworkConnection owner,
@@ -231,13 +231,13 @@ namespace GraffitiGala.Drawing
             )
         {
             // Instantiate the paint object for the client.
-            GameObject spawnedPaint = Instantiate(objToSpawn, position, rotation);
-            // Modify paint object by pressure here.
-
+            BrushTexture spawnedPaint = Instantiate(objToSpawn, position, rotation) as BrushTexture;
+            // Modifies the instantiated paint object based on color and pressure.
+            spawnedPaint.ConfigurePaint(color, pressure);
             // Spawn the created paint object for all other clients.
-            ServerManager.Spawn(spawnedPaint, owner);
+            ServerManager.Spawn(spawnedPaint.gameObject, owner);
             // Add the newly spawned object to this component's synced list of spawned objects.
-            drawnObjects.Add(spawnedPaint);
+            drawnObjects.Add(spawnedPaint.gameObject);
         }
 
         ///// <summary>
