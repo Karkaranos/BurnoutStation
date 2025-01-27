@@ -1,0 +1,96 @@
+{
+    "name": "MainActions",
+    "maps": [
+        {
+            "name": "Brush",
+            "id": "4704bf6e-725d-4617-a8f7-ca9ceb34c6ab",
+            "actions": [
+                {
+                    "name": "Press",
+                    "type": "Button",
+                    "id": "cf07e7fa-b056-43eb-bb02-e56166b4542a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pressure",
+                    "type": "Value",
+                    "id": "59a8ab81-79f7-4a3e-bdfa-c74688c17fce",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Position",
+                    "type": "Value",
+                    "id": "47409376-3cd1-4d4e-9048-09376b8b383a",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "23250a55-de07-4e29-9bb7-fd6d10b1123d",
+                    "path": "<Pen>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a66a3228-9eb4-4448-b0d9-9a08fd34a5e1",
+                    "path": "<Mouse>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0df0f74f-83bb-4a25-afe2-75c5d9ac10d1",
+                    "path": "<Pen>/{Pressure}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pressure",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "43793d27-9aa7-443a-ba04-e01740d8775f",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "728ed176-2b73-413b-a447-5f5214f520a4",
+                    "path": "<Pen>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

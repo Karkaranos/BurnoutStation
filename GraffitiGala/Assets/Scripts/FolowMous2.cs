@@ -1,18 +1,67 @@
+using System.Xml.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class FollowMouse2D : MonoBehaviour
 {
     public float zPosition = 10f; // Set this to the desired depth from the camera
+    private bool mousePressed;
 
-    void Update()
+    private InputAction mousePress;
+    private InputAction mousePosition;
+    public PlayerInput playerInput;
+
+
+    private void Awake()
     {
-        // Create a ray from the camera to the mouse position in world space
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        mousePressed = false;
+        SetupActions();
 
-        // Calculate the point on the plane at the desired z position
-        Vector3 targetPosition = ray.GetPoint(zPosition); // Get the world position at the fixed z
-
-        // Only change x and y, keep the z from the current object
-        transform.position = new Vector3(targetPosition.x, targetPosition.y, transform.position.z);
     }
+
+    private void SetupActions()
+    {
+        playerInput.currentActionMap.Enable();  //Enable action map
+        mousePress = playerInput.currentActionMap.FindAction("Press");
+        mousePosition = playerInput.currentActionMap.FindAction("Position");
+        mousePress.started += Mouse_pressed;
+        mousePress.canceled += Mouse_press_canceled;
+
+    }
+
+    private void OnDestroy()
+    {
+        mousePress.started -= Mouse_pressed;
+        mousePress.canceled -= Mouse_press_canceled;
+    }
+
+    private void Mouse_pressed(InputAction.CallbackContext obj)
+    {
+        mousePressed = true;
+
+    }
+    private void Mouse_press_canceled(InputAction.CallbackContext obj)
+    {
+        mousePressed = false;
+
+    }
+
+    private void FixedUpdate()
+    {
+        if (mousePressed)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(mousePosition.ReadValue<Vector2>());
+
+            // Calculate the point on the plane at the desired z position
+            Vector3 targetPosition = ray.GetPoint(zPosition); // Get the world position at the fixed z
+
+            // Only change x and y, keep the z from the current object
+            transform.position = new Vector3(targetPosition.x, targetPosition.y, transform.position.z);
+        }
+        
+    }
+
 }
