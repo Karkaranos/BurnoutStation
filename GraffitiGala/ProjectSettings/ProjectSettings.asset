@@ -103,7 +103,7 @@ PlayerSettings:
   xboxEnableFitness: 0
   visibleInBackground: 1
   allowFullscreenSwitch: 1
-  fullscreenMode: 1
+  fullscreenMode: 3
   xboxSpeechDB: 0
   xboxEnableHeadOrientation: 0
   xboxEnableGuest: 0
@@ -646,7 +646,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Standalone: EDGEGAP_PLUGIN_SERVERS;FISHNET;FISHNET_V4
+    Standalone: EDGEGAP_PLUGIN_SERVERS;FISHNET;FISHNET_V4;FISHNET_DISABLE_V3TOV4_HELPERS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
