@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 8986493551982128398}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.5581436, y: 5.9312086, z: 0.8280444}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -153,6 +153,8 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 8934451301212810652}
   _networkObjectCache: {fileID: 8934451301212810652}
   lineRenderer: {fileID: 1668174455379986403}
+  minPressureWidth: 0
+  maxPressureWidth: 0
 --- !u!114 &8934451301212810652
 MonoBehaviour:
   m_ObjectHideFlags: 0

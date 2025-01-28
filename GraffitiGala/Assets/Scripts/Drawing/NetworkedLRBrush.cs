@@ -63,8 +63,7 @@ namespace GraffitiGala.Drawing
         private abstract class DrawState
         {
             internal abstract void HandleBrushMove(NetworkedLRBrush brush, InputAction positionAction);
-            internal abstract void InitializeLine(LRBrushTexture line, NetworkedLRBrush brush, InputAction positionAction);
-            internal abstract LRBrushTexture GetLineReference();
+            internal abstract void InitializeLine(LRBrushTexture line);
 
             /// <summary>
             /// Checks to see if two vectors are within a certain range of each other
@@ -91,8 +90,7 @@ namespace GraffitiGala.Drawing
         {
             // NotDrawingState should do nothing when it's functions are called.
             internal override void HandleBrushMove(NetworkedLRBrush brush, InputAction positionAction) { }
-            internal override void InitializeLine(LRBrushTexture line, NetworkedLRBrush brush, InputAction positionAction) { }
-            internal override LRBrushTexture GetLineReference() { return null; }
+            internal override void InitializeLine(LRBrushTexture line) { }
         }
 
         /// <summary>
@@ -106,36 +104,30 @@ namespace GraffitiGala.Drawing
             private Vector2 lastPosition;
             private LRBrushTexture currentLine;
 
-            /// <summary>
-            /// Sets this object's reference to a server spawned line.
-            /// </summary>
-            /// <param name="line">The spawned line.</param>
-            internal override void InitializeLine(LRBrushTexture line, NetworkedLRBrush brush, InputAction positionAction)
+            internal DrawingState(LRBrushTexture line, NetworkedLRBrush brush, InputAction positionAction)
             {
-                // Only do this if line has yet to be set.
-                if(currentLine == null)
-                {
-                    currentLine = line;
+                currentLine = line;
 
-                    // Call the brush's draw function twice to make the line visibly
-                    // show as a dot.
-                    brush.Draw(line, GetMousePosition(positionAction));
-                    brush.Draw(line, GetMousePosition(positionAction));
-                }
-                //else
-                //{
-                //    Debug.LogError("Duplicate line reference was attempted to be assigned to brush " + brush.name);
-                //}
+                // Call the brush's draw function twice to make the line visibly
+                // show as a dot.
+                brush.Draw(line, GetMousePosition(positionAction));
+                brush.Draw(line, GetMousePosition(positionAction));
             }
 
             /// <summary>
-            /// Returns this object's reference to the line that is currently being 
-            /// drawn.
+            /// Sets this object's reference to a server spawned line and initialize
+            /// that line based on the changes made to the client line.
             /// </summary>
-            /// <returns>The currentl line being drawn.</returns>
-            internal override LRBrushTexture GetLineReference()
+            /// <param name="line">The spawned line.</param>
+            internal override void InitializeLine(LRBrushTexture line)
             {
-                return currentLine;
+                // Save a reference to the temporary client line that this DrawState
+                // was updating.
+                LRBrushTexture tempClientLine = currentLine;
+                // Initializes the passed in line as a line that is communicating over the network.
+                line.InitializeAsNetworked(tempClientLine);
+                // Sets this state's currentLine as the new network line.
+                currentLine = line;
             }
 
             /// <summary>
@@ -216,18 +208,18 @@ namespace GraffitiGala.Drawing
         private void PressAction_Started(InputAction.CallbackContext obj)
         {
             // Updates this object's state to handle pointer movement drawing.
-            state = new DrawingState();
-
-            // Creates a new line to draw.
-            StartNewLine(
-                brushTexturePrefab, 
-                GetMousePosition(positionAction), 
+            // And create a new line object for this client.  This temporary
+            // client line will be updated until the server passes backa  reference
+            // to the spawned server line.
+            state = new DrawingState(StartNewLine(
+                brushTexturePrefab,
+                GetMousePosition(positionAction),
                 Quaternion.identity,
                 null,
-                this.Owner,
-                this,
                 brushColor
-                );
+                ), this, positionAction);
+
+
             //Debug.Log("Drawing");
         }
 
@@ -269,33 +261,37 @@ namespace GraffitiGala.Drawing
         internal void Draw(LRBrushTexture line, Vector3 position)
         {
             float pressure = pressureAction.ReadValue<float>();
-            DrawOnServer(line, position, pressure);
+            //DrawOnServer(line, position, pressure);
+            //Adds a new point to the current line.
+            line.AddPoint(position, pressure);
         }
 
-        ///// <summary>
-        ///// Spawns a new line.
-        ///// </summary>
-        ///// <param name="linePrefab">The prefab to spawn the line from.</param>
-        ///// <param name="position">The position to spawn the line at.</param>
-        ///// <param name="rotation">The rotation to spawmn the line with.</param>
-        ///// <param name="parent">The transform that will act as the parent of the line.</param>
-        ///// <param name="owner">The network connection that will own this line.</param>
-        ///// <param name="color">The color of the line.</param>
-        ///// <returns>The created line object over the client.</returns>
-        //private LRBrushTexture StartNewLine(
-        //    LRBrushTexture linePrefab,
-        //    Vector3 position,
-        //    Quaternion rotation,
-        //    Transform parent,
-        //    NetworkConnection owner,
-        //    Color color
-        //    )
-        //{
-
-        //    // Spawns and sets up the line over the server.
-        //    StartNewLineServer(spawnedLine, position, rotation, parent, owner, color);
-        //    return spawnedLine;
-        //}
+        /// <summary>
+        /// Spawns a new line.
+        /// </summary>
+        /// <param name="linePrefab">The prefab to spawn the line from.</param>
+        /// <param name="position">The position to spawn the line at.</param>
+        /// <param name="rotation">The rotation to spawmn the line with.</param>
+        /// <param name="parent">The transform that will act as the parent of the line.</param>
+        /// <param name="color">The color of the line.</param>
+        /// <returns>The created line object over the client.</returns>
+        private LRBrushTexture StartNewLine(
+            LRBrushTexture linePrefab,
+            Vector3 position,
+            Quaternion rotation,
+            Transform parent,
+            Color color
+            )
+        {
+            // Creates a line only for this client that will be updated
+            LRBrushTexture clientPlaceholderLine = Instantiate(linePrefab, position, rotation, parent) as LRBrushTexture;
+            clientPlaceholderLine.Configure(color);
+            // Spawns and sets up the line over the server.
+            StartNewLineServer(linePrefab, position, rotation, parent, this.Owner, this, color);
+            // Returns the created client line.  This will be stored by the current
+            // DrawingState and updated to keep the client responsive.
+            return clientPlaceholderLine;
+        }
 
         /// <summary>
         /// Spawns a new line object over the network to be updated as the player
@@ -313,7 +309,7 @@ namespace GraffitiGala.Drawing
         /// <param name="color">The color of the line.</param>
         /// <returns>The created line object.</returns>
         [ServerRpc]
-        private void StartNewLine(
+        private void StartNewLineServer(
             LRBrushTexture linePrefab,
             Vector3 position,
             Quaternion rotation,
@@ -328,11 +324,11 @@ namespace GraffitiGala.Drawing
             // Spawns the line over the server.
             ServerManager.Spawn(spawnedLine.gameObject, owner);
             // Configures the line with set values such as color.
-            spawnedLine.Configure(color);
+            spawnedLine.ObserverConfigure(color);
             // Adds the spawned line object to a stored SyncList of lines this 
             // object has spawned.
             drawnObjects.Add(spawnedLine);
-            // Sets a reference to the spawned line of the current drawing state
+            // Sets a reference to the spawned server line of the current drawing state
             // of the object that spawned this new line.
             InitializeDrawState(spawnedLine, brush);
         }
@@ -351,20 +347,19 @@ namespace GraffitiGala.Drawing
         private void InitializeDrawState(LRBrushTexture line, NetworkedLRBrush brush)
         {
             // Passes a reference to a spawned line to the current state.
-            brush.state.InitializeLine(line, this, positionAction);
+            brush.state.InitializeLine(line);
         }
 
-        /// <summary>
-        /// Adds points to a given line at a given position.
-        /// </summary>
-        /// <param name="line">The line to update.</param>
-        /// <param name="position">The position to put the new point at.</param>
-        /// <param name="pressure">The pressure of the pen that determines the width of the line.</param>
-        private void DrawOnServer(LRBrushTexture line, Vector3 position, float pressure)
-        {
-            //Adds a new point to the current line.
-            line.AddPoint(position, pressure);
-        }
+        ///// <summary>
+        ///// Adds points to a given line at a given position.
+        ///// </summary>
+        ///// <param name="line">The line to update.</param>
+        ///// <param name="position">The position to put the new point at.</param>
+        ///// <param name="pressure">The pressure of the pen that determines the width of the line.</param>
+        //private void DrawOnServer(LRBrushTexture line, Vector3 position, float pressure)
+        //{
+            
+        //}
 
 
         [Button]
