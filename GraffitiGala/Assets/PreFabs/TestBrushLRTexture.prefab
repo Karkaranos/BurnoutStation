@@ -178,6 +178,7 @@ MonoBehaviour:
   RuntimeParentNetworkBehaviour: {fileID: 0}
   RuntimeChildNetworkBehaviours: []
   _isNetworked: 1
+  _hideWithoutConnection: 0
   _isSpawnable: 1
   _isGlobal: 0
   _initializeOrder: 0
@@ -203,7 +204,7 @@ MonoBehaviour:
   <AssetPathHash>k__BackingField: 5619044045038583337
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
-    Position: {x: 6.5581436, y: 5.9312086, z: 0.8280444}
+    Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1

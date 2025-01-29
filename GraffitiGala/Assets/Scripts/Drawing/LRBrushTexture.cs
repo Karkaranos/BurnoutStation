@@ -41,15 +41,6 @@ namespace GraffitiGala.Drawing
         #endregion
 
         /// <summary>
-        /// Configures this object with values when it is spawned over the server.
-        /// </summary>
-        /// <param name="color">The color this line should be.</param>
-        [ObserversRpc]
-        public void ObserverConfigure(Color color)
-        {
-            Configure(color);
-        }
-        /// <summary>
         /// Configures this object with values.
         /// </summary>
         /// <param name="color">The color this line should be.</param>
@@ -58,6 +49,21 @@ namespace GraffitiGala.Drawing
             // Updates the line renderer's color.
             lineRenderer.startColor = color;
             lineRenderer.endColor = color;
+        }
+
+        private void OnDisable()
+        {
+            Debug.Log("I was disabled.");
+        }
+
+        /// <summary>
+        /// Configures this object with values when it is spawned over the server.
+        /// </summary>
+        /// <param name="color">The color this line should be.</param>
+        [ObserversRpc]
+        public void ObserverConfigure(Color color)
+        {
+            Configure(color);
         }
 
         /// <summary>
@@ -75,14 +81,46 @@ namespace GraffitiGala.Drawing
             Vector3[] positions = new Vector3[posCount];
             clientReferenceLine.LR.GetPositions(positions);
             // Sets this line renderer to reflect the client line renderer.
-            lineRenderer.positionCount = posCount;
-            lineRenderer.SetPositions(positions);
+            SetPositions(positions);
+            // Sets the line rendere to reflec the client line renderer for other clients across the network.
+            InitNetworkedServer(positions);
 
             isNetworked = true;
             // Destroys the client reference line because it is no longer needed.
             // This line shall now be updated in it's place.
-            //Destroy(clientReferenceLine.gameObject);
+            Destroy(clientReferenceLine.gameObject);
         }
+
+        /// <summary>
+        /// Sets this object's line renderer positions to a given array of positions.
+        /// </summary>
+        /// <param name="positions">The positions to set to this line renderer.</param>
+        private void SetPositions(Vector3[] positions)
+        {
+            lineRenderer.positionCount = positions.Length;
+            lineRenderer.SetPositions(positions);
+        }
+
+
+        /// <summary>
+        /// Initializes a pre-established set of positions for this object's line renderer across the network.
+        /// </summary>
+        /// <param name="positions">The positions to set for the line renderer.</param>
+        [ServerRpc]
+        private void InitNetworkedServer(Vector3[] positions)
+        {
+            InitNetworkedObserver(positions);
+        }
+        /// <summary>
+        /// Initializes a pre-established set of positions for this object's line renderer for this client.
+        /// </summary>
+        /// <param name="positions">The positions to set for the line renderer.</param>
+        [ObserversRpc(ExcludeOwner = true)]
+        private void InitNetworkedObserver(Vector3[] positions)
+        {
+            SetPositions(positions);
+        }
+
 
         /// <summary>
         /// Adds a point to this line.

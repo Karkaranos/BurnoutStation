@@ -49,11 +49,27 @@ namespace GraffitiGala.Drawing
         private readonly SyncList<LRBrushTexture> drawnObjects = new();
         // Temporary list to display the spawned objects SyncList in the inspector.
         [SerializeField, ReadOnly, Header("Testing")] private List<LRBrushTexture> testObjects = new();
+        // List that stores drawing states that have not initialized.
+        private readonly List<DrawingState> drawingStateQueue = new();
 
         /// <summary>
         /// State Machine
         /// </summary>
         private DrawState state = new NotDrawingState();
+        #endregion
+
+        #region Properties
+        public Color BrushColor
+        {
+            get
+            {
+                return brushColor;
+            }
+            set
+            {
+                brushColor = value;
+            }
+        }
         #endregion
 
         #region Nested Classes
@@ -211,13 +227,17 @@ namespace GraffitiGala.Drawing
             // And create a new line object for this client.  This temporary
             // client line will be updated until the server passes backa  reference
             // to the spawned server line.
-            state = new DrawingState(StartNewLine(
+            DrawingState drawingState = new DrawingState(StartNewLine(
                 brushTexturePrefab,
                 GetMousePosition(positionAction),
                 Quaternion.identity,
                 null,
-                brushColor
+                BrushColor
                 ), this, positionAction);
+            state = drawingState;
+            // Adds the newly created drawing state to a queue to be initialized.  Even if the state changes, drawing
+            // States still need to be initialized so that lines accurately reflect user inputs.
+            drawingStateQueue.Add(drawingState);
 
 
             //Debug.Log("Drawing");
@@ -346,8 +366,14 @@ namespace GraffitiGala.Drawing
         [ObserversRpc]
         private void InitializeDrawState(LRBrushTexture line, NetworkedLRBrush brush)
         {
-            // Passes a reference to a spawned line to the current state.
-            brush.state.InitializeLine(line);
+            if(this.IsOwner)
+            {
+                // Initializes the state earliest on in the queue.
+                brush.drawingStateQueue[0].InitializeLine(line);
+                // Removes the newly initialized state from the queue.  If that state is not the current state, no 
+                // references to it will exist and it will be garbage collected.
+                brush.drawingStateQueue.RemoveAt(0);
+            }
         }
 
         ///// <summary>

@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4028759741188241690, guid: 91693e77a00a4874583b8ebd73f64fb6, type: 3}
+      propertyPath: _componentIndexCache
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6220941877542401348, guid: 91693e77a00a4874583b8ebd73f64fb6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -53,13 +57,21 @@ PrefabInstance:
       value: LRBrush
       objectReference: {fileID: 0}
     - target: {fileID: 8432188840679166690, guid: 91693e77a00a4874583b8ebd73f64fb6, type: 3}
+      propertyPath: <PrefabId>k__BackingField
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8432188840679166690, guid: 91693e77a00a4874583b8ebd73f64fb6, type: 3}
       propertyPath: <AssetPathHash>k__BackingField
       value: 9698177691569363675
       objectReference: {fileID: 0}
     - target: {fileID: 8432188840679166690, guid: 91693e77a00a4874583b8ebd73f64fb6, type: 3}
       propertyPath: NetworkBehaviours.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7890224081001936727}
+    - target: {fileID: 8432188840679166690, guid: 91693e77a00a4874583b8ebd73f64fb6, type: 3}
+      propertyPath: NetworkBehaviours.Array.data[1]
+      value: 
+      objectReference: {fileID: 8650227963309098412}
     m_RemovedComponents:
     - {fileID: 1513675837552132003, guid: 91693e77a00a4874583b8ebd73f64fb6, type: 3}
     m_RemovedGameObjects: []
@@ -86,12 +98,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34ae5ca6d0c67749bc6ec16cc3089be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 3428246812123782319}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 3428246812123782319}
   brushTexturePrefab: {fileID: 8010230483745428724, guid: 5f64e26324bde2f4c8b62bcd987bcd01, type: 3}
   brushColor: {r: 1, g: 0, b: 0, a: 1}
-  drawBuffer: 0.1
+  drawBuffer: 0.02
   testObjects: []
 --- !u!114 &3428246812123782319 stripped
 MonoBehaviour:
@@ -102,5 +114,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7890224081001936727 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4028759741188241690, guid: 91693e77a00a4874583b8ebd73f64fb6, type: 3}
+  m_PrefabInstance: {fileID: 6527601921676611149}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428012315506495424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
