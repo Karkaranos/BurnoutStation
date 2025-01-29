@@ -1,54 +1,34 @@
-using FishNet.Connection;
-using FishNet.Managing.Server;
-using FishNet.Object.Synchronizing;
-using FishNet.Object;
-using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
-
 /*************************************************
 Brandon Koederitz
 1/27/2025
 1/27/2025
 Creates and updates a LineRenderer object to draw across a network.
-FishNet, InputSystem
+FishNet, InputSystem, NaughtyAttributes.
 ***************************************************/
+
+using FishNet.Connection;
+using FishNet.Managing.Server;
+using FishNet.Object;
+using FishNet.Object.Synchronizing;
+using NaughtyAttributes;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace GraffitiGala.Drawing
 {
     [RequireComponent(typeof(PlayerInput))]
-    public class NetworkedLRBrush : NetworkBehaviour
+    public class LineNetBrush : NetworkBrush
     {
-        #region CONSTS
-        private const string PRESSURE_ACTION_NAME = "Pressure";
-        private const string PRESS_ACTION_NAME = "Press";
-        private const string POSITION_ACTION_NAME = "Position";
-        #endregion
-
         #region vars
-        [Header("Brush Settings")]
         [SerializeField, Tooltip("The paint prefab to spawn.  Use different types" +
             " of paint prefabs to create different brush textures.")]
-        internal LRBrushTexture brushTexturePrefab;
-        [SerializeField, Tooltip("The color of this brush.")]
-        private Color brushColor;
-        [SerializeField, Tooltip("The distance away from where the last paint object" +
-            " was spawned before the brush can spawn another.  Increasing the distance" +
-            " will cause less objects to spawn and is better for performance, but will reduce" +
-            " stroke quality.")]
-        internal float drawBuffer;
-
-        // Inputs
-        private InputAction pressureAction;
-        private InputAction pressAction;
-        private InputAction positionAction;
+        internal LineBrushTexture brushTexturePrefab;
 
         // List of spawned game objects.
-        private readonly SyncList<LRBrushTexture> drawnObjects = new();
+        private readonly SyncList<LineBrushTexture> drawnObjects = new();
         // Temporary list to display the spawned objects SyncList in the inspector.
-        [SerializeField, ReadOnly, Header("Testing")] private List<LRBrushTexture> testObjects = new();
+        [SerializeField, ReadOnly, Header("Testing")] private List<LineBrushTexture> testObjects = new();
         // List that stores drawing states that have not initialized.
         private readonly List<DrawingState> drawingStateQueue = new();
 
@@ -59,15 +39,15 @@ namespace GraffitiGala.Drawing
         #endregion
 
         #region Properties
-        public Color BrushColor
+        public LineBrushTexture BrushPrefab
         {
             get
             {
-                return brushColor;
+                return brushTexturePrefab;
             }
             set
             {
-                brushColor = value;
+                brushTexturePrefab = value;
             }
         }
         #endregion
@@ -78,8 +58,8 @@ namespace GraffitiGala.Drawing
         /// </summary>
         private abstract class DrawState
         {
-            internal abstract void HandleBrushMove(NetworkedLRBrush brush, InputAction positionAction);
-            internal abstract void InitializeLine(LRBrushTexture line);
+            internal abstract void HandleBrushMove(LineNetBrush brush, InputAction positionAction);
+            internal abstract void InitializeLine(LineBrushTexture line);
 
             /// <summary>
             /// Checks to see if two vectors are within a certain range of each other
@@ -105,8 +85,8 @@ namespace GraffitiGala.Drawing
         private class NotDrawingState : DrawState
         {
             // NotDrawingState should do nothing when it's functions are called.
-            internal override void HandleBrushMove(NetworkedLRBrush brush, InputAction positionAction) { }
-            internal override void InitializeLine(LRBrushTexture line) { }
+            internal override void HandleBrushMove(LineNetBrush brush, InputAction positionAction) { }
+            internal override void InitializeLine(LineBrushTexture line) { }
         }
 
         /// <summary>
@@ -118,9 +98,9 @@ namespace GraffitiGala.Drawing
         private class DrawingState : DrawState
         {
             private Vector2 lastPosition;
-            private LRBrushTexture currentLine;
+            private LineBrushTexture currentLine;
 
-            internal DrawingState(LRBrushTexture line, NetworkedLRBrush brush, InputAction positionAction)
+            internal DrawingState(LineBrushTexture line, LineNetBrush brush, InputAction positionAction)
             {
                 currentLine = line;
 
@@ -135,11 +115,11 @@ namespace GraffitiGala.Drawing
             /// that line based on the changes made to the client line.
             /// </summary>
             /// <param name="line">The spawned line.</param>
-            internal override void InitializeLine(LRBrushTexture line)
+            internal override void InitializeLine(LineBrushTexture line)
             {
                 // Save a reference to the temporary client line that this DrawState
                 // was updating.
-                LRBrushTexture tempClientLine = currentLine;
+                LineBrushTexture tempClientLine = currentLine;
                 // Initializes the passed in line as a line that is communicating over the network.
                 line.InitializeAsNetworked(tempClientLine);
                 // Sets this state's currentLine as the new network line.
@@ -155,7 +135,7 @@ namespace GraffitiGala.Drawing
             /// The InputAction that handles the pointer position (pen or mouse)
             /// Used to find where to draw.
             /// </param>
-            internal override void HandleBrushMove(NetworkedLRBrush brush, InputAction positionAction)
+            internal override void HandleBrushMove(LineNetBrush brush, InputAction positionAction)
             {
                 // Prevents MoveBrush from giving a nullref.  Simply wait until the current line is set.
                 if(currentLine == null)
@@ -177,51 +157,11 @@ namespace GraffitiGala.Drawing
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Sets up this as a networked object.
-        /// </summary>
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
-
-            PlayerInput playerInput = GetComponent<PlayerInput>();
-            if (base.IsOwner)
-            {
-                // Set up InputActions and input functions.
-                pressAction = playerInput.currentActionMap.FindAction(PRESS_ACTION_NAME);
-                pressureAction = playerInput.currentActionMap.FindAction(PRESSURE_ACTION_NAME);
-                positionAction = playerInput.currentActionMap.FindAction(POSITION_ACTION_NAME);
-
-                pressAction.started += PressAction_Started;
-                pressAction.canceled += PressAction_Canceled;
-                //pressureAction.performed += PressureAction_Performed;
-                positionAction.performed += MoveAction_Performed;
-            }
-            else
-            {
-                // If this object is not owned by this client, then disable
-                // it's PlayerInput and this component.
-                playerInput.enabled = false;
-                this.enabled = false;
-                return;
-            }
-        }
-
-        public override void OnStopClient()
-        {
-            if (base.IsOwner)
-            {
-                // Unsubscribe input functions.
-                pressAction.started -= PressAction_Started;
-                pressAction.canceled -= PressAction_Canceled;
-                //pressureAction.performed -= PressureAction_Performed;
-            }
-        }
 
         /// <summary>
         /// Handles the player touching the pen to the tablet.
         /// </summary>
-        private void PressAction_Started(InputAction.CallbackContext obj)
+        protected override void PressAction_Started(InputAction.CallbackContext obj)
         {
             // Updates this object's state to handle pointer movement drawing.
             // And create a new line object for this client.  This temporary
@@ -246,7 +186,7 @@ namespace GraffitiGala.Drawing
         /// <summary>
         /// Handles the player removing the pen from the tablet.
         /// </summary>
-        private void PressAction_Canceled(InputAction.CallbackContext obj)
+        protected override void PressAction_Canceled(InputAction.CallbackContext obj)
         {
             // Change this brush's state to not drawing.
             state = new NotDrawingState();
@@ -257,7 +197,7 @@ namespace GraffitiGala.Drawing
         /// Handles a change in the player's pen position.
         /// </summary>
         /// <param name="obj"></param>
-        private void MoveAction_Performed(InputAction.CallbackContext obj)
+        protected override void MoveAction_Performed(InputAction.CallbackContext obj)
         {
             /// Tells the current state to handle a movement in the brush.
             state.HandleBrushMove(this, positionAction);
@@ -278,7 +218,7 @@ namespace GraffitiGala.Drawing
         /// </summary>
         /// <param name="line"> The line to update.</param>
         /// <param name="position">The position to spawn the paint at.</param>
-        internal void Draw(LRBrushTexture line, Vector3 position)
+        internal void Draw(LineBrushTexture line, Vector3 position)
         {
             float pressure = pressureAction.ReadValue<float>();
             //DrawOnServer(line, position, pressure);
@@ -295,8 +235,8 @@ namespace GraffitiGala.Drawing
         /// <param name="parent">The transform that will act as the parent of the line.</param>
         /// <param name="color">The color of the line.</param>
         /// <returns>The created line object over the client.</returns>
-        private LRBrushTexture StartNewLine(
-            LRBrushTexture linePrefab,
+        private LineBrushTexture StartNewLine(
+            LineBrushTexture linePrefab,
             Vector3 position,
             Quaternion rotation,
             Transform parent,
@@ -304,7 +244,7 @@ namespace GraffitiGala.Drawing
             )
         {
             // Creates a line only for this client that will be updated
-            LRBrushTexture clientPlaceholderLine = Instantiate(linePrefab, position, rotation, parent) as LRBrushTexture;
+            LineBrushTexture clientPlaceholderLine = Instantiate(linePrefab, position, rotation, parent) as LineBrushTexture;
             clientPlaceholderLine.Configure(color);
             // Spawns and sets up the line over the server.
             StartNewLineServer(linePrefab, position, rotation, parent, this.Owner, this, color);
@@ -330,17 +270,17 @@ namespace GraffitiGala.Drawing
         /// <returns>The created line object.</returns>
         [ServerRpc]
         private void StartNewLineServer(
-            LRBrushTexture linePrefab,
+            LineBrushTexture linePrefab,
             Vector3 position,
             Quaternion rotation,
             Transform parent,
             NetworkConnection owner,
-            NetworkedLRBrush brush,
+            LineNetBrush brush,
             Color color
             )
         {
             // Instantiates the new Line for the client
-            LRBrushTexture spawnedLine = Instantiate(linePrefab, position, rotation, parent) as LRBrushTexture;
+            LineBrushTexture spawnedLine = Instantiate(linePrefab, position, rotation, parent) as LineBrushTexture;
             // Spawns the line over the server.
             ServerManager.Spawn(spawnedLine.gameObject, owner);
             // Configures the line with set values such as color.
@@ -364,7 +304,7 @@ namespace GraffitiGala.Drawing
         /// <param name="line">The created line.</param>
         /// <param name="brush">The brush that created the line.</param>
         [ObserversRpc]
-        private void InitializeDrawState(LRBrushTexture line, NetworkedLRBrush brush)
+        private void InitializeDrawState(LineBrushTexture line, LineNetBrush brush)
         {
             if(this.IsOwner)
             {
@@ -384,10 +324,10 @@ namespace GraffitiGala.Drawing
         ///// <param name="pressure">The pressure of the pen that determines the width of the line.</param>
         //private void DrawOnServer(LRBrushTexture line, Vector3 position, float pressure)
         //{
-            
+
         //}
 
-
+        #region Testing
         [Button]
         private void RefreshTestList()
         {
@@ -405,6 +345,7 @@ namespace GraffitiGala.Drawing
             }
             drawnObjects.Clear();
         }
+        #endregion
         #endregion
     }
 

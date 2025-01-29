@@ -1,8 +1,3 @@
-using FishNet.Object;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 /*************************************************
 Brandon Koederitz
 1/26/2025
@@ -10,9 +5,13 @@ Brandon Koederitz
 Control script for instantiated paint prefabs.
 FishNet
 ***************************************************/
+
+using FishNet.Object;
+using UnityEngine;
+
 namespace GraffitiGala.Drawing
 {
-    public class BrushTexture : NetworkBehaviour
+    public class SpriteBrushTexture : NetworkBehaviour
     {
         #region vars
         [SerializeReference] private SpriteRenderer spriteRenderer;
