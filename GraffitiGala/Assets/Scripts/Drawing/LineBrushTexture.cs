@@ -1,8 +1,3 @@
-using FishNet.Object;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 /*************************************************
 Brandon Koederitz
 1/27/2025
@@ -11,10 +6,13 @@ Control script for instantiated paint prefabs that use the LR (Line Renderer) sy
 FishNet
 ***************************************************/
 
+using FishNet.Object;
+using UnityEngine;
+
 namespace GraffitiGala.Drawing
 {
     [RequireComponent(typeof(LineRenderer))]
-    public class LRBrushTexture : NetworkBehaviour
+    public class LineBrushTexture : NetworkBehaviour
     {
         #region vars
         [SerializeReference] private LineRenderer lineRenderer;
@@ -72,7 +70,7 @@ namespace GraffitiGala.Drawing
         /// <param name="clientReferenceLine">
         /// The line displayed on the client that this line should update to match.
         /// </param>
-        public void InitializeAsNetworked(LRBrushTexture clientReferenceLine)
+        public void InitializeAsNetworked(LineBrushTexture clientReferenceLine)
         {
             // Load point values here.
             // Gets the number of and locations of all the positions that the 
