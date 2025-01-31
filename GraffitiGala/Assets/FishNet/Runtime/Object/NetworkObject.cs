@@ -208,6 +208,10 @@ namespace FishNet.Object
         [SerializeField]
         private bool _isNetworked = true;
 
+        [Tooltip("Whether this object should be disabled if it is networked and no connection exists.")]
+        [SerializeField]
+        private bool _hideWithoutConnection = true;
+
         /// <summary>
         /// True if the object can be spawned at runtime; this is generally false for scene prefabs you do not spawn.
         /// </summary>
@@ -590,7 +594,10 @@ namespace FishNet.Object
                 //ActiveDuringEdit is only used for scene objects.
                 if (IsSceneObject)
                     ActiveDuringEdit = true;
-                gameObject.SetActive(false);
+                if(_hideWithoutConnection)
+                {
+                    gameObject.SetActive(false);
+                }
             }
         }
 

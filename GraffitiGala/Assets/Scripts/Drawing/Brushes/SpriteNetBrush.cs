@@ -1,3 +1,11 @@
+/*************************************************
+Brandon Koederitz
+1/24/2025
+1/26/2025
+Creates drawings across the network by spawning a series of sprite game objects.
+FishNet, InputSystem, NaughtyAttributes.
+***************************************************/
+
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -6,42 +14,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/*************************************************
-Brandon Koederitz
-1/24/2025
-1/26/2025
-Creates spawned objects to draw across the network.
-FishNet, InputSystem
-***************************************************/
-
 namespace GraffitiGala.Drawing
 {
     [RequireComponent(typeof(PlayerInput))]
-    public class NetworkedBrush : NetworkBehaviour
+    public class SpriteNetBrush : NetworkBrush
     {
-        #region CONSTS
-        private const string PRESSURE_ACTION_NAME = "Pressure";
-        private const string PRESS_ACTION_NAME = "Press";
-        private const string POSITION_ACTION_NAME = "Position";
-        #endregion
-
         #region vars
-        [Header("Brush Settings")]
         [SerializeField, Tooltip("The paint prefab to spawn.  Use different types" +
             " of paint prefabs to create different brush textures.")]
-        internal BrushTexture brushTexturePrefab;
-        [SerializeField, Tooltip("The color of this brush.")]
-        private Color brushColor;
-        [SerializeField, Tooltip("The distance away from where the last paint object" +
-            " was spawned before the brush can spawn another.  Increasing the distance" +
-            " will cause less objects to spawn and is better for performance, but will reduce" +
-            " stroke quality.")]
-        internal float drawBuffer;
-
-        // Inputs
-        private InputAction pressureAction;
-        private InputAction pressAction;
-        private InputAction positionAction;
+        internal SpriteBrushTexture brushTexturePrefab;
 
         // List of spawned game objects.
         private readonly SyncList<GameObject> drawnObjects = new();
@@ -54,13 +35,27 @@ namespace GraffitiGala.Drawing
         private DrawState state = new NotDrawingState();
         #endregion
 
+        #region Properties
+        public SpriteBrushTexture BrushPrefab
+        {
+            get
+            {
+                return brushTexturePrefab;
+            }
+            set
+            {
+                brushTexturePrefab = value;
+            }
+        }
+        #endregion
+
         #region Nested Classes
         /// <summary>
         /// Parent class for drawing and not drawing states for this networked brush.
         /// </summary>
         private abstract class DrawState
         {
-            internal abstract void HandleBrushMove(NetworkedBrush brush, InputAction positionAction);
+            internal abstract void HandleBrushMove(SpriteNetBrush brush, InputAction positionAction);
 
             /// <summary>
             /// Checks to see if two vectors are within a certain range of each other
@@ -85,7 +80,7 @@ namespace GraffitiGala.Drawing
         /// </summary>
         private class NotDrawingState : DrawState
         {
-            internal override void HandleBrushMove(NetworkedBrush brush, InputAction positionAction)
+            internal override void HandleBrushMove(SpriteNetBrush brush, InputAction positionAction)
             {
                 // Do Nothing.
             }
@@ -110,7 +105,7 @@ namespace GraffitiGala.Drawing
             /// The InputAction that handles the pointer position (pen or mouse)
             /// Used to find where to draw.
             /// </param>
-            internal override void HandleBrushMove(NetworkedBrush brush, InputAction positionAction)
+            internal override void HandleBrushMove(SpriteNetBrush brush, InputAction positionAction)
             {
                 Vector2 currentPosition = Camera.main.ScreenToWorldPoint(positionAction.ReadValue<Vector2>());
 
@@ -126,51 +121,12 @@ namespace GraffitiGala.Drawing
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Sets up this as a networked object.
-        /// </summary>
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
 
-            PlayerInput playerInput = GetComponent<PlayerInput>();
-            if(base.IsOwner)
-            {
-                // Set up InputActions and input functions.
-                pressAction = playerInput.currentActionMap.FindAction(PRESS_ACTION_NAME);
-                pressureAction = playerInput.currentActionMap.FindAction(PRESSURE_ACTION_NAME);
-                positionAction = playerInput.currentActionMap.FindAction(POSITION_ACTION_NAME);
-
-                pressAction.started += PressAction_Started;
-                pressAction.canceled += PressAction_Canceled;
-                //pressureAction.performed += PressureAction_Performed;
-                positionAction.performed += MoveAction_Performed;
-            }
-            else
-            {
-                // If this object is not owned by this client, then disable
-                // it's PlayerInput and this component.
-                playerInput.enabled = false;
-                this.enabled = false;
-                return;
-            }
-        }
-
-        public override void OnStopClient()
-        {
-            if (base.IsOwner)
-            {
-                // Unsubscribe input functions.
-                pressAction.started -= PressAction_Started;
-                pressAction.canceled -= PressAction_Canceled;
-                //pressureAction.performed -= PressureAction_Performed;
-            }
-        }
 
         /// <summary>
         /// Handles the player touching the pen to the tablet.
         /// </summary>
-        private void PressAction_Started(InputAction.CallbackContext obj)
+        protected override void PressAction_Started(InputAction.CallbackContext obj)
         {
             // Change this brush's state to drawing.
             state = new DrawingState();
@@ -180,7 +136,7 @@ namespace GraffitiGala.Drawing
         /// <summary>
         /// Handles the player removing the pen from the tablet.
         /// </summary>
-        private void PressAction_Canceled(InputAction.CallbackContext obj)
+        protected override void PressAction_Canceled(InputAction.CallbackContext obj)
         {
             // Change this brush's state to not drawing.
             state = new NotDrawingState();
@@ -191,7 +147,7 @@ namespace GraffitiGala.Drawing
         /// Handles a change in the player's pen position.
         /// </summary>
         /// <param name="obj"></param>
-        private void MoveAction_Performed(InputAction.CallbackContext obj)
+        protected override void MoveAction_Performed(InputAction.CallbackContext obj)
         {
             /// Tells the current state to handle a movement in the brush.
             state.HandleBrushMove(this, positionAction);
@@ -222,7 +178,7 @@ namespace GraffitiGala.Drawing
         /// </param>
         [ServerRpc]
         private void DrawOnServer(
-            BrushTexture objToSpawn, 
+            SpriteBrushTexture objToSpawn, 
             Vector3 position, 
             Quaternion rotation, 
             NetworkConnection owner,
@@ -231,7 +187,7 @@ namespace GraffitiGala.Drawing
             )
         {
             // Instantiate the paint object for the client.
-            BrushTexture spawnedPaint = Instantiate(objToSpawn, position, rotation) as BrushTexture;
+            SpriteBrushTexture spawnedPaint = Instantiate(objToSpawn, position, rotation) as SpriteBrushTexture;
             // Modifies the instantiated paint object based on color and pressure.
             // Done purely to make the paint appear correctl on the server side.
             spawnedPaint.PreconfigurePaint(color, pressure);

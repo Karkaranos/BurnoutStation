@@ -1,9 +1,5 @@
-using System.Xml.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class FollowMouse2D : MonoBehaviour
 {
