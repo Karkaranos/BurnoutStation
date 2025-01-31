@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 4732343003940245178}
   - component: {fileID: 1059227127766087419}
   m_Layer: 0
-  m_Name: Brush
+  m_Name: SpriteBrush
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,9 +53,9 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 8432188840679166690}
   _networkObjectCache: {fileID: 8432188840679166690}
-  brushTexturePrefab: {fileID: 6113815423177307856, guid: 3d7e4f3626b5f544f84176537d7c921b, type: 3}
   brushColor: {r: 1, g: 0, b: 0.07258654, a: 1}
   drawBuffer: 0.1
+  brushTexturePrefab: {fileID: 6113815423177307856, guid: 3d7e4f3626b5f544f84176537d7c921b, type: 3}
   testObjects: []
 --- !u!114 &8432188840679166690
 MonoBehaviour:
@@ -81,6 +81,7 @@ MonoBehaviour:
   RuntimeParentNetworkBehaviour: {fileID: 0}
   RuntimeChildNetworkBehaviours: []
   _isNetworked: 0
+  _hideWithoutConnection: 1
   _isSpawnable: 1
   _isGlobal: 0
   _initializeOrder: 0
@@ -103,7 +104,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 9
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 12696516699901806279
+  <AssetPathHash>k__BackingField: 9671225444065590051
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}

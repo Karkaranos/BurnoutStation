@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8934451301212810652}
   - component: {fileID: 1744234734694408889}
   m_Layer: 0
-  m_Name: TestBrushLRTexture
+  m_Name: LineTexture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -201,7 +201,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 1
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 5619044045038583337
+  <AssetPathHash>k__BackingField: 10212518903669188435
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
