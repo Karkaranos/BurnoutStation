@@ -15,7 +15,7 @@ namespace GraffitiGala.Drawing
     public class LineBrushTexture : NetworkBehaviour
     {
         #region vars
-        [SerializeReference] private LineRenderer lineRenderer;
+        [SerializeReference] internal LineRenderer lineRenderer;
         [SerializeReference, Tooltip("The width of this line when the player is applying" +
             " the minimum amount of pressure to the pen.  If this value is larger than" +
             " Max Pressure Width, then the line will appear larger when less pressure is applied.")] 
@@ -74,8 +74,8 @@ namespace GraffitiGala.Drawing
         {
             // Load point values here.
             // Gets the number of and locations of all the positions that the 
-            // clientReverenceLine had in it's line renderer.
-            int posCount = clientReferenceLine.LR.positionCount;
+            // clientReferenceLine had in it's line renderer.
+            int posCount = clientReferenceLine.lineRenderer.positionCount;
             Vector3[] positions = new Vector3[posCount];
             clientReferenceLine.LR.GetPositions(positions);
             // Sets this line renderer to reflect the client line renderer.
@@ -149,6 +149,8 @@ namespace GraffitiGala.Drawing
             // Sets the position of the newly created point to be equal to the passed in position.
             lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
             // Handle pressure here.
+            float thickness = Mathf.Lerp(minPressureWidth, maxPressureWidth, pressure);
+            lineRenderer.endWidth = thickness;
         }
 
         /// <summary>

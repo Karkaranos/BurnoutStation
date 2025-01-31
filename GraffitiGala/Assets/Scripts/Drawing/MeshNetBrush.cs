@@ -1,0 +1,298 @@
+/*************************************************
+Brandon Koederitz
+1/30/2025
+1/30/2025
+Draws images using a mesh that are shared across the network.
+FishNet, InputSystem, NaughtyAttributes
+***************************************************/
+
+using FishNet.Object.Synchronizing;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using FishNet.Object;
+using NaughtyAttributes;
+using FishNet.Connection;
+
+namespace GraffitiGala.Drawing
+{
+    [RequireComponent(typeof(PlayerInput))]
+    public class MeshNetBrush : NetworkBrush
+    {
+        #region vars
+        [SerializeField, Tooltip("The paint prefab to spawn.  Use different types" +
+    " of paint prefabs to create different brush textures.")]
+        internal MeshBrushTexture brushTexturePrefab;
+        // Material is not supported for serialization so it cant be sent over the network.
+        // Brush textures must have a material assigned.
+        //[SerializeField, Tooltip("The material to use for this brush.")]
+        //internal Material brushMaterial;
+
+        // List of spawned game objects.
+        private readonly SyncList<MeshBrushTexture> drawnObjects = new();
+        // Temporary list to display the spawned objects SyncList in the inspector.
+        [SerializeField, ReadOnly, Header("Testing")] private List<MeshBrushTexture> testObjects = new();
+        // List that stores drawing states that have not initialized.
+        private readonly List<DrawingState> drawingStateQueue = new();
+
+        /// <summary>
+        /// State Machine
+        /// </summary>
+        private DrawState state = new NotDrawingState();
+        #endregion
+
+        #region Nested Classes
+        /// <summary>
+        /// Parent class for drawing and not drawing states for this networked brush.
+        /// </summary>
+        private abstract class DrawState
+        {
+            internal abstract void HandleBrushMove(MeshNetBrush brush, InputAction positionAction);
+            internal abstract void InitializeLine(MeshBrushTexture line);
+
+            ///// <summary>
+            ///// Checks to see if two vectors are within a certain range of each other
+            ///// </summary>
+            ///// <param name="vector1"> A vector to compare. </param>
+            ///// <param name="vector2"> A second vector to compare. </param>
+            ///// <param name="range"> The numerical range that the two must be within. (Inclusive) </param>
+            ///// <returns> Whether the two vectors are within range of each other. </returns>
+            //protected static bool CheckProximity(Vector3 vector1, Vector3 vector2, float range)
+            //{
+            //    float xDelta = vector2.x - vector1.x;
+            //    float yDelta = vector2.y - vector1.y;
+            //    float zDelta = vector2.z - vector1.z;
+            //    float distance = Mathf.Sqrt(Mathf.Pow(xDelta, 2) + Mathf.Pow(yDelta, 2) + Mathf.Pow(zDelta, 2));
+            //    return Mathf.Abs(distance) <= range;
+            //}
+        }
+
+        /// <summary>
+        /// Brush state that nulls the move function when the player is not pressing
+        /// their pen.
+        /// </summary>
+        private class NotDrawingState : DrawState
+        {
+            // NotDrawingState should do nothing when it's functions are called.
+            internal override void HandleBrushMove(MeshNetBrush brush, InputAction positionAction) { }
+            internal override void InitializeLine(MeshBrushTexture line) { }
+        }
+
+        /// <summary>
+        /// Brush state that handles the playing drawing with their pen to the tablet.
+        /// </summary>
+        /// <remarks>
+        /// Place any limitations placed on brushes here.
+        /// </remarks>
+        private class DrawingState : DrawState
+        {
+            private Vector2 lastPosition;
+            private MeshBrushTexture currentLine;
+
+            internal DrawingState(MeshBrushTexture line, MeshNetBrush brush)
+            {
+                // Sets the current line that this state is updating to be the temporary localLine that was
+                // created.
+                currentLine = line;
+            }
+
+            /// <summary>
+            /// Sets this object's reference to a server spawned line and initialize
+            /// that line based on the changes made to the client line.
+            /// </summary>
+            /// <param name="spawnedLine">The spawned line.</param>
+            internal override void InitializeLine(MeshBrushTexture spawnedLine)
+            {
+                // Initializes the spawned line as now communication over the network, and passes the temporary
+                // localLine (which is currently stored in currentLine) to it to laod the mesh from it and to
+                // destroy it.
+                spawnedLine.InitializeAsNetworked(currentLine);
+                currentLine = spawnedLine;
+            }
+
+            /// <summary>
+            /// While the brush is in the drawing state, whenever the brush is moved
+            /// tell the associated line that is being drawn to add new points
+            /// </summary>
+            /// <param name="brush">The NetworkBrush component that is in the draw state.</param>
+            /// <param name="positionAction">
+            /// The InputAction that handles the pointer position (pen or mouse)
+            /// Used to find where to draw.
+            /// </param>
+            internal override void HandleBrushMove(MeshNetBrush brush, InputAction positionAction)
+            {
+                // Check for NullRefs
+                if(currentLine == null)
+                {
+                    return;
+                }
+
+                Vector2 currentPosition = brush.GetMousePosition();
+                // Calculates the vector representing the change in position from the last to the current..
+                Vector2 moveDelta = currentPosition - lastPosition;
+                // Checks if the new position is outside the range of the drawBuffer.  If the pen as not move enough, 
+                // then a new point is not added to prevent multiple points from being too close together and
+                // causing memory issues.
+                if(Mathf.Abs(moveDelta.magnitude) > brush.drawBuffer)
+                {
+                    brush.Draw(currentLine, currentPosition, moveDelta);
+                    lastPosition = currentPosition;
+                }
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Handles the playing touching the pen to the tablet.
+        /// </summary>
+        /// <param name="obj">Unused.</param>
+        protected override void PressAction_Started(InputAction.CallbackContext obj)
+        {
+            // Creates a new line and a new drawing state to link to that line.
+            DrawingState drawingState = new DrawingState(CreateNewLine(
+                brushTexturePrefab,
+                GetMousePosition(),
+                null,
+                BrushColor
+                ), this);
+            // Sets the current state as the newly created drawing state.
+            state = drawingState;
+            // Adds the drawing state to the queue for initialization of it's line over the network.
+            drawingStateQueue.Add(drawingState);
+        }
+
+        /// <summary>
+        /// Handles the player removing the pen from the tablet.
+        /// </summary>
+        /// <param name="obj">Unused.</param>
+        protected override void PressAction_Canceled(InputAction.CallbackContext obj)
+        {
+            // Sets the current state to not drawing.
+            state = new NotDrawingState();
+        }
+
+        /// <summary>
+        /// Handles the player moving the stylus across the tablet screen.
+        /// </summary>
+        /// <param name="obj">Unused.</param>
+        protected override void MoveAction_Performed(InputAction.CallbackContext obj)
+        {
+            // Delegates control to the current state.
+            state.HandleBrushMove(this, positionAction);
+        }
+
+        /// <summary>
+        /// Tells a given line to add a new point to the line.
+        /// </summary>
+        /// <param name="line">The line to add a point to.</param>
+        /// <param name="position">The position to draw that point at.</param>
+        /// <param name="drawDirection">The direction the line is moving to calculate the verticies.</param>
+        internal void Draw(MeshBrushTexture line, Vector2 position, Vector2 drawDirection)
+        {
+            float pressure = pressureAction.ReadValue<float>();
+            // Adds a new point tot he currently draw mesh-based line.
+            line.AddPoint(position, drawDirection, pressure);
+        }
+
+        /// <summary>
+        /// Spawns a new line.
+        /// </summary>
+        /// <param name="meshPrefab">The prefab to spawn the line from.</param>
+        /// <param name="position">The position to spawn the line at.</param>
+        /// <param name="parent">The transform that will act as the parent for this line.</param>
+        /// <param name="color">The color of the line</param>
+        /// <returns>The created tmeporary localLine.</returns>
+        private MeshBrushTexture CreateNewLine(
+            MeshBrushTexture meshPrefab, 
+            Vector2 position,  
+            Transform parent, 
+            Color color)
+        {
+            // Instantiate a new line purely on the local client side.
+            MeshBrushTexture localLine = Instantiate(meshPrefab, Vector2.zero, Quaternion.identity, parent);
+            localLine.ConfigureAppearance(color);
+            localLine.InitializeMesh(pressureAction.ReadValue<float>(), position);
+            // Spawns a separate new line over the server.  This line is the actual line that will be used
+            // in the drawing, but a temporary local line is created to have better responsiveness.
+            Server_CreateNewLine(meshPrefab, position, parent, this.Owner, this, color);
+            // Returns the created local line.
+            return localLine;
+        }
+
+        /// <summary>
+        /// Spawns a new line over the network.
+        /// </summary>
+        /// <param name="meshPrefab">The line prefab to spawn.</param>
+        /// <param name="position">The position to spawn the line at.</param>
+        /// <param name="parent">The transform that will act as the parent for this line.</param>
+        /// <param name="owner">The NetworkConnection taht owns this line.</param>
+        /// <param name="callbackBrush">The brush that created this line.</param>
+        /// <param name="color">Tjhe color of the line.</param>
+        [ServerRpc]
+        private void Server_CreateNewLine(
+            MeshBrushTexture meshPrefab, 
+            Vector2 position, 
+            Transform parent, 
+            NetworkConnection owner, 
+            MeshNetBrush callbackBrush, 
+            Color color)
+        {
+            // Instantiates the new line for the client.
+            MeshBrushTexture spawnedLine = Instantiate(meshPrefab, Vector2.zero, Quaternion.identity, parent);
+            // Spawns the new line over the server, with it's owner set as the network connection that spawned it.
+            ServerManager.Spawn(spawnedLine.gameObject, owner);
+            spawnedLine.Observer_ConfigureAppearance(color);
+            // Stores this line in a SyncList of lines created by this brush.
+            drawnObjects.Add(spawnedLine);
+            // Initializes a reference to the spawned server line for the brush that created it.
+            // Done this way because server communication has some inherent delay, so to avoid dropping some of the
+            // user's drawing inputs, a  client placeholder is used and then loaded to created server line once
+            // the callback brush recieves the InitializeDrawState call.
+            InitializeDrawState(spawnedLine, callbackBrush);
+        }
+
+        /// <summary>
+        /// Initializes uninitialized DrawingStates with a reference to the spawned server line.
+        /// </summary>
+        /// <remarks>
+        /// Needs to be done this way because ServerRPCs can't return anything and the state object cannot
+        /// have an ObserverRpc directly.
+        /// </remarks>
+        /// <param name="line">The spawned line that the state will now be linked to.</param>
+        /// <param name="brush">The brush that needs it's state to have a refernece to the spawned line.</param>
+        [ObserversRpc]
+        private void InitializeDrawState(MeshBrushTexture line, MeshNetBrush brush)
+        {
+            if(this.IsOwner)
+            {
+                // Initializes the earlies drawing state in the queue with a reference to the spawned server line
+                // to replace the localLine.
+                brush.drawingStateQueue[0].InitializeLine(line);
+                // Removes the newly initialized state from the queue.  If this state is not the current state, then
+                // no references to it will exist and it will be garbate collected.
+                brush.drawingStateQueue.RemoveAt(0);
+            }
+        }
+
+        #region Testing
+        [Button]
+        private void RefreshTestList()
+        {
+            testObjects.Clear();
+            testObjects.AddRange(drawnObjects);
+        }
+
+        [Button, ServerRpc(RequireOwnership = false)]
+        private void ClearDrawing()
+        {
+            testObjects.Clear();
+            foreach (var obj in drawnObjects)
+            {
+                ServerManager.Despawn(obj.gameObject);
+            }
+            drawnObjects.Clear();
+        }
+        #endregion
+    }
+}
