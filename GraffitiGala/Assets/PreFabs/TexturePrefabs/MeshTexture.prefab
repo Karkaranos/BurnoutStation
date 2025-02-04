@@ -103,8 +103,8 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 4035134273328829344}
   meshFilter: {fileID: 6272970740869397297}
   meshRenderer: {fileID: 8247381600263371267}
-  referenceMaterial: {fileID: 2100000, guid: 4c62c607906e6e1499102239be9499be, type: 2}
-  minPressureWidth: 1
+  referenceMaterial: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  minPressureWidth: 0.5
   maxPressureWidth: 1
 --- !u!114 &4035134273328829344
 MonoBehaviour:
@@ -150,9 +150,9 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 11
+  <PrefabId>k__BackingField: 12
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 15172159616247769815
+  <AssetPathHash>k__BackingField: 14867566598415399214
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: -0.4370834, y: -2.3308115, z: 0}
