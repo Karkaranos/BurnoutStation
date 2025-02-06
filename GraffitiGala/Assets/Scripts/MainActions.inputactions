@@ -103,12 +103,59 @@
                 {
                     "name": "",
                     "id": "380786da-d374-4dfa-a8f1-9fa7498de366",
-
                     "path": "<Pointer>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PDollarTesting",
+            "id": "1c2944bb-e17f-4ddc-8678-691d565beab3",
+            "actions": [
+                {
+                    "name": "LeftClick",
+                    "type": "Button",
+                    "id": "51d109cc-7ae9-4807-894d-4764f0549dc2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MousePosition",
+                    "type": "Value",
+                    "id": "248b6b8e-9120-4ab5-9a13-8945e1c50c64",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ab6b97e1-c8df-4b72-a290-9277c6762d38",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "76a84824-168c-4ef8-9358-d02138c64333",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MousePosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
