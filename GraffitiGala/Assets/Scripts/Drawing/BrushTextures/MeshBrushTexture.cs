@@ -3,12 +3,11 @@ Brandon Koederitz
 1/30/2025
 1/30/2025
 Control script for instantiated paint prefabs that use the Mesh drawing system.
-FishNet, InputSystem
+FishNet, InputSystem, NaughtyAttributes
 ***************************************************/
 
 using FishNet.Object;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace GraffitiGala.Drawing
 {

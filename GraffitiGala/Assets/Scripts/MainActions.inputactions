@@ -48,7 +48,7 @@
                 {
                     "name": "",
                     "id": "a66a3228-9eb4-4448-b0d9-9a08fd34a5e1",
-                    "path": "<Mouse>/press",
+                    "path": "<Pointer>/press",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -103,7 +103,8 @@
                 {
                     "name": "",
                     "id": "380786da-d374-4dfa-a8f1-9fa7498de366",
-                    "path": "<Pen>/position",
+
+                    "path": "<Pointer>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
