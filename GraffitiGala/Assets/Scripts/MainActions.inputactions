@@ -37,18 +37,7 @@
                 {
                     "name": "",
                     "id": "23250a55-de07-4e29-9bb7-fd6d10b1123d",
-                    "path": "<Pen>/press",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Press",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a66a3228-9eb4-4448-b0d9-9a08fd34a5e1",
-                    "path": "<Mouse>/press",
+                    "path": "<Pointer>/press",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -70,18 +59,7 @@
                 {
                     "name": "",
                     "id": "43793d27-9aa7-443a-ba04-e01740d8775f",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Position",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "728ed176-2b73-413b-a447-5f5214f520a4",
-                    "path": "<Pen>/position",
+                    "path": "<Pointer>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

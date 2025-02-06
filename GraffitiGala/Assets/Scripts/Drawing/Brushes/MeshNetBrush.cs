@@ -6,14 +6,13 @@ Draws images using a mesh that are shared across the network.
 FishNet, InputSystem, NaughtyAttributes
 ***************************************************/
 
+using FishNet.Connection;
+using FishNet.Object;
 using FishNet.Object.Synchronizing;
-using System.Collections;
+using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using FishNet.Object;
-using NaughtyAttributes;
-using FishNet.Connection;
 
 namespace GraffitiGala.Drawing
 {
