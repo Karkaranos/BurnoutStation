@@ -37,7 +37,7 @@
                 {
                     "name": "",
                     "id": "23250a55-de07-4e29-9bb7-fd6d10b1123d",
-                    "path": "<Pen>/press",
+                    "path": "<Touchscreen>/Press",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -49,6 +49,17 @@
                     "name": "",
                     "id": "a66a3228-9eb4-4448-b0d9-9a08fd34a5e1",
                     "path": "<Mouse>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fa1bb724-35c8-4fe8-b308-ae62b0d76e54",
+                    "path": "<Pen>/press",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -81,6 +92,17 @@
                 {
                     "name": "",
                     "id": "728ed176-2b73-413b-a447-5f5214f520a4",
+                    "path": "<Touchscreen>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "380786da-d374-4dfa-a8f1-9fa7498de366",
                     "path": "<Pen>/position",
                     "interactions": "",
                     "processors": "",
