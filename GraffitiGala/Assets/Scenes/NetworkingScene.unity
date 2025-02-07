@@ -480,7 +480,7 @@ MonoBehaviour:
   _ipv6BindAddress: 
   _port: 7770
   _maximumClients: 4095
-  _clientAddress: localHost
+  _clientAddress: 172.20.10.2
 --- !u!1 &897846173
 GameObject:
   m_ObjectHideFlags: 0
