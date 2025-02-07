@@ -55,7 +55,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 8432188840679166690}
   brushColor: {r: 1, g: 0, b: 0.07258654, a: 1}
   drawBuffer: 0.1
-  brushTexturePrefab: {fileID: 6113815423177307856, guid: 3d7e4f3626b5f544f84176537d7c921b, type: 3}
+  brushTexturePrefab: {fileID: 0}
   testObjects: []
 --- !u!114 &8432188840679166690
 MonoBehaviour:
