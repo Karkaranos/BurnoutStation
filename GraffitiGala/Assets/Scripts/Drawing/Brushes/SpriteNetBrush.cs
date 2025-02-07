@@ -256,5 +256,5 @@ namespace GraffitiGala.Drawing
         }
         #endregion
     }
-
+    
 }

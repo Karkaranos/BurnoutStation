@@ -1,0 +1,66 @@
+/// Cristian Lesco
+/// 2/4/25
+/// TTransforms a sphere into a collor palete. Dependent on the index it gives a special color
+
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using GraffitiGala.Drawing;
+using UnityEngine;
+
+public class RGBpallete : MonoBehaviour
+{
+    private MeshRenderer meshRenderer; //sphere's rendrer, used to paint the sphere itself
+    public int index;
+
+
+    // depending on the public int index it will give a color 1 = red, 2 = green, 3 = blue
+    public void Start()
+    {
+
+        meshRenderer = GetComponent<MeshRenderer>();
+        if (index == 1)
+        {
+            meshRenderer.material.color = Color.red; // makes the sample red
+        }
+        else if (index == 2)
+        {
+            meshRenderer.material.color = Color.green; // makes the sample green
+        }
+        else if (index == 3)
+        {
+            meshRenderer.material.color = Color.blue; // makes the sample blue
+        } 
+    }
+
+    // if the sphere (paint sample) toucches with the mouse pointer in checks its index and gives a specific color
+    public void OnCollisionEnter2D(Collision2D collision) 
+    {
+
+        if (collision.gameObject.name == "MeshBrush(Clone)")
+        {
+            if (index == 1)
+            {
+                collision.gameObject.GetComponent<MeshNetBrush>().BrushColor = Color.red; // makes the pointer red
+
+            }
+            else if (index == 2)
+            {
+                collision.gameObject.GetComponent<MeshNetBrush>().BrushColor = Color.green; // makes the pointer green
+
+            }
+            else if (index == 3)
+            {
+                collision.gameObject.GetComponent<MeshNetBrush>().BrushColor = Color.blue;  // makes the pointer blue
+
+            }
+
+
+
+
+
+        }
+
+    }
+}

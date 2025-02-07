@@ -40,10 +40,12 @@ namespace GraffitiGala.Drawing
         #endregion
 
         #region Properties
-        public Color BrushColor
+        public Color BrushColor // networkBrush.BrushColor = Blue
         {
+            
             get
             {
+               // print("wantToChangeColor");
                 return brushColor;
             }
             set
@@ -52,7 +54,7 @@ namespace GraffitiGala.Drawing
             }
         }
         #endregion
-
+        
         #region Methods
         #region Setup
         /// <summary>
