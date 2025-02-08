@@ -20,6 +20,9 @@ namespace GraffitiGala.Drawing
     public class MeshNetBrush : NetworkBrush
     {
         #region vars
+        #region CONSTS
+        private const float Z_STEP = -0.001f;
+        #endregion
         [SerializeField, Tooltip("The paint prefab to spawn.  Use different types" +
     " of paint prefabs to create different brush textures.")]
         internal MeshBrushTexture brushTexturePrefab;
@@ -39,6 +42,8 @@ namespace GraffitiGala.Drawing
         /// State Machine
         /// </summary>
         private DrawState state = new NotDrawingState();
+
+        private static float currentZLayer;
         #endregion
 
         #region Nested Classes
@@ -47,7 +52,7 @@ namespace GraffitiGala.Drawing
         /// </summary>
         private abstract class DrawState
         {
-            internal abstract void HandleBrushMove(MeshNetBrush brush, InputAction positionAction);
+            internal abstract void HandleBrushMove(MeshNetBrush brush);
             internal abstract void InitializeLine(MeshBrushTexture line);
 
             ///// <summary>
@@ -74,7 +79,7 @@ namespace GraffitiGala.Drawing
         private class NotDrawingState : DrawState
         {
             // NotDrawingState should do nothing when it's functions are called.
-            internal override void HandleBrushMove(MeshNetBrush brush, InputAction positionAction) { }
+            internal override void HandleBrushMove(MeshNetBrush brush) { }
             internal override void InitializeLine(MeshBrushTexture line) { }
         }
 
@@ -94,6 +99,7 @@ namespace GraffitiGala.Drawing
                 // Sets the current line that this state is updating to be the temporary localLine that was
                 // created.
                 currentLine = line;
+                lastPosition = brush.GetMousePosition();
             }
 
             /// <summary>
@@ -115,11 +121,7 @@ namespace GraffitiGala.Drawing
             /// tell the associated line that is being drawn to add new points
             /// </summary>
             /// <param name="brush">The NetworkBrush component that is in the draw state.</param>
-            /// <param name="positionAction">
-            /// The InputAction that handles the pointer position (pen or mouse)
-            /// Used to find where to draw.
-            /// </param>
-            internal override void HandleBrushMove(MeshNetBrush brush, InputAction positionAction)
+            internal override void HandleBrushMove(MeshNetBrush brush)
             {
                 // Check for NullRefs
                 if(currentLine == null)
@@ -178,7 +180,7 @@ namespace GraffitiGala.Drawing
         protected override void MoveAction_Performed(InputAction.CallbackContext obj)
         {
             // Delegates control to the current state.
-            state.HandleBrushMove(this, positionAction);
+            state.HandleBrushMove(this);
         }
 
         /// <summary>
@@ -210,8 +212,8 @@ namespace GraffitiGala.Drawing
         {
             // Instantiate a new line purely on the local client side.
             MeshBrushTexture localLine = Instantiate(meshPrefab, Vector2.zero, Quaternion.identity, parent);
-            localLine.ConfigureAppearance(color);
-            localLine.InitializeMesh(pressureAction.ReadValue<float>(), position);
+            localLine.Initialize(color, currentZLayer);
+            localLine.Local_InitializeMesh(pressureAction.ReadValue<float>(), position);
             // Spawns a separate new line over the server.  This line is the actual line that will be used
             // in the drawing, but a temporary local line is created to have better responsiveness.
             Server_CreateNewLine(meshPrefab, position, parent, this.Owner, this, color);
@@ -241,7 +243,10 @@ namespace GraffitiGala.Drawing
             MeshBrushTexture spawnedLine = Instantiate(meshPrefab, Vector2.zero, Quaternion.identity, parent);
             // Spawns the new line over the server, with it's owner set as the network connection that spawned it.
             ServerManager.Spawn(spawnedLine.gameObject, owner);
-            spawnedLine.Observer_ConfigureAppearance(color);
+            spawnedLine.Observer_Initialize(color, currentZLayer);
+            // Increments the current layer for all brushes then sends that value to clients.
+            currentZLayer += Z_STEP;
+            SetCurrentLayer(currentZLayer);
             // Stores this line in a SyncList of lines created by this brush.
             drawnObjects.Add(spawnedLine);
             // Initializes a reference to the spawned server line for the brush that created it.
@@ -249,6 +254,16 @@ namespace GraffitiGala.Drawing
             // user's drawing inputs, a  client placeholder is used and then loaded to created server line once
             // the callback brush recieves the InitializeDrawState call.
             InitializeDrawState(spawnedLine, callbackBrush);
+        }
+
+        /// <summary>
+        /// Sets the current z layer of clients to match the server.
+        /// </summary>
+        /// <param name="currentLayer">The current z layer value of the server.</param>
+        [ObserversRpc]
+        private void SetCurrentLayer(float currentLayer)
+        {
+            currentZLayer = currentLayer;
         }
 
         /// <summary>
