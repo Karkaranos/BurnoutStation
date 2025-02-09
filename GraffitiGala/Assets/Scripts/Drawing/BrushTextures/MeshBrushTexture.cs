@@ -7,9 +7,6 @@ FishNet, InputSystem, NaughtyAttributes
 ***************************************************/
 using FishNet.Object;
 using UnityEngine;
-using NaughtyAttributes;
-using Unity.VisualScripting;
-using UnityEngine.UIElements;
 
 namespace GraffitiGala.Drawing
 {
@@ -36,7 +33,6 @@ namespace GraffitiGala.Drawing
         private float maxPressureWidth;
 
         private Mesh mesh;
-        [SerializeField,ReadOnly] private float zLayer;
         private bool isNetworked;
         private bool isQuad;
         private Vector3 originPoint;
@@ -142,8 +138,6 @@ namespace GraffitiGala.Drawing
             int[] triangles = new int[6];
 
             float halfWidth = GetWidth(pressure) / 2;
-            // Sets the position equal to this line's z layer so that it renders on top of previous lines.
-            position.z = zLayer;
 
             // Uses half the width to create a simple quad whose width is equal to the line width based on pressure.
             verticies[0] = position + new Vector3(-halfWidth, halfWidth, 0); // Top Left
@@ -188,15 +182,6 @@ namespace GraffitiGala.Drawing
             //Vector2[] uv = localReferenceLine.mesh.uv;
             //int[] triangles = localReferenceLine.mesh.triangles;
 
-            // Sets the mesh's verticie's z positon equal to this line's z layer value if there is a discrepency 
-            if(localReferenceLine.zLayer != zLayer)
-            {
-                for(int i = 0; i < verticies.Length; i++)
-                {
-                    verticies[i].z = zLayer;
-                }
-            }
-
             // Sets this object's mesh to be the same as the local reference line's
             SetMesh(verticies, uv, triangles);
 
@@ -218,7 +203,7 @@ namespace GraffitiGala.Drawing
         /// </summary>
         /// <param name="color">The color of this line.</param>
         /// <param name="z">The z position that this mesh renders at.</param>
-        public void Initialize(Color color, float z)
+        public void Initialize(Color color)
         {
             // Creates a new temporary material that is a clone of the reference material.
             Material thisMaterial = new Material(referenceMaterial);
@@ -226,8 +211,6 @@ namespace GraffitiGala.Drawing
             thisMaterial.SetColor("_Color", color);
             // Applies the cloned material to this object's mesh renderer.
             meshRenderer.material = thisMaterial;
-            // sets this object's z layer.
-            zLayer = z;
         }
 
         /// <summary>
@@ -237,9 +220,9 @@ namespace GraffitiGala.Drawing
         /// <param name="color">The color of this line.</param>
         /// <param name="z">The z position that this mesh renders at.</param>
         [ObserversRpc(BufferLast = true)]
-        public void Observer_Initialize(Color color, float z)
+        public void Observer_Initialize(Color color)
         {
-            Initialize(color, z);
+            Initialize(color);
         }
         #endregion
 
@@ -250,7 +233,7 @@ namespace GraffitiGala.Drawing
         /// <param name="position">The position of the new point.</param>
         /// <param name="drawDirection">The direction that this point was drawn from.</param>
         /// <param name="pressure">The pen pressure when this point was added.</param>
-        public void AddPoint(Vector2 position, Vector2 drawDirection, float pressure)
+        public void AddPoint(Vector3 position, Vector2 drawDirection, float pressure)
         {
             // Adds a point to this line locally.
             Local_AddPoint(position, drawDirection, pressure);
@@ -300,8 +283,6 @@ namespace GraffitiGala.Drawing
             int newTopIndex = (verticies.Length - 4) + 2;
             int newBottomIndex = (verticies.Length - 4) + 3;
 
-            // Sets the position equal to this line's z layer so that it renders on top of previous lines.
-            position.z = zLayer;
             // Calculates a vector that will be used to calculate the vertex positions based on the given point 
             // position.
             Vector3 drawParallel = Vector3.Cross(drawDirection.normalized, SCREEN_NORMAL) * (GetWidth(pressure) / 2);

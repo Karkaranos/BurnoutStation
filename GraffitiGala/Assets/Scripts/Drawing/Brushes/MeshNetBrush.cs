@@ -21,7 +21,8 @@ namespace GraffitiGala.Drawing
     {
         #region vars
         #region CONSTS
-        private const float Z_STEP = -0.001f;
+        private const float Z_MIN = 0f;
+        private const float Z_MAX = -5f;
         #endregion
         [SerializeField, Tooltip("The paint prefab to spawn.  Use different types" +
     " of paint prefabs to create different brush textures.")]
@@ -43,7 +44,7 @@ namespace GraffitiGala.Drawing
         /// </summary>
         private DrawState state = new NotDrawingState();
 
-        private static float currentZLayer;
+        public static PlayTimer PlayTimer { private get; set; }
         #endregion
 
         #region Nested Classes
@@ -184,14 +185,43 @@ namespace GraffitiGala.Drawing
         }
 
         /// <summary>
+        /// Lets an external script give this script a reference to the current play timer.
+        /// </summary>
+        /// <param name="timer">The current play timer.</param>
+        /// <returns>Whether the play timer was assigned or if it already has a value.</returns>
+        public static bool SetPlayTimer(PlayTimer timer)
+        {
+            if(PlayTimer != null && PlayTimer != timer)
+            {
+                return false;
+            }
+            else
+            {
+                PlayTimer = timer;
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Gets the current z position of line points as determined by the current timer.
+        /// </summary>
+        /// <returns></returns>
+        private static float GetZLayer()
+        {
+            return Mathf.Lerp(Z_MIN, Z_MAX, PlayTimer.NormalizedProgress);
+        }
+
+        /// <summary>
         /// Tells a given line to add a new point to the line.
         /// </summary>
         /// <param name="line">The line to add a point to.</param>
         /// <param name="position">The position to draw that point at.</param>
         /// <param name="drawDirection">The direction the line is moving to calculate the verticies.</param>
-        internal void Draw(MeshBrushTexture line, Vector2 position, Vector2 drawDirection)
+        internal void Draw(MeshBrushTexture line, Vector3 position, Vector2 drawDirection)
         {
             float pressure = pressureAction.ReadValue<float>();
+            // Gets the z position of this new point on the line so that it overlaps previous points.
+            position.z = GetZLayer();
             // Adds a new point tot he currently draw mesh-based line.
             line.AddPoint(position, drawDirection, pressure);
         }
@@ -206,13 +236,15 @@ namespace GraffitiGala.Drawing
         /// <returns>The created tmeporary localLine.</returns>
         private MeshBrushTexture CreateNewLine(
             MeshBrushTexture meshPrefab, 
-            Vector2 position,  
+            Vector3 position,  
             Transform parent, 
             Color color)
         {
+            // Gets the z position of this new point on the line so that it overlaps previous points.
+            position.z = GetZLayer();
             // Instantiate a new line purely on the local client side.
             MeshBrushTexture localLine = Instantiate(meshPrefab, Vector2.zero, Quaternion.identity, parent);
-            localLine.Initialize(color, currentZLayer);
+            localLine.Initialize(color);
             localLine.Local_InitializeMesh(pressureAction.ReadValue<float>(), position);
             // Spawns a separate new line over the server.  This line is the actual line that will be used
             // in the drawing, but a temporary local line is created to have better responsiveness.
@@ -220,6 +252,8 @@ namespace GraffitiGala.Drawing
             // Returns the created local line.
             return localLine;
         }
+
+
 
         /// <summary>
         /// Spawns a new line over the network.
@@ -243,10 +277,7 @@ namespace GraffitiGala.Drawing
             MeshBrushTexture spawnedLine = Instantiate(meshPrefab, Vector2.zero, Quaternion.identity, parent);
             // Spawns the new line over the server, with it's owner set as the network connection that spawned it.
             ServerManager.Spawn(spawnedLine.gameObject, owner);
-            spawnedLine.Observer_Initialize(color, currentZLayer);
-            // Increments the current layer for all brushes then sends that value to clients.
-            currentZLayer += Z_STEP;
-            SetCurrentLayer(currentZLayer);
+            spawnedLine.Observer_Initialize(color);
             // Stores this line in a SyncList of lines created by this brush.
             drawnObjects.Add(spawnedLine);
             // Initializes a reference to the spawned server line for the brush that created it.
@@ -254,16 +285,6 @@ namespace GraffitiGala.Drawing
             // user's drawing inputs, a  client placeholder is used and then loaded to created server line once
             // the callback brush recieves the InitializeDrawState call.
             InitializeDrawState(spawnedLine, callbackBrush);
-        }
-
-        /// <summary>
-        /// Sets the current z layer of clients to match the server.
-        /// </summary>
-        /// <param name="currentLayer">The current z layer value of the server.</param>
-        [ObserversRpc]
-        private void SetCurrentLayer(float currentLayer)
-        {
-            currentZLayer = currentLayer;
         }
 
         /// <summary>
