@@ -82,9 +82,6 @@ PrefabInstance:
       addedObject: {fileID: 1060679701027091252}
     - targetCorrespondingSourceObject: {fileID: 6874227726143766925, guid: 91693e77a00a4874583b8ebd73f64fb6, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -6898807952826761434}
-    - targetCorrespondingSourceObject: {fileID: 6874227726143766925, guid: 91693e77a00a4874583b8ebd73f64fb6, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1898138805572108798}
     - targetCorrespondingSourceObject: {fileID: 6874227726143766925, guid: 91693e77a00a4874583b8ebd73f64fb6, type: 3}
       insertIndex: -1
@@ -114,18 +111,6 @@ MonoBehaviour:
   drawBuffer: 0.1
   brushTexturePrefab: {fileID: 6192131541430378155, guid: d9f01cdccd0792940b59ddd250536f87, type: 3}
   testObjects: []
---- !u!114 &-6898807952826761434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 504875321695142324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13f9769ef1cf5a34eba4beb8bb667da7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!58 &1898138805572108798
 CircleCollider2D:
   m_ObjectHideFlags: 0
