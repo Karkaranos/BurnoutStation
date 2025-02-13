@@ -5,7 +5,6 @@ Brandon Koederitz
 Control script for instantiated paint prefabs that use the Mesh drawing system.
 FishNet, InputSystem, NaughtyAttributes
 ***************************************************/
-
 using FishNet.Object;
 using UnityEngine;
 
@@ -16,7 +15,7 @@ namespace GraffitiGala.Drawing
 
         #region vars
         #region CONSTS
-        private Vector3 SCREEN_NORMAL = new Vector3(0f, 0f, -1f);
+        private static readonly Vector3 SCREEN_NORMAL = new Vector3(0f, 0f, -1f);
         #endregion
         [Header("Component References")]
         [SerializeReference] internal MeshFilter meshFilter;
@@ -34,9 +33,24 @@ namespace GraffitiGala.Drawing
         private float maxPressureWidth;
 
         private Mesh mesh;
-
         private bool isNetworked;
+        private bool isQuad;
+        private Vector3 originPoint;
         #endregion
+
+        ///// <summary>
+        ///// Fetches the mesh from the server when this client connects.
+        ///// </summary>
+        //public override void OnStartClient()
+        //{
+            
+        //}
+
+        //[ServerRpc]
+        //private void Server_UpdateMesh()
+        //{
+            
+        //}
 
         /// <summary>
         /// Gets the width of a line based on a given pressure.
@@ -48,12 +62,75 @@ namespace GraffitiGala.Drawing
             return Mathf.Lerp(minPressureWidth, maxPressureWidth, pressure);
         }
 
+        #region Set Mesh
+        /// <summary>
+        /// Sets this object's mesh data values.
+        /// </summary>
+        /// <param name="vertices">The verticies of the mesh.</param>
+        /// <param name="uv">The UVs of the mesh.</param>
+        /// <param name="triangles">The triangles of the mesh.</param>
+        private void SetMesh(Vector3[] vertices, Vector2[] uv, int[] triangles)
+        {
+            // Creates a new mesh if the mesh is null.
+            if (mesh == null)
+            {
+                mesh = new Mesh();
+                mesh.MarkDynamic();
+                meshFilter.mesh = mesh;
+            }
+
+            // Sets the mesh data.
+            mesh.vertices = vertices;
+            mesh.uv = uv;
+            mesh.triangles = triangles;
+        }
+
+        /// <summary>
+        /// Sets the mesh of all lines across the network
+        /// </summary>
+        /// /// <param name="verticies">The verticies of the mesh.</param>
+        /// <param name="uv">The UVs of the mesh.</param>
+        /// <param name="triangles">The triangles of the mesh.</param>
+        [ServerRpc]
+        private void Server_SetMesh(Vector3[] verticies, Vector2[] uv, int[] triangles)
+        {
+            Client_SetMesh(verticies, uv, triangles);
+        }
+
+        /// <summary>
+        /// Sets this client's mesh to a set of given values.
+        /// </summary>
+        /// <param name="verticies">The verticies of the mesh.</param>
+        /// <param name="uv">The UVs of the mesh.</param>
+        /// <param name="triangles">The triangles of the mesh.</param>
+        [ObserversRpc(ExcludeOwner = true, BufferLast = true)]
+        private void Client_SetMesh(Vector3[] verticies, Vector2[] uv, int[] triangles)
+        {
+            SetMesh(verticies, uv, triangles);
+        }
+        #endregion
+
+        /// <summary>
+        /// Splits a mesh into it's component info.
+        /// </summary>
+        /// <param name="mesh">The mesh to get the info of.</param>
+        /// <param name="verticies">The verticies array of the mesh.</param>
+        /// <param name="uv">The UV array of the mesh.</param>
+        /// <param name="triangles">The triangles array of the mesh.</param>
+        private static void GetMeshInfo(Mesh mesh, out Vector3[] verticies, out Vector2[] uv, out int[] triangles)
+        {
+            verticies = mesh.vertices;
+            uv = mesh.uv;
+            triangles = mesh.triangles;
+        }
+
+        #region Initialization
         /// <summary>
         /// Creates a new mesh that this object will use to render it's line.
         /// </summary>
         /// <param name="pressure"> The pressure of the pen when this line was created.</param>
         /// <param name="position">The position that this line will start from.</param>
-        public void InitializeMesh(float pressure, Vector2 position)
+        public void Local_InitializeMesh(float pressure, Vector3 position)
         {
             // Creates a new set of mesh information
             Vector3[] verticies = new Vector3[4];
@@ -63,10 +140,10 @@ namespace GraffitiGala.Drawing
             float halfWidth = GetWidth(pressure) / 2;
 
             // Uses half the width to create a simple quad whose width is equal to the line width based on pressure.
-            verticies[0] = position + new Vector2(-halfWidth, halfWidth); // Top Left
-            verticies[1] = position + new Vector2(-halfWidth, -halfWidth); // Bottom Left
-            verticies[2] = position + new Vector2(halfWidth, halfWidth); // Top Right
-            verticies[3] = position + new Vector2(halfWidth, -halfWidth); // Bottom Right
+            verticies[0] = position + new Vector3(-halfWidth, halfWidth, 0); // Top Left
+            verticies[1] = position + new Vector3(-halfWidth, -halfWidth, 0); // Bottom Left
+            verticies[2] = position + new Vector3(halfWidth, halfWidth, 0); // Top Right
+            verticies[3] = position + new Vector3(halfWidth, -halfWidth, 0); // Bottom Right
 
             // Sets the UVs of this mesh to show the entire material inside the quad.
             uv[0] = new Vector2(0, 1);
@@ -82,17 +159,51 @@ namespace GraffitiGala.Drawing
             triangles[3] = 1;
             triangles[4] = 2;
             triangles[5] = 3;
+            // Tells this component that the current mesh is only a quad, and that it needs to be updated to be fully
+            // line compatible.
+            isQuad = true;
+            originPoint = position;
 
             // Sets the mesh's values to the ones calculated.
             SetMesh(verticies, uv, triangles);
         }
 
         /// <summary>
+        /// Sets up this line to send information across the network.
+        /// </summary>
+        /// <param name="localReferenceLine">
+        /// The local placeholder line that was used to keep graphics updated that should be loaded to this line.
+        /// </param>
+        public void InitializeAsNetworked(MeshBrushTexture localReferenceLine)
+        {
+            // Creates a new set of mesh information based on the local reference line.
+            GetMeshInfo(localReferenceLine.mesh, out Vector3[] verticies, out Vector2[] uv, out int[] triangles);
+            //Vector3[] verticies = localReferenceLine.mesh.vertices;
+            //Vector2[] uv = localReferenceLine.mesh.uv;
+            //int[] triangles = localReferenceLine.mesh.triangles;
+
+            // Sets this object's mesh to be the same as the local reference line's
+            SetMesh(verticies, uv, triangles);
+
+            // Sets this mesh to reflect the client mesh for all mesh lines across the network.
+            Server_SetMesh(verticies, uv, triangles);
+
+            // Sets information of this line's current state based on the local reference line's state.
+            isQuad = localReferenceLine.isQuad;
+            originPoint = localReferenceLine.originPoint;
+
+            isNetworked = true;
+            // Destroy the local reference line as it is no longer needed, newly initialized network line will
+            // be updated instead.
+            Destroy(localReferenceLine.gameObject);
+        }
+
+        /// <summary>
         /// Configures this line with the correct color and material for the brush.
         /// </summary>
         /// <param name="color">The color of this line.</param>
-        /// <param name="referenceMaterial">The material this line will use.</param>
-        public void ConfigureAppearance(Color color)
+        /// <param name="z">The z position that this mesh renders at.</param>
+        public void Initialize(Color color)
         {
             // Creates a new temporary material that is a clone of the reference material.
             Material thisMaterial = new Material(referenceMaterial);
@@ -107,11 +218,13 @@ namespace GraffitiGala.Drawing
         /// network.
         /// </summary>
         /// <param name="color">The color of this line.</param>
-        [ObserversRpc]
-        public void Observer_ConfigureAppearance(Color color)
+        /// <param name="z">The z position that this mesh renders at.</param>
+        [ObserversRpc(BufferLast = true)]
+        public void Observer_Initialize(Color color)
         {
-            ConfigureAppearance(color);
+            Initialize(color);
         }
+        #endregion
 
         #region Add Point
         /// <summary>
@@ -120,15 +233,18 @@ namespace GraffitiGala.Drawing
         /// <param name="position">The position of the new point.</param>
         /// <param name="drawDirection">The direction that this point was drawn from.</param>
         /// <param name="pressure">The pen pressure when this point was added.</param>
-        public void AddPoint(Vector2 position, Vector2 drawDirection, float pressure)
+        public void AddPoint(Vector3 position, Vector2 drawDirection, float pressure)
         {
             // Adds a point to this line locally.
             Local_AddPoint(position, drawDirection, pressure);
             // Adds a point to this line for the entire server if this object is set up as a networked object.
             if(isNetworked)
             {
-                Server_AddPoint(position, drawDirection, pressure);
+                // Updates the entire mesh to allow for new connections to load lines correctly.
+                GetMeshInfo(mesh, out Vector3[] verticies, out Vector2[] uv, out int[] triangles);
+                Server_SetMesh(verticies, uv, triangles);
             }
+
         }
 
         /// <summary>
@@ -143,8 +259,14 @@ namespace GraffitiGala.Drawing
         /// <param name="position">The position of the new point.</param>
         /// <param name="drawDirection">The direction that this point was drawn from.</param>
         /// <param name="pressure">The pen pressure when this point was added.</param>
-        private void Local_AddPoint(Vector2 position, Vector2 drawDirection, float pressure)
+        private void Local_AddPoint(Vector3 position, Vector2 drawDirection, float pressure)
         {
+            if(isQuad)
+            {
+                RotateMesh(mesh, originPoint, drawDirection);
+                isQuad = false;
+            }
+
             // Define a new set of array to update the mesh values.
             Vector3[] verticies = new Vector3[mesh.vertices.Length + 2]; // Add two additional verticies.
             Vector2[] uv = new Vector2[mesh.uv.Length + 2]; // Add two additional UV positions.
@@ -163,12 +285,12 @@ namespace GraffitiGala.Drawing
 
             // Calculates a vector that will be used to calculate the vertex positions based on the given point 
             // position.
-            Vector2 drawParallel = Vector3.Cross(drawDirection.normalized, SCREEN_NORMAL) * (GetWidth(pressure) / 2);
+            Vector3 drawParallel = Vector3.Cross(drawDirection.normalized, SCREEN_NORMAL) * (GetWidth(pressure) / 2);
             //Debug.Log(drawDirection);
             //Debug.Log(drawParallel);
             // Calculates the new vertex positions.
-            Vector2 newTopPosition = position + drawParallel;
-            Vector2 newBottomPosition = position - drawParallel;
+            Vector3 newTopPosition = position + drawParallel;
+            Vector3 newBottomPosition = position - drawParallel;
 
             // Adds the new top and bottom positions to the verticies array.
             verticies[newTopIndex] = newTopPosition;
@@ -197,98 +319,56 @@ namespace GraffitiGala.Drawing
         }
 
         /// <summary>
-        /// Adds a point to all lines across the network.
+        /// Rotates a mesh around a given pivot point.
         /// </summary>
-        /// <param name="position">The position of the new point.</param>
-        /// <param name="drawDirection">The direction that this point was drawn from.</param>
-        /// <param name="pressure">The pen pressure when this point was added.</param>
-        [ServerRpc]
-        private void Server_AddPoint(Vector2 position, Vector2 drawDirection, float pressure)
+        /// <param name="mesh">The mesh to rotate.</param>
+        /// <param name="pivotPoint">The pivot point to rotate the mesh around.</param>
+        /// <param name="newDirection">The vector that the mesh should be facing in.</param>
+        private static void RotateMesh(Mesh mesh, Vector3 pivotPoint, Vector3 newDirection)
         {
-            Client_AddPoint(position, drawDirection, pressure);
-        }
+            //Debug.Log("Rotating mesh");
+            Vector3[] verticies = mesh.vertices;
+            float additiveAngle = MathHelpers.VectorToAngle(newDirection);
 
-        /// <summary>
-        /// Adds a line to this non-owner client.
-        /// </summary>
-        /// <param name="position">The position of the new point.</param>
-        /// <param name="drawDirection">The direction that this point was drawn from.</param>
-        /// <param name="pressure">The pen pressure when this point was added.</param>
-        [ObserversRpc(ExcludeOwner = true)]
-        private void Client_AddPoint(Vector2 position, Vector2 drawDirection, float pressure)
-        {
-            Local_AddPoint(position, drawDirection, pressure);
-        }
-        #endregion
-
-        #region Network Initialization
-        /// <summary>
-        /// Sets up this line to send information across the network.
-        /// </summary>
-        /// <param name="localReferenceLine">
-        /// The local placeholder line that was used to keep graphics updated that should be loaded to this line.
-        /// </param>
-        public void InitializeAsNetworked(MeshBrushTexture localReferenceLine)
-        {
-            // Creates a new set of mesh information based on the local reference line.
-            Vector3[] verticies = localReferenceLine.mesh.vertices;
-            Vector2[] uv = localReferenceLine.mesh.uv;
-            int[] triangles = localReferenceLine.mesh.triangles;
-
-            // Sets this object's mesh to be the same as the local reference line's
-            SetMesh(verticies, uv, triangles);
-
-            // Sets this mesh to reflect the client mesh for all mesh lines across the network.
-            Server_InitializeAsNetworked(verticies, uv, triangles);
-
-            isNetworked = true;
-            // Destroy the local reference line as it is no longer needed, newly initialized network line will
-            // be updated instead.
-            Destroy(localReferenceLine.gameObject);
-        }
-
-        /// <summary>
-        /// Initializes a pre-established mesh to Mesh lines across the network.
-        /// </summary>
-        [ServerRpc]
-        private void Server_InitializeAsNetworked(Vector3[] verticies, Vector2[] uv, int[] triangles)
-        {
-            Client_InitializeAsNetworked(verticies, uv, triangles);
-        }
-
-        /// <summary>
-        /// Initializes a pre-established mesh to this Mesh line as a client.
-        /// </summary>
-        /// <param name="verticies">The verticies of the mesh.</param>
-        /// <param name="uv">The UVs of the mesh.</param>
-        /// <param name="triangles">The triangles of the mesh.</param>
-        [ObserversRpc(ExcludeOwner = true)]
-        private void Client_InitializeAsNetworked(Vector3[] verticies, Vector2[] uv, int[] triangles)
-        {
-            SetMesh(verticies, uv, triangles);
-        }
-
-        /// <summary>
-        /// Sets this object's mesh data values.
-        /// </summary>
-        /// <param name="vertices">The verticies of the mesh.</param>
-        /// <param name="uv">The UVs of the mesh.</param>
-        /// <param name="triangles">The triangles of the mesh.</param>
-        private void SetMesh(Vector3[] vertices, Vector2[] uv, int[] triangles)
-        {
-            // Creates a new mesh if the mesh is null.
-            if(mesh == null)
+            for(int i = 0; i < verticies.Length; i++)
             {
-                mesh = new Mesh();
-                mesh.MarkDynamic();
-                meshFilter.mesh = mesh;
+                Vector2 relativePosition = verticies[i] - pivotPoint;
+                // Adds the angle specified by newDirection to the angle of the current verrticie's relative position
+                // from the pivot point in polar coordinates.
+                float angle = MathHelpers.VectorToAngle(relativePosition);
+                angle = angle + additiveAngle;
+                // Sets the verticie's relative position in cartesian coordinates equal to the newly calculated
+                // position in polar coordinates.
+                relativePosition = MathHelpers.AngleToUnitVector(angle) * relativePosition.magnitude;
+                verticies[i] = (Vector3)relativePosition + pivotPoint;
             }
 
-            // Sets the mesh data.
-            mesh.vertices = vertices;
-            mesh.uv = uv;
-            mesh.triangles = triangles;
+            mesh.vertices = verticies;
         }
+
+        ///// <summary>
+        ///// Adds a point to all lines across the network.
+        ///// </summary>
+        ///// <param name="position">The position of the new point.</param>
+        ///// <param name="drawDirection">The direction that this point was drawn from.</param>
+        ///// <param name="pressure">The pen pressure when this point was added.</param>
+        //[ServerRpc]
+        //private void Server_UpdateMesh(Vector2 position, Vector2 drawDirection, float pressure)
+        //{
+        //    Client_AddPoint(position, drawDirection, pressure);
+        //}
+
+        ///// <summary>
+        ///// Adds a line to this non-owner client.
+        ///// </summary>
+        ///// <param name="position">The position of the new point.</param>
+        ///// <param name="drawDirection">The direction that this point was drawn from.</param>
+        ///// <param name="pressure">The pen pressure when this point was added.</param>
+        //[ObserversRpc(ExcludeOwner = true)]
+        //private void Client_AddPoint(Vector2 position, Vector2 drawDirection, float pressure)
+        //{
+        //    Local_AddPoint(position, drawDirection, pressure);
+        //}
         #endregion
     }
 
