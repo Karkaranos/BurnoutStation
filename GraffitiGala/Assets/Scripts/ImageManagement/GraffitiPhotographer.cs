@@ -88,7 +88,7 @@ namespace GraffitiGala
         /// <param name="height">The height in pixels of the screenshot to capture.</param>
         public static void ScreenshotDrawing(int width, int height)
         {
-            Debug.Log(width + " x " + height);
+            //Debug.Log(width + " x " + height);
             // Only allow the admin, which is always the server host, to save graffiti images.
             if (!InstanceFinder.IsServerStarted)
             {

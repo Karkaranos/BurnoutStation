@@ -10,6 +10,7 @@ using FishNet.Object.Synchronizing;
 using GraffitiGala.Drawing;
 using GraffitiGala.UI;
 using NaughtyAttributes;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -29,6 +30,9 @@ namespace GraffitiGala
 
         private bool isStarted;
         private Coroutine displayUpdateRoutine;
+
+        public static event Action OnFinishClientStatic;
+        public static event Action OnStartClientStatic;
 
         #region Properties
         public float RemainingTime
@@ -126,6 +130,7 @@ namespace GraffitiGala
                 StopCoroutine(displayUpdateRoutine);
             }
             displayUpdateRoutine = StartCoroutine(TimerDisplayUpdate());
+            OnStartClientStatic?.Invoke();
         }
 
         /// <summary>
@@ -149,6 +154,7 @@ namespace GraffitiGala
                 OnFinishServer?.Invoke();
             }
             OnFinishClient?.Invoke();
+            OnFinishClientStatic?.Invoke();
             isStarted = false;
         }
 
