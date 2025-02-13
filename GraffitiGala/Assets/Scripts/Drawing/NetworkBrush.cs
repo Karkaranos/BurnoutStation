@@ -9,6 +9,7 @@ FishNet, InputSystem
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 namespace GraffitiGala.Drawing
 {
@@ -85,7 +86,8 @@ namespace GraffitiGala.Drawing
                 return;
             }
 
-            PlayTimer.OnStartClientStatic += EnableBrush;
+            PlayTimer.OnBeginClientStatic += EnableBrush;
+            PlayTimer.OnBeginClientStatic += ClearLinesOwner;
             PlayTimer.OnFinishClientStatic += DisableBrush;
         }
 
@@ -93,7 +95,8 @@ namespace GraffitiGala.Drawing
         {
             DisableBrush();
 
-            PlayTimer.OnStartClientStatic -= EnableBrush;
+            PlayTimer.OnBeginClientStatic -= EnableBrush;
+            PlayTimer.OnBeginClientStatic -= ClearLinesOwner;
             PlayTimer.OnFinishClientStatic -= DisableBrush;
         }
         #endregion
@@ -134,6 +137,20 @@ namespace GraffitiGala.Drawing
             return Camera.main.ScreenToWorldPoint(positionAction.ReadValue<Vector2>());
         }
         #endregion
+
+        /// <summary>
+        /// Extra check before calling ClearLines so that only clients that are owners of a brush clear that brush's 
+        /// lines.
+        /// </summary>
+        private void ClearLinesOwner()
+        {
+            if (base.IsOwner)
+            {
+                ClearLines();
+            }
+        }
+
+        protected abstract void ClearLines();
 
         #region Input Functions
 

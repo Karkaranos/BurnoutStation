@@ -22,17 +22,24 @@ namespace GraffitiGala
         [SerializeField] private TimeDisplayer displayer;
         [SerializeField, Tooltip("The amount of time in seconds that this timer will run for.")] 
         private float time = 120f;
-        [SerializeField]
+        [Header("Events")]
+        [SerializeField, Tooltip("Called on server/admin clients when the timer begins.")]
+        private UnityEvent OnBeginServer;
+        [SerializeField, Tooltip("Called on all clients when the timer begins.")]
+        private UnityEvent OnBeginClient;
+        [SerializeField, Tooltip("Called on server/admin clients when the timer finishes.")]
         private UnityEvent OnFinishServer;
-        [SerializeField]
+        [SerializeField, Tooltip("Called on all clients when the timer finishes.")]
         private UnityEvent OnFinishClient;
         private readonly SyncTimer timer = new();
 
         private bool isStarted;
         private Coroutine displayUpdateRoutine;
 
+        public static event Action OnBeginClientStatic;
+        public static event Action OnBeginServerStatic;
         public static event Action OnFinishClientStatic;
-        public static event Action OnStartClientStatic;
+        public static event Action OnFinishServerStatic;
 
         #region Properties
         public float RemainingTime
@@ -104,12 +111,12 @@ namespace GraffitiGala
             switch (op)
             {
                 case SyncTimerOperation.Start:
-                    OnTimerStart();
+                    OnTimerStart(asServer);
                     break;
                 case SyncTimerOperation.Pause:
                     break;
                 case SyncTimerOperation.Stop:
-                    OnTimerStop();
+                    OnTimerStop(asServer);
                     break;
                 case SyncTimerOperation.Finished:
                     OnTimerFinish(asServer);
@@ -122,21 +129,29 @@ namespace GraffitiGala
         /// <summary>
         /// Marks this timer as started and handles behaviour that should happen when this timer starts.
         /// </summary>
-        private void OnTimerStart()
+        private void OnTimerStart(bool asServer)
         {
+            // Starts a coroutine that displays changes to this timer on the UI.
             isStarted = true;
             if(displayUpdateRoutine != null)
             {
                 StopCoroutine(displayUpdateRoutine);
             }
             displayUpdateRoutine = StartCoroutine(TimerDisplayUpdate());
-            OnStartClientStatic?.Invoke();
+
+            if (asServer)
+            {
+                OnBeginServerStatic?.Invoke();
+                OnBeginServer?.Invoke();
+            }
+            OnBeginClientStatic?.Invoke();
+            OnBeginClient?.Invoke();
         }
 
         /// <summary>
         /// Marks this timer as stopped and handles behaviour that should happen when this timer stops.
         /// </summary>
-        private void OnTimerStop()
+        private void OnTimerStop(bool asServer)
         {
             isStarted = false;
             // Sets the displayer to display no time remaining.
@@ -152,6 +167,7 @@ namespace GraffitiGala
             if (asServer)
             {
                 OnFinishServer?.Invoke();
+                OnFinishServerStatic?.Invoke();
             }
             OnFinishClient?.Invoke();
             OnFinishClientStatic?.Invoke();
