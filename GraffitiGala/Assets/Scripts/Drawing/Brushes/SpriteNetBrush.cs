@@ -205,7 +205,7 @@ namespace GraffitiGala.Drawing
         ///// <param name="obj"></param>
         //private void PressureAction_Performed(InputAction.CallbackContext obj)
         //{
-            
+
         //}
 
 
@@ -236,6 +236,11 @@ namespace GraffitiGala.Drawing
         //    Debug.Log("Mouse position of " + name + " is: " + position);
         //}
 
+
+        protected override void ClearLines()
+        {
+            throw new System.NotImplementedException();
+        }
 
         [Button]
         private void RefreshTestList()

@@ -327,6 +327,11 @@ namespace GraffitiGala.Drawing
 
         //}
 
+        protected override void ClearLines()
+        {
+            throw new System.NotImplementedException();
+        }
+
         #region Testing
         [Button]
         private void RefreshTestList()
