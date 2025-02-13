@@ -7,7 +7,7 @@ NaughtyAttributes, FishNet
 ***************************************************/
 using FishNet;
 using NaughtyAttributes;
-using UnityEditor;
+using System;
 using UnityEngine;
 
 namespace GraffitiGala
@@ -72,7 +72,9 @@ namespace GraffitiGala
         [Button]
         public static void ScreenshotDrawing()
         {
-            ScreenshotDrawing(Screen.width, Screen.height);
+            // Screen.width and height returns the wrong values when triggered by a NaughtyAttributes button.
+            //ScreenshotDrawing(Screen.width, Screen.height);
+            ScreenshotDrawing(captureCamera.pixelWidth, captureCamera.pixelHeight);
         }
 
         /// <summary>
@@ -86,6 +88,7 @@ namespace GraffitiGala
         /// <param name="height">The height in pixels of the screenshot to capture.</param>
         public static void ScreenshotDrawing(int width, int height)
         {
+            Debug.Log(width + " x " + height);
             // Only allow the admin, which is always the server host, to save graffiti images.
             if (!InstanceFinder.IsServerStarted)
             {
@@ -142,7 +145,7 @@ namespace GraffitiGala
             // Saves the recorded image to this device's streaming assets folder.
             if(saveBackup)
             {
-                ImageManagement.SaveImage(imgData, "GraffitiFile_");
+                ImageManagement.SaveImage(imgData, "GraffitiFile_" + DateTime.Now.Ticks);
             }
 
             Debug.Log("Sent screenshot over the network.");

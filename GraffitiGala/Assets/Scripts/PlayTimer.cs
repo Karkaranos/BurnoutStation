@@ -13,7 +13,6 @@ using NaughtyAttributes;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 
 namespace GraffitiGala
 {
