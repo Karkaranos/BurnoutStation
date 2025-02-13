@@ -118,7 +118,7 @@
             "id": "1c2944bb-e17f-4ddc-8678-691d565beab3",
             "actions": [
                 {
-                    "name": "LeftClick",
+                    "name": "Click",
                     "type": "Button",
                     "id": "51d109cc-7ae9-4807-894d-4764f0549dc2",
                     "expectedControlType": "Button",
@@ -144,7 +144,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "LeftClick",
+                    "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

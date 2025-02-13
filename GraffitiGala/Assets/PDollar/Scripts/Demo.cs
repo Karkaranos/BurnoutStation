@@ -2,15 +2,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.InputSystem;
 using System.IO;
+using UnityEngine.InputSystem;
 using PDollarGestureRecognizer;
 
-public class Demo : MonoBehaviour {
+public class Demo : MonoBehaviour
+{
 
-	private PlayerInput sceneInput;
-	private InputAction leftClick;
-	private InputAction mPos;
 	public Transform gestureOnScreenPrefab;
 
 	private List<Gesture> trainingSet = new List<Gesture>();
@@ -31,18 +29,22 @@ public class Demo : MonoBehaviour {
 	private string message;
 	private bool recognized;
 	private string newGestureName = "";
+	private bool leftClickDown;
+	private bool leftInstance;
 
-	public bool leftClickDown = false;
+	private PlayerInput pi;
+	private InputAction leftClick;
 
-	void Start () 
+
+
+	void Start()
 	{
-		sceneInput = GetComponent<PlayerInput>();
-		leftClick = sceneInput.currentActionMap.FindAction("LeftClick");
-		mPos = sceneInput.currentActionMap.FindAction("MousePosition");
-		leftClick.started += LeftClick_Performed;
-		leftClick.canceled += LeftClick_Stopped;
 
+		pi = GetComponent<PlayerInput>();
+		leftClick = pi.currentActionMap.FindAction("Click");
 
+		leftClick.started += LeftClick_started;
+		leftClick.canceled += LeftClick_canceled;
 		platform = Application.platform;
 		drawArea = new Rect(0, 0, Screen.width - Screen.width / 3, Screen.height);
 
@@ -57,46 +59,60 @@ public class Demo : MonoBehaviour {
 			trainingSet.Add(GestureIO.ReadGestureFromFile(filePath));
 	}
 
-    private void LeftClick_Stopped(InputAction.CallbackContext obj)
-    {
+	private void LeftClick_canceled(InputAction.CallbackContext obj)
+	{
 		leftClickDown = false;
-    }
+	}
 
-    private void LeftClick_Performed(InputAction.CallbackContext obj)
-    {
+	private void LeftClick_started(InputAction.CallbackContext obj)
+	{
 		leftClickDown = true;
-    }
+		leftInstance = true;
+		StartCoroutine(DisableKey());
+	}
 
-    void Update () {
+	private IEnumerator DisableKey()
+	{
+		yield return new WaitForEndOfFrame();
+		leftInstance = false;
+	}
 
-		Vector2 mousePos = mPos.ReadValue<Vector2>();
-		print(mPos);
-		
-		if (platform == RuntimePlatform.Android || platform == RuntimePlatform.IPhonePlayer) {
-			/*if (Input.touchCount > 0) {
+	void Update()
+	{
+
+		if (platform == RuntimePlatform.Android || platform == RuntimePlatform.IPhonePlayer)
+		{
+			if (Input.touchCount > 0)
+			{
 				virtualKeyPosition = new Vector3(Input.GetTouch(0).position.x, Input.GetTouch(0).position.y);
-			}*/
-		} else {
-			if (leftClickDown) {
-				
-				virtualKeyPosition = new Vector3(mousePos.x, mousePos.y, 0);
+			}
+		}
+		else
+		{
+			if (leftClickDown)
+			{
+				virtualKeyPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
 			}
 		}
 
-		if (drawArea.Contains(virtualKeyPosition)) {
+		if (drawArea.Contains(virtualKeyPosition))
+		{
 
-			if (leftClickDown) {
+			if (leftInstance)
+			{
 
-				if (recognized) {
+				if (recognized)
+				{
 
 					recognized = false;
 					strokeId = -1;
 
 					points.Clear();
 
-					foreach (LineRenderer lineRenderer in gestureLinesRenderer) 
+					foreach (LineRenderer lineRenderer in gestureLinesRenderer)
 					{
 
+						lineRenderer.SetVertexCount(0);
 						Destroy(lineRenderer.gameObject);
 					}
 
@@ -104,51 +120,54 @@ public class Demo : MonoBehaviour {
 				}
 
 				++strokeId;
-				
+
 				Transform tmpGesture = Instantiate(gestureOnScreenPrefab, transform.position, transform.rotation) as Transform;
 				currentGestureLineRenderer = tmpGesture.GetComponent<LineRenderer>();
-				
+
 				gestureLinesRenderer.Add(currentGestureLineRenderer);
-				
+
 				vertexCount = 0;
 			}
-			
-			if (leftClickDown) {
+
+			if (leftClickDown)
+			{
 				points.Add(new Point(virtualKeyPosition.x, -virtualKeyPosition.y, strokeId));
 
-				//currentGestureLineRenderer.SetVertexCount(++vertexCount);
-				vertexCount++;
+				currentGestureLineRenderer.SetVertexCount(++vertexCount);
 				currentGestureLineRenderer.SetPosition(vertexCount - 1, Camera.main.ScreenToWorldPoint(new Vector3(virtualKeyPosition.x, virtualKeyPosition.y, 10)));
 			}
 		}
 	}
 
-	void OnGUI() {
+	void OnGUI()
+	{
 
 		GUI.Box(drawArea, "Draw Area");
 
 		GUI.Label(new Rect(10, Screen.height - 40, 500, 50), message);
 
-		if (GUI.Button(new Rect(Screen.width - 100, 10, 100, 30), "Recognize")) {
+		if (GUI.Button(new Rect(Screen.width - 100, 10, 100, 30), "Recognize"))
+		{
 
 			recognized = true;
 
 			Gesture candidate = new Gesture(points.ToArray());
 			Result gestureResult = PointCloudRecognizer.Classify(candidate, trainingSet.ToArray());
-			
+
 			message = gestureResult.GestureClass + " " + gestureResult.Score;
 		}
 
 		GUI.Label(new Rect(Screen.width - 200, 150, 70, 30), "Add as: ");
 		newGestureName = GUI.TextField(new Rect(Screen.width - 150, 150, 100, 30), newGestureName);
 
-		if (GUI.Button(new Rect(Screen.width - 50, 150, 50, 30), "Add") && points.Count > 0 && newGestureName != "") {
+		if (GUI.Button(new Rect(Screen.width - 50, 150, 50, 30), "Add") && points.Count > 0 && newGestureName != "")
+		{
 
 			string fileName = String.Format("{0}/{1}-{2}.xml", Application.persistentDataPath, newGestureName, DateTime.Now.ToFileTime());
 
-			#if !UNITY_WEBPLAYER
-				GestureIO.WriteGesture(points.ToArray(), newGestureName, fileName);
-			#endif
+#if !UNITY_WEBPLAYER
+			GestureIO.WriteGesture(points.ToArray(), newGestureName, fileName);
+#endif
 
 			trainingSet.Add(new Gesture(points.ToArray(), newGestureName));
 
