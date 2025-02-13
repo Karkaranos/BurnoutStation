@@ -79,19 +79,19 @@ public class Demo : MonoBehaviour
 
 	void Update()
 	{
-
+		Vector2 mousePos = pi.currentActionMap.FindAction("Position").ReadValue<Vector2>();
 		if (platform == RuntimePlatform.Android || platform == RuntimePlatform.IPhonePlayer)
 		{
 			if (Input.touchCount > 0)
 			{
-				virtualKeyPosition = new Vector3(Input.GetTouch(0).position.x, Input.GetTouch(0).position.y);
+				virtualKeyPosition = new Vector3(mousePos.x, mousePos.y);
 			}
 		}
 		else
 		{
 			if (leftClickDown)
 			{
-				virtualKeyPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
+				virtualKeyPosition = new Vector3(mousePos.x, mousePos.y);
 			}
 		}
 
