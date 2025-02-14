@@ -10,6 +10,7 @@ using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -310,6 +311,19 @@ namespace GraffitiGala.Drawing
             }
         }
 
+        /// <summary>
+        /// Clears all lines made nby this brush.
+        /// </summary>
+        [ServerRpc(RequireOwnership = false)]
+        protected override void ClearLines()
+        {
+            foreach (var obj in drawnObjects)
+            {
+                ServerManager.Despawn(obj.gameObject);
+            }
+            drawnObjects.Clear();
+        }
+
         #region Testing
         [Button]
         private void RefreshTestList()
@@ -319,7 +333,7 @@ namespace GraffitiGala.Drawing
         }
 
         [Button, ServerRpc(RequireOwnership = false)]
-        private void ClearDrawing()
+        private void ClearDrawingTest()
         {
             testObjects.Clear();
             foreach (var obj in drawnObjects)

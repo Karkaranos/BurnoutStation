@@ -9,6 +9,7 @@ FishNet, InputSystem
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 namespace GraffitiGala.Drawing
 {
@@ -64,7 +65,8 @@ namespace GraffitiGala.Drawing
         {
             base.OnStartClient();
 
-            PlayerInput playerInput = GetComponent<PlayerInput>();
+            //PlayerInput playerInput = GetComponent<PlayerInput>();
+            TryGetComponent(out PlayerInput playerInput);
             if (base.IsOwner)
             {
                 // Set up InputActions and input functions.
@@ -72,10 +74,8 @@ namespace GraffitiGala.Drawing
                 pressureAction = playerInput.currentActionMap.FindAction(PRESSURE_ACTION_NAME);
                 positionAction = playerInput.currentActionMap.FindAction(POSITION_ACTION_NAME);
 
-                pressAction.started += PressAction_Started;
-                pressAction.canceled += PressAction_Canceled;
-                //pressureAction.performed += PressureAction_Performed;
-                positionAction.performed += MoveAction_Performed;
+                // Enable on client start for playtesting.  Later, enable it on a broadcast when the experience starts.
+                //EnableBrush();
             }
             else
             {
@@ -85,20 +85,47 @@ namespace GraffitiGala.Drawing
                 this.enabled = false;
                 return;
             }
+
+            PlayTimer.OnBeginClientStatic += EnableBrush;
+            PlayTimer.OnBeginClientStatic += ClearLinesOwner;
+            PlayTimer.OnFinishClientStatic += DisableBrush;
         }
 
         public override void OnStopClient()
         {
+            DisableBrush();
+
+            PlayTimer.OnBeginClientStatic -= EnableBrush;
+            PlayTimer.OnBeginClientStatic -= ClearLinesOwner;
+            PlayTimer.OnFinishClientStatic -= DisableBrush;
+        }
+        #endregion
+
+        /// <summary>
+        /// Enables this brush on the owner client by subscribing to input functions.
+        /// </summary>
+        private void EnableBrush()
+        {
             if (base.IsOwner)
             {
-                // Unsubscribe input functions.
+                pressAction.started += PressAction_Started;
+                pressAction.canceled += PressAction_Canceled;
+                positionAction.performed += MoveAction_Performed;
+            }
+        }
+
+        /// <summary>
+        /// Disables this brush on its owner client by unsubscribing from input functions.
+        /// </summary>
+        private void DisableBrush()
+        {
+            if (base.IsOwner)
+            {
                 pressAction.started -= PressAction_Started;
                 pressAction.canceled -= PressAction_Canceled;
                 positionAction.performed -= MoveAction_Performed;
-                //pressureAction.performed -= PressureAction_Performed;
             }
         }
-        #endregion
 
         #region Statics
         /// <summary>
@@ -111,12 +138,27 @@ namespace GraffitiGala.Drawing
         }
         #endregion
 
+        /// <summary>
+        /// Extra check before calling ClearLines so that only clients that are owners of a brush clear that brush's 
+        /// lines.
+        /// </summary>
+        private void ClearLinesOwner()
+        {
+            if (base.IsOwner)
+            {
+                ClearLines();
+            }
+        }
+
+        protected abstract void ClearLines();
+
         #region Input Functions
 
         /// <summary>
         /// Handles the player touching the pen to the tablet.
         /// </summary>
         protected abstract void PressAction_Started(InputAction.CallbackContext obj);
+
 
         /// <summary>
         /// Handles the player removing the pen from the tablet.
