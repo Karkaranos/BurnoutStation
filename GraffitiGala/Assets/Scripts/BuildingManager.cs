@@ -10,7 +10,7 @@ namespace GraffitiGala
     {
         [Header("Control Panel")]
         [SerializeField, Tooltip("All buildings that can be spawned. They should all be prefabs.")]
-        private GameObject[] buildingPrefabs;
+        private BuildingBehavior[] buildingPrefabs;
         [SerializeField, Tooltip("All buildings should exist here")]
         private List<BuildingBehavior> allBuildings = new List<BuildingBehavior>();
 
@@ -25,12 +25,12 @@ namespace GraffitiGala
         public void SpawnNewBuilding()
         {
             int index = Random.Range(0, buildingPrefabs.Length);
-            Instantiate(buildingPrefabs[index], Vector3.zero, Quaternion.identity);
+            allBuildings.Add(Instantiate(buildingPrefabs[index], Vector3.zero, Quaternion.identity, transform));
         }
 
         public void SpawnGraffiti(string filePath)
         {
-            if(allBuildings[currentBuildingIndex].BuildingIsFull)
+            if(!allBuildings[currentBuildingIndex].BuildingIsFull)
             {
                 allBuildings[currentBuildingIndex].SpawnDrawing(ImageManagement.LoadSprite(filePath, new Vector2(0.5f, 0.5f), 256f));
             }
