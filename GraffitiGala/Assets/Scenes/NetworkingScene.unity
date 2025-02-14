@@ -368,6 +368,53 @@ Transform:
   - {fileID: 565378347}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &127084937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 127084939}
+  - component: {fileID: 127084938}
+  m_Layer: 0
+  m_Name: ColorReciever
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &127084938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127084937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd6abee3874e1842a94af503e36e8d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnRecieveColors:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &127084939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127084937}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.4666897, y: 0.6036048, z: -5.137879}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &233008088
 GameObject:
   m_ObjectHideFlags: 0
@@ -703,7 +750,7 @@ MonoBehaviour:
   _ipv6BindAddress: 
   _port: 7770
   _maximumClients: 4095
-  _clientAddress: 172.20.10.2
+  _clientAddress: localhost
 --- !u!1 &565378346
 GameObject:
   m_ObjectHideFlags: 0
@@ -734,6 +781,52 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 109015621}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &567763803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 567763805}
+  - component: {fileID: 567763804}
+  m_Layer: 0
+  m_Name: ColorDistributor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &567763804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567763803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4bf8e7f5ad4484d96f2543f01bf8bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorChoices: {fileID: 11400000, guid: 081d863bec5f5b3469f83139f0ca77c6, type: 2}
+  colorNumber: 2
+--- !u!4 &567763805
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567763803}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.570646, y: 1.0843103, z: -5.137879}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &579223340
 GameObject:
@@ -1488,7 +1581,22 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 1549895329}
   _networkObjectCache: {fileID: 0}
   displayer: {fileID: 275006552}
-  time: 20
+  time: 10
+  OnBeginServer:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 567763804}
+        m_TargetAssemblyTypeName: GraffitiGala.ColorSwitching.ColorDistributor, Assembly-CSharp
+        m_MethodName: SendColors
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnBeginClient:
     m_PersistentCalls:
       m_Calls:
@@ -2067,6 +2175,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1933812519}
+  - {fileID: 567763805}
   - {fileID: 1886649678}
   - {fileID: 1559451522}
   - {fileID: 1954582103}
@@ -2076,6 +2185,7 @@ SceneRoots:
   - {fileID: 1549895331}
   - {fileID: 811795729}
   - {fileID: 1609055883}
+  - {fileID: 127084939}
   - {fileID: 13394706}
   - {fileID: 897846180}
   - {fileID: 259756120}
