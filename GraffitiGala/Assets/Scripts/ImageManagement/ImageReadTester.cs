@@ -19,7 +19,8 @@ namespace GraffitiGala
         /// <param name="filePath">The file path to get the png image from</param>
         public void UpdateSprite(string filePath)
         {
-            sRenderer.sprite = ImageManagement.LoadSprite(filePath, new Vector2(0.5f, 0.5f), 100f);
+            sRenderer.sprite = ImageManagement.LoadSprite(filePath, new Vector2(0.5f, 0.5f), 256f);
+            Debug.Log("Should be calling a function on BuildingManager");
         }
     }
 }

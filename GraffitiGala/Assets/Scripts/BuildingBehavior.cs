@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GraffitiSpawner : MonoBehaviour
+public class BuildingBehavior : MonoBehaviour
 {
     [SerializeField, Tooltip("Building Width, in Unity Units")]
     private float buildingWidth;
@@ -26,13 +26,16 @@ public class GraffitiSpawner : MonoBehaviour
     [SerializeField, Tooltip("The unchanged width of a spawned object, in Unity Units")]
     private float normalHeight;
 
-    [SerializeField, Tooltip("Blank Game Ob")]
 
     private Vector3 localSpawningPosition;
     private int currentSpawnArea;
 
+    private bool buildingIsFull = false;
 
     public Sprite testSprite;
+
+    public bool BuildingIsFull { get => buildingIsFull;}
+
     public void SpawnDrawing(Sprite spawnMe)
     {
         GameObject g = new GameObject();
@@ -55,6 +58,9 @@ public class GraffitiSpawner : MonoBehaviour
             else
             {
                 Debug.Log("Building is full");
+                buildingIsFull = true;
+                Destroy(g);
+                return;
             }
         }
         g.transform.localScale = new Vector3(scaleModifier, scaleModifier, 1);
@@ -67,8 +73,6 @@ public class GraffitiSpawner : MonoBehaviour
     void Start()
     {
         localSpawningPosition = new Vector3(validAreas[0].StartingPosition.x, validAreas[0].StartingPosition.y, -1);
-        for(int i=0; i<20; i++)
-            SpawnDrawing(testSprite);
     }
 
     // Update is called once per frame
