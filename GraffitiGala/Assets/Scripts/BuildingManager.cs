@@ -25,7 +25,7 @@ namespace GraffitiGala
         public void SpawnNewBuilding()
         {
             int index = Random.Range(0, buildingPrefabs.Length);
-            allBuildings.Add(Instantiate(buildingPrefabs[index], Vector3.zero, Quaternion.identity, transform));
+            allBuildings.Add(Instantiate(buildingPrefabs[index], new Vector3(-50,0,0), Quaternion.identity, transform));
         }
 
         public void SpawnGraffiti(string filePath)
