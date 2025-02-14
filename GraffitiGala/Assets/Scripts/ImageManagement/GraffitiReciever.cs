@@ -47,6 +47,7 @@ namespace GraffitiGala
         {
             // Creates a new unique file name using the default file name and the current time.
             string fileName = defaultFileName + DateTime.Now.Ticks;
+            Debug.Log("Recieved image of name " + fileName);
             // Save the image to the folder in StreamingAssets.
             string filePath = ImageManagement.SaveImage(image, fileName);
             // Notify listeners that a new image has been saved.
