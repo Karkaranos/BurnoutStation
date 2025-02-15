@@ -40,6 +40,8 @@ namespace GraffitiGala.Drawing
         // List that stores drawing states that have not initialized.
         private readonly List<DrawingState> drawingStateQueue = new();
 
+        public static Color CurrentColor { get; set; }
+
         /// <summary>
         /// State Machine
         /// </summary>
