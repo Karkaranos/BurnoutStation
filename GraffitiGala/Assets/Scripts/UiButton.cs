@@ -22,7 +22,7 @@ public class UiButton : MonoBehaviour
 
     public void changeBrushCl ()
     {
-        MeshNetBrush.CurrentColor = paint;
+        NetworkBrush.CurrentColor = paint;
 
     }    
 

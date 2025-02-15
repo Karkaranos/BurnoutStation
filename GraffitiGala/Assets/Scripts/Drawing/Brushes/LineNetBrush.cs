@@ -172,7 +172,7 @@ namespace GraffitiGala.Drawing
                 GetMousePosition(positionAction),
                 Quaternion.identity,
                 null,
-                BrushColor
+                CurrentColor
                 ), this, positionAction);
             state = drawingState;
             // Adds the newly created drawing state to a queue to be initialized.  Even if the state changes, drawing

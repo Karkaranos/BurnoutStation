@@ -588,7 +588,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -1248,7 +1248,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 1549895329}
   _networkObjectCache: {fileID: 0}
   displayer: {fileID: 275006552}
-  time: 10
+  time: 20
   OnBeginServer:
     m_PersistentCalls:
       m_Calls:
@@ -1390,7 +1390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}

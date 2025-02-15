@@ -7,6 +7,7 @@ FishNet
 ***************************************************/
 using FishNet;
 using FishNet.Transporting;
+using GraffitiGala.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -48,6 +49,8 @@ namespace GraffitiGala.ColorSwitching
                 return;
             }
             //Debug.LogError("RecievedColors");
+            // Sets the default colors of this client's brush to the first color in the color data's array.
+            NetworkBrush.CurrentColor = colorData.Colors[0];
             OnRecieveColors?.Invoke(colorData.Colors);
         }
     }
