@@ -1,7 +1,7 @@
 /*************************************************
 Brandon Koederitz
 1/30/2025
-1/30/2025
+2/15/2025
 Draws images using a mesh that are shared across the network.
 FishNet, InputSystem, NaughtyAttributes
 ***************************************************/
@@ -157,7 +157,7 @@ namespace GraffitiGala.Drawing
                 brushTexturePrefab,
                 GetMousePosition(),
                 null,
-                BrushColor
+                CurrentColor
                 ), this);
             // Sets the current state as the newly created drawing state.
             state = drawingState;
