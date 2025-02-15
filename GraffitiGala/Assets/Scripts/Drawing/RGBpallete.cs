@@ -16,30 +16,19 @@ public class RGBpallete : MonoBehaviour
     private Color paint;
 
 
-    public void paintTransfer(Color[] paintStorage) 
-    {    
+    public void paintTransfer(Color[] paintStorage)
+    {
+        if (index < paintStorage.Length)
+        {
             paint = paintStorage[index]; // if first sphere grab 1st color in the array  
+            meshRenderer = GetComponent<MeshRenderer>();
+            meshRenderer.material.color = paint; // makes the sample red
+
+        }
     }
 
 
-    // depending on the public int index it will give a color 1 = red, 2 = green, 3 = blue
-    //public void Start()
-    //{
-
-    //    meshRenderer = GetComponent<MeshRenderer>();
-    //    if (index == 1)
-    //    {
-    //        meshRenderer.material.color = Color.red; // makes the sample red
-    //    }
-    //    else if (index == 2)
-    //    {
-    //        meshRenderer.material.color = Color.green; // makes the sample green
-    //    }
-    //    else if (index == 3)
-    //    {
-    //        meshRenderer.material.color = Color.blue; // makes the sample blue
-    //    } 
-    //}
+    
 
     // if the sphere (paint sample) toucches with the mouse pointer in checks its index and gives a specific color
     public void OnCollisionEnter2D(Collision2D collision) 
