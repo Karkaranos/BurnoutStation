@@ -18,9 +18,9 @@ public class RGBpallete : MonoBehaviour
 
     public void paintTransfer(Color[] paintStorage)
     {
-        if (index < paintStorage.Length)
+        if (index+1 < paintStorage.Length)
         {
-            paint = paintStorage[index]; // if first sphere grab 1st color in the array  
+            paint = paintStorage[index+1]; // if first sphere grab 1st color in the array  
             meshRenderer = GetComponent<MeshRenderer>();
             meshRenderer.material.color = paint; // makes the sample red
 
