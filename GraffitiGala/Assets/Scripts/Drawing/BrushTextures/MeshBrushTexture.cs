@@ -5,7 +5,10 @@ Brandon Koederitz
 Control script for instantiated paint prefabs that use the Mesh drawing system.
 FishNet, InputSystem, NaughtyAttributes
 ***************************************************/
+using FishNet;
+using FishNet.Connection;
 using FishNet.Object;
+using System.Collections;
 using UnityEngine;
 
 namespace GraffitiGala.Drawing
@@ -36,21 +39,104 @@ namespace GraffitiGala.Drawing
         private bool isNetworked;
         private bool isQuad;
         private Vector3 originPoint;
+
+        private static bool isSetup;
+        private static Coroutine newClientRoutine;
         #endregion
 
-        ///// <summary>
-        ///// Fetches the mesh from the server when this client connects.
-        ///// </summary>
-        //public override void OnStartClient()
-        //{
-            
-        //}
 
-        //[ServerRpc]
-        //private void Server_UpdateMesh()
-        //{
-            
-        //}
+        #region Mesh Requesting
+        /// <summary>
+        /// Fetches the mesh from the server when this client connects.
+        /// </summary>
+        public override void OnStartClient()
+        {
+            if(!isSetup)
+            {
+                Server_RequestMesh(base.Owner);
+                Debug.Log(" Client " + InstanceFinder.ClientManager.Connection + " Requesting Mesh from Owner " + base.Owner.ClientId);
+            }
+            // Sets this client as not new at the end of frame.
+            if (newClientRoutine == null && !isSetup)
+            {
+                newClientRoutine = StartCoroutine(InitNewClient());
+            }
+        }
+
+        /// <summary>
+        /// Resets this client to set up the next time it connects to as a client.
+        /// </summary>
+        public override void OnStopClient()
+        {
+            isSetup = false;
+        }
+
+        /// <summary>
+        /// Provides a mesh from the server to a connection that lacks one.
+        /// </summary>
+        /// <param name="requestingConnection">The network connection that is requesting a mesh.</param>
+        /// <param name="ownerConnection">The connection that owns the line object to request a mesh from.</param>
+        [ServerRpc(RequireOwnership = false)]
+        private void Server_RequestMesh(NetworkConnection ownerConnection, NetworkConnection requestingConnection = null)
+        {
+            Debug.Log($"Connection {requestingConnection.ClientId} is requesting a mesh from connection {ownerConnection.ClientId}");
+            Target_RequestMesh(ownerConnection, requestingConnection);
+        }
+
+        /// <summary>
+        /// Gives a mesh to a specific network connection that doesn't have one.
+        /// </summary>
+        /// <param name="ownerConnection">The network connection to provide a mesh for this object for.</param>
+        /// <param name="requestingConnection">The connection requesting a mesh.</param>
+        [TargetRpc]
+        private void Target_RequestMesh(NetworkConnection ownerConnection, NetworkConnection requestingConnection)
+        {
+            Debug.Log($"Connection {ownerConnection.ClientId} is providing a mesh for connection {requestingConnection.ClientId}");
+            GetMeshInfo(mesh, out Vector3[] verticies, out Vector2[] uv, out int[] triangles);
+            Server_ProvideMesh(requestingConnection, verticies, uv, triangles);
+        }
+
+        /// <summary>
+        /// Provides a mesh to a different target network connection.
+        /// </summary>
+        /// <param name="requestingConnection">The connection to provide a mesh to.</param>
+        /// <param name="vertices">The verticies of the mesh.</param>
+        /// <param name="uv">The UVs of the mesh.</param>
+        /// <param name="triangles">The triangles of the mesh.</param>
+        [ServerRpc]
+        private void Server_ProvideMesh(NetworkConnection requestingConnection, Vector3[] vertices, Vector2[] uv, 
+            int[] triangles)
+        {
+            Debug.Log($"Connection {requestingConnection.ClientId} is recieving a mesh.");
+            Target_ProvideMesh(requestingConnection, vertices, uv, triangles);
+        }
+
+        /// <summary>
+        /// Recieves a provide mesh from the owner connection from across the server.
+        /// </summary>
+        /// <param name="requestingConnection">This network connection.</param>
+        /// <param name="vertices">The verticies of the mesh.</param>
+        /// <param name="uv">The UVs of the mesh.</param>
+        /// <param name="triangles">The triangles of the mesh.</param>
+        [TargetRpc]
+        private void Target_ProvideMesh(NetworkConnection requestingConnection, Vector3[] vertices, Vector2[] uv,
+            int[] triangles)
+        {
+            Debug.Log($"Connection {requestingConnection.ClientId} is recieving a mesh.");
+            SetMesh(vertices, uv, triangles);
+        }
+
+        /// <summary>
+        /// Sets the newClient variable for this client to false once the strokes have requested a mesh from the 
+        /// server.
+        /// </summary>
+        /// <returns>Coroutine.</returns>
+        private IEnumerator InitNewClient()
+        {
+            yield return new WaitForEndOfFrame();
+            isSetup |= true;
+        }
+        #endregion
 
         /// <summary>
         /// Gets the width of a line based on a given pressure.
@@ -103,7 +189,7 @@ namespace GraffitiGala.Drawing
         /// <param name="verticies">The verticies of the mesh.</param>
         /// <param name="uv">The UVs of the mesh.</param>
         /// <param name="triangles">The triangles of the mesh.</param>
-        [ObserversRpc(ExcludeOwner = true, BufferLast = true)]
+        [ObserversRpc(ExcludeOwner = true)]
         private void Client_SetMesh(Vector3[] verticies, Vector2[] uv, int[] triangles)
         {
             SetMesh(verticies, uv, triangles);
@@ -178,15 +264,12 @@ namespace GraffitiGala.Drawing
         {
             // Creates a new set of mesh information based on the local reference line.
             GetMeshInfo(localReferenceLine.mesh, out Vector3[] verticies, out Vector2[] uv, out int[] triangles);
-            //Vector3[] verticies = localReferenceLine.mesh.vertices;
-            //Vector2[] uv = localReferenceLine.mesh.uv;
-            //int[] triangles = localReferenceLine.mesh.triangles;
-
             // Sets this object's mesh to be the same as the local reference line's
             SetMesh(verticies, uv, triangles);
 
             // Sets this mesh to reflect the client mesh for all mesh lines across the network.
-            Server_SetMesh(verticies, uv, triangles);
+            Server_InitializeAsNetworked(verticies, uv, triangles, localReferenceLine.isQuad, 
+                localReferenceLine.originPoint);
 
             // Sets information of this line's current state based on the local reference line's state.
             isQuad = localReferenceLine.isQuad;
@@ -196,6 +279,39 @@ namespace GraffitiGala.Drawing
             // Destroy the local reference line as it is no longer needed, newly initialized network line will
             // be updated instead.
             Destroy(localReferenceLine.gameObject);
+        }
+
+        /// <summary>
+        /// Initializes this line as networked over the server.
+        /// </summary>
+        /// <remarks>
+        /// Sets the mesh of spawned line objects across the server and gives them values that they will need
+        /// for continued updates.
+        /// </remarks>
+        /// <param name="verticies">The verticies of the mesh.</param>
+        /// <param name="uv">The UVs of the mesh.</param>
+        /// <param name="triangles">The triangles of the mesh.</param>
+        /// <param name="isQuad">Whether this mesh is still just a quad or if it has had points added to it.</param>
+        /// <param name="originPoint">The origion point of the line.</param>
+        [ServerRpc]
+        private void Server_InitializeAsNetworked(Vector3[] verticies, Vector2[] uv, int[] triangles, bool isQuad, 
+            Vector3 originPoint)
+        {
+            Client_SetMesh(verticies, uv, triangles);
+            Client_InitializeAsNetworked(isQuad, originPoint);
+        }
+
+        /// <summary>
+        /// Sets this line up as networked for other clients.
+        /// </summary>
+        /// <param name="isQuad">Whether this mesh is still just a quad or if it has had points added to it.</param>
+        /// <param name="originPoint">The origion point of the line.</param>
+        [ObserversRpc(ExcludeOwner = true, BufferLast = true)]
+        private void Client_InitializeAsNetworked(bool isQuad, Vector3 originPoint)
+        {
+            this.isQuad = isQuad;
+            this.originPoint = originPoint;
+            isNetworked = true;
         }
 
         /// <summary>
@@ -211,6 +327,9 @@ namespace GraffitiGala.Drawing
             thisMaterial.SetColor("_Color", color);
             // Applies the cloned material to this object's mesh renderer.
             meshRenderer.material = thisMaterial;
+            // Sets NewClient to true, as if a line is being spawned locally on a client then it is definitely
+            // not new.
+            isSetup |= true;
         }
 
         /// <summary>
@@ -241,8 +360,9 @@ namespace GraffitiGala.Drawing
             if(isNetworked)
             {
                 // Updates the entire mesh to allow for new connections to load lines correctly.
-                GetMeshInfo(mesh, out Vector3[] verticies, out Vector2[] uv, out int[] triangles);
-                Server_SetMesh(verticies, uv, triangles);
+                //GetMeshInfo(mesh, out Vector3[] verticies, out Vector2[] uv, out int[] triangles);
+                //Server_SetMesh(verticies, uv, triangles);
+                Server_AddPoint(position, drawDirection, pressure);
             }
 
         }
@@ -319,6 +439,30 @@ namespace GraffitiGala.Drawing
         }
 
         /// <summary>
+        /// Adds a point to all lines across the network.
+        /// </summary>
+        /// <param name="position">The position of the new point.</param>
+        /// <param name="drawDirection">The direction that this point was drawn from.</param>
+        /// <param name="pressure">The pen pressure when this point was added.</param>
+        [ServerRpc]
+        private void Server_AddPoint(Vector3 position, Vector2 drawDirection, float pressure)
+        {
+            Client_AddPoint(position, drawDirection, pressure);
+        }
+
+        /// <summary>
+        /// Adds a line to this non-owner client.
+        /// </summary>
+        /// <param name="position">The position of the new point.</param>
+        /// <param name="drawDirection">The direction that this point was drawn from.</param>
+        /// <param name="pressure">The pen pressure when this point was added.</param>
+        [ObserversRpc(ExcludeOwner = true)]
+        private void Client_AddPoint(Vector3 position, Vector2 drawDirection, float pressure)
+        {
+            Local_AddPoint(position, drawDirection, pressure);
+        }
+
+        /// <summary>
         /// Rotates a mesh around a given pivot point.
         /// </summary>
         /// <param name="mesh">The mesh to rotate.</param>
@@ -345,30 +489,6 @@ namespace GraffitiGala.Drawing
 
             mesh.vertices = verticies;
         }
-
-        ///// <summary>
-        ///// Adds a point to all lines across the network.
-        ///// </summary>
-        ///// <param name="position">The position of the new point.</param>
-        ///// <param name="drawDirection">The direction that this point was drawn from.</param>
-        ///// <param name="pressure">The pen pressure when this point was added.</param>
-        //[ServerRpc]
-        //private void Server_UpdateMesh(Vector2 position, Vector2 drawDirection, float pressure)
-        //{
-        //    Client_AddPoint(position, drawDirection, pressure);
-        //}
-
-        ///// <summary>
-        ///// Adds a line to this non-owner client.
-        ///// </summary>
-        ///// <param name="position">The position of the new point.</param>
-        ///// <param name="drawDirection">The direction that this point was drawn from.</param>
-        ///// <param name="pressure">The pen pressure when this point was added.</param>
-        //[ObserversRpc(ExcludeOwner = true)]
-        //private void Client_AddPoint(Vector2 position, Vector2 drawDirection, float pressure)
-        //{
-        //    Local_AddPoint(position, drawDirection, pressure);
-        //}
         #endregion
     }
 
