@@ -103,10 +103,9 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 4035134273328829344}
   meshFilter: {fileID: 6272970740869397297}
   meshRenderer: {fileID: 8247381600263371267}
-  referenceMaterial: {fileID: -876546973899608171, guid: d912959aabd6a3e439552066ae82eb71, type: 3}
+  referenceMaterial: {fileID: 2100000, guid: a3b633122bba2c2469efddfa80e828cb, type: 2}
   minPressureWidth: 0.5
   maxPressureWidth: 1
-  zLayer: 0
 --- !u!114 &4035134273328829344
 MonoBehaviour:
   m_ObjectHideFlags: 0

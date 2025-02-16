@@ -23,14 +23,18 @@ namespace GraffitiGala
         [SerializeField, Tooltip("The amount of time in seconds that this timer will run for.")] 
         private float time = 120f;
         [Header("Events")]
-        [SerializeField, Tooltip("Called on server/admin clients when the timer begins.")]
-        private UnityEvent OnBeginServer;
+        [Header("Client Events")]
         [SerializeField, Tooltip("Called on all clients when the timer begins.")]
         private UnityEvent OnBeginClient;
-        [SerializeField, Tooltip("Called on server/admin clients when the timer finishes.")]
-        private UnityEvent OnFinishServer;
+        [SerializeField, Tooltip("Called on a given client when it joins late.")]
+        private UnityEvent OnLateJoinClient;
         [SerializeField, Tooltip("Called on all clients when the timer finishes.")]
         private UnityEvent OnFinishClient;
+        [Header("Server Events")]
+        [SerializeField, Tooltip("Called on server/admin clients when the timer begins.")]
+        private UnityEvent OnBeginServer;
+        [SerializeField, Tooltip("Called on server/admin clients when the timer finishes.")]
+        private UnityEvent OnFinishServer;
         private readonly SyncTimer timer = new();
 
         private bool isStarted;
@@ -55,7 +59,7 @@ namespace GraffitiGala
             get
             {
                 timer.Update();
-                return timer.Remaining / time;
+                return timer.Remaining / timer.Duration;
             }
         }
         public float NormalizedProgress
@@ -63,7 +67,7 @@ namespace GraffitiGala
             get
             {
                 timer.Update();
-                return timer.Elapsed / time;
+                return timer.Elapsed / timer.Duration;
             }
         }
         #endregion
@@ -83,6 +87,27 @@ namespace GraffitiGala
                 return;
             }
 
+            StartCoroutine(LateJoin());
+        }
+
+        /// <summary>
+        /// Calls begin events once the timer has been initialized if this client joins the server late and the timer
+        /// is already running.
+        /// </summary>
+        /// <returns>Coroutine.</returns>
+        private IEnumerator LateJoin()
+        {
+            while (!timer.OnStartClientCalled)
+            {
+                yield return null;
+            }
+            // Calls the OnBegin events when a new client joins if the timer is running.
+            if (!timer.Paused && timer.Remaining > 0)
+            {
+                OnBeginClient?.Invoke();
+                OnBeginClientStatic?.Invoke();
+                OnLateJoinClient?.Invoke();
+            }
         }
 
         /// <summary>
