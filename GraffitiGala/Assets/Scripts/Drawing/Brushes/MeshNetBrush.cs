@@ -147,6 +147,17 @@ namespace GraffitiGala.Drawing
         #endregion
 
         /// <summary>
+        /// Clears lines made by this objecct when the client starts.
+        /// </summary>
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            // Clear out all lines when a client starts for debugging purposes.  Sometimes lines will be left over
+            // on the client from errors.
+             ClearLinesOwner();
+        }
+
+        /// <summary>
         /// Handles the playing touching the pen to the tablet.
         /// </summary>
         /// <param name="obj">Unused.</param>
@@ -312,9 +323,9 @@ namespace GraffitiGala.Drawing
         }
 
         /// <summary>
-        /// Clears all lines made nby this brush.
+        /// Clears all lines made by this brush.
         /// </summary>
-        [ServerRpc(RequireOwnership = false)]
+        [ServerRpc]
         protected override void ClearLines()
         {
             foreach (var obj in drawnObjects)

@@ -41,17 +41,17 @@ namespace GraffitiGala.ColorSwitching
         /// <summary>
         /// Sends a unique set of colors to each client.
         /// </summary>
-        public void SendColors()
+        public void CreateColorPool()
         {
             // Resets the new list of possible colors each time a new round starts.
             possibleColors.Clear();
             possibleColors.AddRange(colorChoices.Colors);
             // Get all clients connected to this server.
-            Dictionary<int, NetworkConnection> clients = InstanceFinder.ServerManager.Clients;
-            foreach (NetworkConnection conn in clients.Values)
-            {
-                SendColorsToClient(conn);
-            }
+            //Dictionary<int, NetworkConnection> clients = InstanceFinder.ServerManager.Clients;
+            //foreach (NetworkConnection conn in clients.Values)
+            //{
+            //    SendColorsToClient(conn);
+            //}
         }
 
         /// <summary>
@@ -61,6 +61,12 @@ namespace GraffitiGala.ColorSwitching
         private void SendColorsToClient(NetworkConnection conn)
         {
             if (conn == null) { return; }
+            if (possibleColors.Count < colorNumber) 
+            {
+                Debug.LogError("Client requested colors before colors have been assigned.  This means that a request" +
+                    " occurred before the timer started.");
+                return; 
+            }
             Color[] clientColors = new Color[colorNumber];
             for (int i = 0; i < clientColors.Length; i++)
             {
@@ -90,7 +96,7 @@ namespace GraffitiGala.ColorSwitching
         /// <summary>
         /// Requests colors from the server for this client if it joins late.
         /// </summary>
-        public void RequestColors()
+        public void RequestColorsFromServer()
         {
             InstanceFinder.ClientManager.Broadcast(new ColorRequest());
         }

@@ -145,7 +145,7 @@ namespace GraffitiGala.Drawing
         /// Extra check before calling ClearLines so that only clients that are owners of a brush clear that brush's 
         /// lines.
         /// </summary>
-        private void ClearLinesOwner()
+        protected void ClearLinesOwner()
         {
             if (base.IsOwner)
             {

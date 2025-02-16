@@ -5,6 +5,8 @@ Brandon Koederitz
 Syncronized timer that limits a plyer's time in the experience.
 FishNet
 ***************************************************/
+using FishNet;
+using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using GraffitiGala.Drawing;
@@ -26,8 +28,6 @@ namespace GraffitiGala
         [Header("Client Events")]
         [SerializeField, Tooltip("Called on all clients when the timer begins.")]
         private UnityEvent OnBeginClient;
-        [SerializeField, Tooltip("Called on a given client when it joins late.")]
-        private UnityEvent OnLateJoinClient;
         [SerializeField, Tooltip("Called on all clients when the timer finishes.")]
         private UnityEvent OnFinishClient;
         [Header("Server Events")]
@@ -86,28 +86,6 @@ namespace GraffitiGala
                     "at a time.");
                 return;
             }
-
-            StartCoroutine(LateJoin());
-        }
-
-        /// <summary>
-        /// Calls begin events once the timer has been initialized if this client joins the server late and the timer
-        /// is already running.
-        /// </summary>
-        /// <returns>Coroutine.</returns>
-        private IEnumerator LateJoin()
-        {
-            while (!timer.OnStartClientCalled)
-            {
-                yield return null;
-            }
-            // Calls the OnBegin events when a new client joins if the timer is running.
-            if (!timer.Paused && timer.Remaining > 0)
-            {
-                OnBeginClient?.Invoke();
-                OnBeginClientStatic?.Invoke();
-                OnLateJoinClient?.Invoke();
-            }
         }
 
         /// <summary>
@@ -133,6 +111,10 @@ namespace GraffitiGala
         /// <param name="asServer">Whether this callback is being run on the server or on a client.</param>
         private void Timer_OnChange(SyncTimerOperation op, float prev, float next, bool asServer)
         {
+            if(asServer && !base.IsOwner)
+            {
+                this.GiveOwnership(InstanceFinder.ClientManager.Connection);
+            }
             switch (op)
             {
                 case SyncTimerOperation.Start:
@@ -180,7 +162,10 @@ namespace GraffitiGala
         {
             isStarted = false;
             // Sets the displayer to display no time remaining.
-            displayer.LoadTime(0);
+            if(displayer != null)
+            {
+                displayer.LoadTime(0);
+            }
         }
 
         /// <summary>
