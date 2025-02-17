@@ -488,6 +488,7 @@ MonoBehaviour:
   MasterBanks:
   - Master
   Banks:
+  - Background
   - City Events
   BanksToLoad: []
   LiveUpdatePort: 9264
