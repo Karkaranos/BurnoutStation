@@ -29,7 +29,10 @@ namespace GraffitiGala.UI
         public override void LoadTime(float time)
         {
             Vector3 newPos = Vector3.Lerp(minPosition, maxPosition, time);
-            displayObject.anchoredPosition = newPos;
+            if(displayObject != null )
+            {
+                displayObject.anchoredPosition = newPos;
+            }
         }
     }
 

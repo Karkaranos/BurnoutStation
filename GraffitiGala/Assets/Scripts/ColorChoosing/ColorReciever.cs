@@ -8,9 +8,6 @@ FishNet
 using FishNet;
 using FishNet.Transporting;
 using GraffitiGala.Drawing;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -32,7 +29,10 @@ namespace GraffitiGala.ColorSwitching
         /// </summary>
         private void OnDisable()
         {
-            InstanceFinder.ClientManager.UnregisterBroadcast<ColorData>(RecieveColors);
+            if(InstanceFinder.ClientManager != null)
+            {
+                InstanceFinder.ClientManager.UnregisterBroadcast<ColorData>(RecieveColors);
+            }
         }
 
         /// <summary>
