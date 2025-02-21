@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,6 +16,7 @@ public class FollowMouse2D : MonoBehaviour
     {
         mousePressed = false;
         SetupActions();
+
 
     }
 

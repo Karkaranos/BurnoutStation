@@ -16,6 +16,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using FMOD.Studio;
 
 namespace GraffitiGala
 {
@@ -44,6 +45,8 @@ namespace GraffitiGala
         public static event Action OnBeginServerStatic;
         public static event Action OnFinishClientStatic;
         public static event Action OnFinishServerStatic;
+
+        private EventInstance countdown;
 
         #region Properties
         public float RemainingTime
@@ -134,6 +137,14 @@ namespace GraffitiGala
         }
 
         /// <summary>
+        /// Called upon the first frame update of this object. Instantiates audio references
+        /// </summary>
+        private void Awake()
+        {
+            countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Timer);
+        }
+
+        /// <summary>
         /// Marks this timer as started and handles behaviour that should happen when this timer starts.
         /// </summary>
         private void OnTimerStart(bool asServer)
@@ -150,6 +161,8 @@ namespace GraffitiGala
             {
                 OnBeginServerStatic?.Invoke();
                 OnBeginServer?.Invoke();
+                countdown.start();
+
             }
             OnBeginClientStatic?.Invoke();
             OnBeginClient?.Invoke();
@@ -178,6 +191,10 @@ namespace GraffitiGala
             {
                 OnFinishServer?.Invoke();
                 OnFinishServerStatic?.Invoke();
+                countdown.stop(STOP_MODE.IMMEDIATE);
+                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
+
+                
             }
             OnFinishClient?.Invoke();
             OnFinishClientStatic?.Invoke();

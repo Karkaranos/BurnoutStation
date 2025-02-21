@@ -9,6 +9,7 @@ FishNet, InputSystem, NaughtyAttributes
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using FMOD.Studio;
 using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,6 +47,8 @@ namespace GraffitiGala.Drawing
         private DrawState state = new NotDrawingState();
 
         public static PlayTimer PlayTimer { private get; set; }
+
+        private EventInstance spray;
         #endregion
 
         #region Nested Classes
@@ -155,6 +158,8 @@ namespace GraffitiGala.Drawing
             // Clear out all lines when a client starts for debugging purposes.  Sometimes lines will be left over
             // on the client from errors.
              ClearLinesOwner();
+
+            spray = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Spraypaint);
         }
 
         /// <summary>
@@ -177,6 +182,7 @@ namespace GraffitiGala.Drawing
                     ), this);
                 // Sets the current state as the newly created drawing state.
                 state = drawingState;
+                spray.start();
                 // Adds the drawing state to the queue for initialization of it's line over the network.
                 drawingStateQueue.Add(drawingState);
             }
@@ -190,6 +196,7 @@ namespace GraffitiGala.Drawing
         {
             // Sets the current state to not drawing.
             state = new NotDrawingState();
+            spray.stop(STOP_MODE.IMMEDIATE);
         }
 
         /// <summary>

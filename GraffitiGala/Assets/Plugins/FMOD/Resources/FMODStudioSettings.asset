@@ -490,6 +490,7 @@ MonoBehaviour:
   Banks:
   - Background
   - City Events
+  - PlayerFeedback
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0
