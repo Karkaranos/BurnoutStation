@@ -303,6 +303,9 @@ namespace FishNet.Transporting.Tugboat.Server
 
             Task t = Task.Run(() => ThreadedSocket());
 
+
+            UnityEngine.Debug.Log("Placeholder Text");
+
             return true;
         }
 

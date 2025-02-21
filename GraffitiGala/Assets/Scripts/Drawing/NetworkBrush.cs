@@ -1,7 +1,7 @@
 /*************************************************
 Brandon Koederitz
 1/29/2025
-1/29/2025
+2/15/2025
 Draws images that are shared across the network.
 FishNet, InputSystem
 ***************************************************/
@@ -38,12 +38,15 @@ namespace GraffitiGala.Drawing
         protected InputAction pressureAction;
         protected InputAction pressAction;
         protected InputAction positionAction;
+
+        public static Color CurrentColor { protected get; set; }
         #endregion
 
         #region Properties
+        [Obsolete("BrushColor is depreciated.  Use NetworkBrush.CurrentColor instead.")]
         public Color BrushColor // networkBrush.BrushColor = Blue
         {
-            
+
             get
             {
                // print("wantToChangeColor");
@@ -55,7 +58,7 @@ namespace GraffitiGala.Drawing
             }
         }
         #endregion
-        
+
         #region Methods
         #region Setup
         /// <summary>
@@ -142,7 +145,7 @@ namespace GraffitiGala.Drawing
         /// Extra check before calling ClearLines so that only clients that are owners of a brush clear that brush's 
         /// lines.
         /// </summary>
-        private void ClearLinesOwner()
+        protected void ClearLinesOwner()
         {
             if (base.IsOwner)
             {

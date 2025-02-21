@@ -5,6 +5,8 @@ Brandon Koederitz
 Syncronized timer that limits a plyer's time in the experience.
 FishNet
 ***************************************************/
+using FishNet;
+using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using GraffitiGala.Drawing;
@@ -14,6 +16,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using FMOD.Studio;
 
 namespace GraffitiGala
 {
@@ -23,14 +26,16 @@ namespace GraffitiGala
         [SerializeField, Tooltip("The amount of time in seconds that this timer will run for.")] 
         private float time = 120f;
         [Header("Events")]
-        [SerializeField, Tooltip("Called on server/admin clients when the timer begins.")]
-        private UnityEvent OnBeginServer;
+        [Header("Client Events")]
         [SerializeField, Tooltip("Called on all clients when the timer begins.")]
         private UnityEvent OnBeginClient;
-        [SerializeField, Tooltip("Called on server/admin clients when the timer finishes.")]
-        private UnityEvent OnFinishServer;
         [SerializeField, Tooltip("Called on all clients when the timer finishes.")]
         private UnityEvent OnFinishClient;
+        [Header("Server Events")]
+        [SerializeField, Tooltip("Called on server/admin clients when the timer begins.")]
+        private UnityEvent OnBeginServer;
+        [SerializeField, Tooltip("Called on server/admin clients when the timer finishes.")]
+        private UnityEvent OnFinishServer;
         private readonly SyncTimer timer = new();
 
         private bool isStarted;
@@ -40,6 +45,8 @@ namespace GraffitiGala
         public static event Action OnBeginServerStatic;
         public static event Action OnFinishClientStatic;
         public static event Action OnFinishServerStatic;
+
+        private EventInstance countdown;
 
         #region Properties
         public float RemainingTime
@@ -55,7 +62,7 @@ namespace GraffitiGala
             get
             {
                 timer.Update();
-                return timer.Remaining / time;
+                return timer.Remaining / timer.Duration;
             }
         }
         public float NormalizedProgress
@@ -63,7 +70,7 @@ namespace GraffitiGala
             get
             {
                 timer.Update();
-                return timer.Elapsed / time;
+                return timer.Elapsed / timer.Duration;
             }
         }
         #endregion
@@ -82,7 +89,6 @@ namespace GraffitiGala
                     "at a time.");
                 return;
             }
-
         }
 
         /// <summary>
@@ -108,6 +114,10 @@ namespace GraffitiGala
         /// <param name="asServer">Whether this callback is being run on the server or on a client.</param>
         private void Timer_OnChange(SyncTimerOperation op, float prev, float next, bool asServer)
         {
+            if(asServer && !base.IsOwner)
+            {
+                this.GiveOwnership(InstanceFinder.ClientManager.Connection);
+            }
             switch (op)
             {
                 case SyncTimerOperation.Start:
@@ -127,6 +137,14 @@ namespace GraffitiGala
         }
 
         /// <summary>
+        /// Called upon the first frame update of this object. Instantiates audio references
+        /// </summary>
+        private void Awake()
+        {
+            countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Timer);
+        }
+
+        /// <summary>
         /// Marks this timer as started and handles behaviour that should happen when this timer starts.
         /// </summary>
         private void OnTimerStart(bool asServer)
@@ -143,6 +161,8 @@ namespace GraffitiGala
             {
                 OnBeginServerStatic?.Invoke();
                 OnBeginServer?.Invoke();
+                countdown.start();
+
             }
             OnBeginClientStatic?.Invoke();
             OnBeginClient?.Invoke();
@@ -155,7 +175,10 @@ namespace GraffitiGala
         {
             isStarted = false;
             // Sets the displayer to display no time remaining.
-            displayer.LoadTime(0);
+            if(displayer != null)
+            {
+                displayer.LoadTime(0);
+            }
         }
 
         /// <summary>
@@ -168,6 +191,10 @@ namespace GraffitiGala
             {
                 OnFinishServer?.Invoke();
                 OnFinishServerStatic?.Invoke();
+                countdown.stop(STOP_MODE.IMMEDIATE);
+                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
+
+                
             }
             OnFinishClient?.Invoke();
             OnFinishClientStatic?.Invoke();
