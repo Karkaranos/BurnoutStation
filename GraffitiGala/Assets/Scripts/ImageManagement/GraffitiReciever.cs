@@ -34,7 +34,10 @@ namespace GraffitiGala
         /// </summary>
         private void OnDisable()
         {
-            InstanceFinder.ClientManager.UnregisterBroadcast<ImageData>(RecieveImage);
+            if(InstanceFinder.ClientManager != null)
+            {
+                InstanceFinder.ClientManager.UnregisterBroadcast<ImageData>(RecieveImage);
+            }
         }
 
         /// <summary>

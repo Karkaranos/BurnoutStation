@@ -1,7 +1,7 @@
 /*************************************************
 Brandon Koederitz
 1/30/2025
-1/30/2025
+2/15/2025
 Draws images using a mesh that are shared across the network.
 FishNet, InputSystem, NaughtyAttributes
 ***************************************************/
@@ -9,10 +9,11 @@ FishNet, InputSystem, NaughtyAttributes
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using FMOD.Studio;
 using NaughtyAttributes;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace GraffitiGala.Drawing
@@ -46,6 +47,8 @@ namespace GraffitiGala.Drawing
         private DrawState state = new NotDrawingState();
 
         public static PlayTimer PlayTimer { private get; set; }
+
+        private EventInstance spray;
         #endregion
 
         #region Nested Classes
@@ -147,22 +150,42 @@ namespace GraffitiGala.Drawing
         #endregion
 
         /// <summary>
+        /// Clears lines made by this objecct when the client starts.
+        /// </summary>
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            // Clear out all lines when a client starts for debugging purposes.  Sometimes lines will be left over
+            // on the client from errors.
+             ClearLinesOwner();
+
+            spray = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Spraypaint);
+        }
+
+        /// <summary>
         /// Handles the playing touching the pen to the tablet.
         /// </summary>
         /// <param name="obj">Unused.</param>
         protected override void PressAction_Started(InputAction.CallbackContext obj)
         {
-            // Creates a new line and a new drawing state to link to that line.
-            DrawingState drawingState = new DrawingState(CreateNewLine(
-                brushTexturePrefab,
-                GetMousePosition(),
-                null,
-                BrushColor
-                ), this);
-            // Sets the current state as the newly created drawing state.
-            state = drawingState;
-            // Adds the drawing state to the queue for initialization of it's line over the network.
-            drawingStateQueue.Add(drawingState);
+            //Debug.Log(EventSystem.current.IsPointerOverGameObject());
+            // Prevvents drawing if the pointer is over a UI element like a button.
+            // Will need to test if it works with drawing pens and touch input.
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                // Creates a new line and a new drawing state to link to that line.
+                DrawingState drawingState = new DrawingState(CreateNewLine(
+                    brushTexturePrefab,
+                    GetMousePosition(),
+                    null,
+                    CurrentColor
+                    ), this);
+                // Sets the current state as the newly created drawing state.
+                state = drawingState;
+                spray.start();
+                // Adds the drawing state to the queue for initialization of it's line over the network.
+                drawingStateQueue.Add(drawingState);
+            }
         }
 
         /// <summary>
@@ -173,6 +196,7 @@ namespace GraffitiGala.Drawing
         {
             // Sets the current state to not drawing.
             state = new NotDrawingState();
+            spray.stop(STOP_MODE.IMMEDIATE);
         }
 
         /// <summary>
@@ -312,9 +336,9 @@ namespace GraffitiGala.Drawing
         }
 
         /// <summary>
-        /// Clears all lines made nby this brush.
+        /// Clears all lines made by this brush.
         /// </summary>
-        [ServerRpc(RequireOwnership = false)]
+        [ServerRpc]
         protected override void ClearLines()
         {
             foreach (var obj in drawnObjects)
