@@ -131,7 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5064374}
-  - component: {fileID: 5064373}
+  - component: {fileID: 5064375}
   m_Layer: 0
   m_Name: BuildingManager
   m_TagString: Untagged
@@ -139,21 +139,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &5064373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5064372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de76d450917ad694b96565b1ce0b2e8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buildingPrefabs:
-  - {fileID: 8640490107238908489, guid: d728c1abb6525af4d9b2a07279167728, type: 3}
-  allBuildings: []
 --- !u!4 &5064374
 Transform:
   m_ObjectHideFlags: 0
@@ -169,6 +154,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 109015621}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5064375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5064372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ffb06c64aac13a469ab7e94f54d5f4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingPrefabs: []
+  allBuildings: []
 --- !u!1 &13394700
 GameObject:
   m_ObjectHideFlags: 0
@@ -1014,7 +1013,7 @@ MonoBehaviour:
   OnNewImage:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5064373}
+      - m_Target: {fileID: 5064375}
         m_TargetAssemblyTypeName: GraffitiGala.BuildingManager, Assembly-CSharp
         m_MethodName: SpawnGraffiti
         m_Mode: 0
