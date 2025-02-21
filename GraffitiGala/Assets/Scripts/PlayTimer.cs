@@ -6,9 +6,9 @@ Syncronized timer that limits a plyer's time in the experience.
 FishNet
 ***************************************************/
 using FishNet;
-using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using FMOD.Studio;
 using GraffitiGala.Drawing;
 using GraffitiGala.UI;
 using NaughtyAttributes;
@@ -16,7 +16,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using FMOD.Studio;
 
 namespace GraffitiGala
 {
