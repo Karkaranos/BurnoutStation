@@ -140,7 +140,7 @@ namespace GraffitiGala
         /// </summary>
         private void Awake()
         {
-            //countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Timer);
+            countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Timer);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace GraffitiGala
             {
                 OnBeginServerStatic?.Invoke();
                 OnBeginServer?.Invoke();
-                //countdown.start();
+                countdown.start();
 
             }
             OnBeginClientStatic?.Invoke();
@@ -190,8 +190,8 @@ namespace GraffitiGala
             {
                 OnFinishServer?.Invoke();
                 OnFinishServerStatic?.Invoke();
-                //countdown.stop(STOP_MODE.IMMEDIATE);
-                //AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
+                countdown.stop(STOP_MODE.IMMEDIATE);
+                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
 
                 
             }

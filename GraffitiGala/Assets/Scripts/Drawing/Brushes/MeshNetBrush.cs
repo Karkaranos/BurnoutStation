@@ -159,7 +159,7 @@ namespace GraffitiGala.Drawing
             // on the client from errors.
              ClearLinesOwner();
 
-            //spray = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Spraypaint);
+            spray = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Spraypaint);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace GraffitiGala.Drawing
                     ), this);
                 // Sets the current state as the newly created drawing state.
                 state = drawingState;
-                //spray.start();
+                spray.start();
                 // Adds the drawing state to the queue for initialization of it's line over the network.
                 drawingStateQueue.Add(drawingState);
             }
@@ -196,7 +196,7 @@ namespace GraffitiGala.Drawing
         {
             // Sets the current state to not drawing.
             state = new NotDrawingState();
-            //spray.stop(STOP_MODE.IMMEDIATE);
+            spray.stop(STOP_MODE.IMMEDIATE);
         }
 
         /// <summary>
