@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1267559031563951585}
   - component: {fileID: 602027183628832647}
+  - component: {fileID: 1815298430683474225}
   m_Layer: 0
   m_Name: PlaceholderBuilding2
   m_TagString: Untagged
@@ -84,3 +85,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1815298430683474225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4129837105368629814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899e0a05fdbe9f647b5e0d1aca8de558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingWidth: 11.16
+  buildingHeight: 27
+  validAreas:
+  - startingPosition: {x: -5.9, y: 0.15}
+    areaWidth: 11.16
+    areaHeight: 19
+  scaleModifier: 0.3
+  bufferDistance: 0.1
+  normalWidth: 0.5
+  normalHeight: 0.5
+  testSprite: {fileID: 0}

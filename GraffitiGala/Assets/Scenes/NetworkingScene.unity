@@ -166,7 +166,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ffb06c64aac13a469ab7e94f54d5f4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingPrefabs: []
+  buildingPrefabs:
+  - {fileID: 5322851697319025126, guid: 3c24e4f4a9dc19b469a5ea48db3db3fe, type: 3}
+  - {fileID: 1815298430683474225, guid: 9018162d059ac6e4f9335f0d6cd8bf48, type: 3}
+  - {fileID: 4026122076952700885, guid: 6428311b44530e94d8cb9f7e1e3aebdc, type: 3}
   allBuildings: []
 --- !u!1 &13394700
 GameObject:
