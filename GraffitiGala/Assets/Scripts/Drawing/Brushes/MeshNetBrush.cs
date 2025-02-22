@@ -18,6 +18,7 @@ using UnityEngine.InputSystem;
 
 namespace GraffitiGala.Drawing
 {
+    public delegate void ClearLineCallback(MeshBrushTexture localLine);
     [RequireComponent(typeof(PlayerInput))]
     public class MeshNetBrush : NetworkBrush
     {
@@ -37,6 +38,7 @@ namespace GraffitiGala.Drawing
 
         // List of spawned game objects.
         private readonly SyncList<MeshBrushTexture> drawnObjects = new();
+        private readonly List<MeshBrushTexture> localLines = new();
         // Temporary list to display the spawned objects SyncList in the inspector.
         [SerializeField, ReadOnly, Header("Testing")] private List<MeshBrushTexture> testObjects = new();
         // List that stores drawing states that have not initialized.
@@ -74,7 +76,7 @@ namespace GraffitiGala.Drawing
         private abstract class DrawState
         {
             internal abstract void HandleBrushMove(MeshNetBrush brush);
-            internal abstract void InitializeLine(MeshBrushTexture line);
+            internal abstract void InitializeLine(MeshBrushTexture line, ClearLineCallback clc);
 
             ///// <summary>
             ///// Checks to see if two vectors are within a certain range of each other
@@ -101,7 +103,7 @@ namespace GraffitiGala.Drawing
         {
             // NotDrawingState should do nothing when it's functions are called.
             internal override void HandleBrushMove(MeshNetBrush brush) { }
-            internal override void InitializeLine(MeshBrushTexture line) { }
+            internal override void InitializeLine(MeshBrushTexture line, ClearLineCallback clc) { }
         }
 
         /// <summary>
@@ -128,12 +130,12 @@ namespace GraffitiGala.Drawing
             /// that line based on the changes made to the client line.
             /// </summary>
             /// <param name="spawnedLine">The spawned line.</param>
-            internal override void InitializeLine(MeshBrushTexture spawnedLine)
+            internal override void InitializeLine(MeshBrushTexture spawnedLine, ClearLineCallback clc)
             {
                 // Initializes the spawned line as now communication over the network, and passes the temporary
                 // localLine (which is currently stored in currentLine) to it to laod the mesh from it and to
                 // destroy it.
-                spawnedLine.InitializeAsNetworked(currentLine);
+                spawnedLine.InitializeAsNetworked(currentLine, clc);
                 currentLine = spawnedLine;
             }
 
@@ -165,6 +167,7 @@ namespace GraffitiGala.Drawing
         }
         #endregion
 
+        #region Setup and Cleanup
         /// <summary>
         /// Clears lines made by this objecct when the client starts.
         /// </summary>
@@ -181,6 +184,16 @@ namespace GraffitiGala.Drawing
             }
         }
 
+        /// <summary>
+        /// Clears all local lines if this client disconnects so that they do not persist between connections.
+        /// </summary>
+        public override void OnStopClient()
+        {
+            ClearLocalLines();
+        }
+        #endregion
+
+        #region Input Functions
         /// <summary>
         /// Handles the playing touching the pen to the tablet.
         /// </summary>
@@ -233,6 +246,7 @@ namespace GraffitiGala.Drawing
             // Delegates control to the current state.
             state.HandleBrushMove(this);
         }
+        #endregion
 
         /// <summary>
         /// Lets an external script give this script a reference to the current play timer.
@@ -296,6 +310,9 @@ namespace GraffitiGala.Drawing
             MeshBrushTexture localLine = Instantiate(meshPrefab, Vector2.zero, Quaternion.identity, parent);
             localLine.Initialize(color);
             localLine.Local_InitializeMesh(pressureAction.ReadValue<float>(), position);
+            // Adds the local line to a list of created local lines.  Keeps track of this to ensure that they are
+            // cleared properly if they never are removed by the server.
+            localLines.Add(localLine);
             // Spawns a separate new line over the server.  This line is the actual line that will be used
             // in the drawing, but a temporary local line is created to have better responsiveness.
             Server_CreateNewLine(meshPrefab, position, parent, this.Owner, this, color);
@@ -353,7 +370,7 @@ namespace GraffitiGala.Drawing
             {
                 // Initializes the earlies drawing state in the queue with a reference to the spawned server line
                 // to replace the localLine.
-                brush.drawingStateQueue[0].InitializeLine(line);
+                brush.drawingStateQueue[0].InitializeLine(line, DestroyLocalLine);
                 // Removes the newly initialized state from the queue.  If this state is not the current state, then
                 // no references to it will exist and it will be garbate collected.
                 brush.drawingStateQueue.RemoveAt(0);
@@ -369,6 +386,30 @@ namespace GraffitiGala.Drawing
             foreach (var obj in drawnObjects)
             {
                 ServerManager.Despawn(obj.gameObject);
+            }
+            drawnObjects.Clear();
+            ClearLocalLines();
+        }
+
+        /// <summary>
+        /// Removes a local line and ensure sthe reference to it in the local line list is removed as well.
+        /// </summary>
+        /// <param name="localLine">The local line to destroy.</param>
+        private void DestroyLocalLine(MeshBrushTexture localLine)
+        {
+            localLines.Remove(localLine);
+            Destroy(localLine.gameObject);
+        }
+
+        /// <summary>
+        /// Clears all lines that never got initialized by the server to ensure they dont stick around.
+        /// </summary>
+        [ObserversRpc]
+        private void ClearLocalLines()
+        {
+            foreach (var obj in localLines)
+            {
+                Destroy(obj.gameObject);
             }
             drawnObjects.Clear();
         }
