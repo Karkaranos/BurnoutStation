@@ -1158,11 +1158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eacc669986f3c54195b630eeebfc1bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hiddenObjects:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  _hiddenObjects: []
   _saveBackup: 0
 --- !u!114 &1260712204
 MonoBehaviour:
