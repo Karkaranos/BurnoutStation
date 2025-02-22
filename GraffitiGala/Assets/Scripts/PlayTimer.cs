@@ -22,8 +22,10 @@ namespace GraffitiGala
     public class PlayTimer : NetworkBehaviour
     {
         [SerializeField] private TimeDisplayer displayer;
-        [SerializeField, Tooltip("The amount of time in seconds that this timer will run for.")] 
+        [SerializeField] 
         private float time = 120f;
+        [SerializeField, Tooltip("Disables sound effects to avoid FMOD errors.")]
+        private bool playSoundEffects;
         [Header("Events")]
         [Header("Client Events")]
         [SerializeField, Tooltip("Called on all clients when the timer begins.")]
@@ -140,7 +142,10 @@ namespace GraffitiGala
         /// </summary>
         private void Awake()
         {
-            countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Timer);
+            if (playSoundEffects)
+            {
+                countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Timer);
+            }
         }
 
         /// <summary>
@@ -160,7 +165,10 @@ namespace GraffitiGala
             {
                 OnBeginServerStatic?.Invoke();
                 OnBeginServer?.Invoke();
-                countdown.start();
+                if (playSoundEffects)
+                {
+                    countdown.start();
+                }
 
             }
             OnBeginClientStatic?.Invoke();
@@ -190,10 +198,11 @@ namespace GraffitiGala
             {
                 OnFinishServer?.Invoke();
                 OnFinishServerStatic?.Invoke();
-                countdown.stop(STOP_MODE.IMMEDIATE);
-                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
-
-                
+                if (playSoundEffects)
+                {
+                    countdown.stop(STOP_MODE.IMMEDIATE);
+                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
+                }
             }
             OnFinishClient?.Invoke();
             OnFinishClientStatic?.Invoke();

@@ -265,6 +265,7 @@ MonoBehaviour:
   brushColor: {r: 1, g: 0, b: 0.6574316, a: 1}
   drawBuffer: 0.1
   brushTexturePrefab: {fileID: 6192131541430378155, guid: d9f01cdccd0792940b59ddd250536f87, type: 3}
+  playSoundEffects: 0
   testObjects: []
 --- !u!114 &3547245522247427985
 MonoBehaviour:
