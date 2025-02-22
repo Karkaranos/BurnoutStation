@@ -13,10 +13,18 @@ namespace GraffitiGala
 {
     public class BuildHider : MonoBehaviour
     {
+        [SerializeField] private AllowedBuilds hiddenInBuilds;
 
+        /// <summary>
+        /// Hides this object if the BuildManager doesnt contain it's flag.
+        /// </summary>
         private void Awake()
         {
-            
+            if (BuildManager.CheckBuild(hiddenInBuilds))
+            {
+                //Debug.Log("Hiding object " + name);
+                gameObject.SetActive(false);
+            }
         }
     }
 

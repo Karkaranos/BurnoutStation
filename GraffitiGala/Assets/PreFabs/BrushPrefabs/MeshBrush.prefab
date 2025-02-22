@@ -16,8 +16,7 @@ GameObject:
   - component: {fileID: 1161096938040531545}
   - component: {fileID: 7956376751250134918}
   - component: {fileID: 6722046548934211994}
-  - component: {fileID: 1393908869104079281}
-  - component: {fileID: 2405505278799965713}
+  - component: {fileID: 3547245522247427985}
   m_Layer: 0
   m_Name: MeshBrush
   m_TagString: Untagged
@@ -267,65 +266,19 @@ MonoBehaviour:
   drawBuffer: 0.1
   brushTexturePrefab: {fileID: 6192131541430378155, guid: d9f01cdccd0792940b59ddd250536f87, type: 3}
   testObjects: []
---- !u!58 &1393908869104079281
-CircleCollider2D:
+--- !u!114 &3547245522247427985
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4096138338718352979}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 1.28
---- !u!50 &2405505278799965713
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4096138338718352979}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 3
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f38e700a0c58984a89516c5f111f0da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 7791339827098185091}
+  _networkObjectCache: {fileID: 0}
+  hiddenInBuilds: 2
