@@ -48,8 +48,23 @@ namespace GraffitiGala.Drawing
         private DrawState state = new NotDrawingState();
 
         public static PlayTimer PlayTimer { private get; set; }
+        private static Transform drawingParent;
 
         private EventInstance spray;
+        #endregion
+
+        #region Properties
+        private static Transform DrawingParent
+        {
+            get
+            {
+                if (drawingParent == null)
+                {
+                    drawingParent = GameObject.FindGameObjectWithTag("DrawingParent").transform;
+                }
+                return drawingParent;
+            }
+        }
         #endregion
 
         #region Nested Classes
@@ -181,7 +196,7 @@ namespace GraffitiGala.Drawing
                 DrawingState drawingState = new DrawingState(CreateNewLine(
                     brushTexturePrefab,
                     GetMousePosition(),
-                    null,
+                    DrawingParent,
                     CurrentColor
                     ), this);
                 // Sets the current state as the newly created drawing state.

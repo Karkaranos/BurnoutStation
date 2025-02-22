@@ -2,8 +2,7 @@
 Brandon Koederitz
 2/21/2025
 2/21/2025
-Hides certain client-side only objects based on the settings of this build's BuildControl asset.
-
+Hides certain object on a given client based on the BuildType of this build's BuildManager.
 ***************************************************/
 using System.Collections;
 using System.Collections.Generic;

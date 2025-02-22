@@ -282,4 +282,4 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 7791339827098185091}
   _networkObjectCache: {fileID: 0}
-  hiddenInBuilds: 2
+  hiddenInBuilds: 3

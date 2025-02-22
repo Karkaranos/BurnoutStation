@@ -2,12 +2,10 @@
 Brandon Koederitz
 2/21/2025
 2/21/2025
-Hides network elements, including if they are spawned, from certain builds.
+Hides network elements owned by a given build, including if they are spawned, from all clients.
 FishNet
 ***************************************************/
 using FishNet.Object;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GraffitiGala
@@ -22,10 +20,26 @@ namespace GraffitiGala
         /// </summary>
         public override void OnStartClient()
         {
-            if (BuildManager.CheckBuild(hiddenInBuilds))
+            if (BuildManager.CheckBuild(hiddenInBuilds) && base.IsOwner)
             {
-                gameObject.SetActive(false);
+                Server_HideObject();
             }
+        }
+        /// <summary>
+        /// Broadcasts to hide this object over the server.
+        /// </summary>
+        [ServerRpc]
+        private void Server_HideObject()
+        {
+            Client_HideObject();
+        }
+        /// <summary>
+        /// Hides this object on observing clients.
+        /// </summary>
+        [ObserversRpc]
+        private void Client_HideObject()
+        {
+            gameObject.SetActive(false);
         }
     }
 }
