@@ -1,7 +1,7 @@
 /*************************************************
 Author:                     Cade Naylor
 Creation Date:              2/13/2025
-Modified Date:              2/13/2025
+Modified Date:              2/23/2025
 Summary:                    Spawns saved images onto buildings
 ***************************************************/
 using System.Collections;
@@ -10,10 +10,12 @@ using UnityEngine;
 
 public class BuildingBehavior : MonoBehaviour
 {
-    [SerializeField, Tooltip("Building Width, in Unity Units")]
-    private float buildingWidth;
-    [SerializeField, Tooltip("Building Height, in Unity Units")]
-    private float buildingHeight;
+    [field: SerializeField, Tooltip("The sprite renderer of this building.")]
+    public SpriteRenderer Rend { get; private set; }
+    [field: SerializeField, Tooltip("Building Width, in Unity Units")]
+    public float BuildingWidth { get; private set; }
+    [field: SerializeField, Tooltip("Building Height, in Unity Units")]
+    public float BuildingHeight { get; private set; }
     [SerializeField, Tooltip("All rectangles on the building that drawings can appear in")]
     private List<DrawingArea> validAreas = new List<DrawingArea>();
     [SerializeField, Range(0f, 2f), Tooltip("Scale modifier for spawned Drawings")]
