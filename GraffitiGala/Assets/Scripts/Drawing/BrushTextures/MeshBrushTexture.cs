@@ -1,7 +1,7 @@
 /*************************************************
 Brandon Koederitz
 1/30/2025
-1/30/2025
+2/22/2025
 Control script for instantiated paint prefabs that use the Mesh drawing system.
 FishNet, InputSystem, NaughtyAttributes
 ***************************************************/
