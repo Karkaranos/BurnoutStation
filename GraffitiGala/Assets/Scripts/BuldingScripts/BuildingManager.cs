@@ -9,9 +9,15 @@ namespace GraffitiGala
 
     public class BuildingManager : MonoBehaviour
     {
+        [SerializeField] private BuildingScroller scroller;
         [Header("Building Settings")]
         [SerializeField, Tooltip("The minimum amount of buildings that should be spawned to ensure that the screen is always scrolling.")]
-        private float minBuildingCount;
+        private int minBuildingCount;
+        [Header("Sprite Settings")]
+        [SerializeField, Tooltip("The normalized position of graffiti sprite's pivot points.")]
+        private Vector2 pivotPoint = new Vector2(0.5f, 0.5f);
+        [SerializeField]
+        private float pixelsPerUnit = 256f;
         [Header("Control Panel")]
         [SerializeField, Tooltip("All buildings that can be spawned. They should all be prefabs.")]
         private BuildingBehavior[] buildingPrefabs;
@@ -23,32 +29,75 @@ namespace GraffitiGala
         // Start is called before the first frame update
         void Start()
         {
-            SpawnNewBuilding();
+            // Creates enough buildings to meet the specified min buildings.  Done this way to ensure we always have enough
+            // buildings to have a full screen at all times.
+            int buildingDiff = minBuildingCount - allBuildings.Count;
+            if (buildingDiff > 0 )
+            {
+                for (int i = 0; i < minBuildingCount; i++)
+                {
+                    SpawnNewBuilding();
+                }
+            }
         }
 
         [Button]
         public void SpawnNewBuilding()
         {
             int index = Random.Range(0, buildingPrefabs.Length);
-            allBuildings.Add(Instantiate(buildingPrefabs[index], transform.position, Quaternion.identity, transform));
+            BuildingBehavior newBuilding = Instantiate(buildingPrefabs[index], transform.position, Quaternion.identity, transform);
+            allBuildings.Add(newBuilding);
+            scroller.AddNewBuildingAsTarget(newBuilding);
         }
 
         public void SpawnGraffiti(string filePath)
         {
-            if (!allBuildings[currentBuildingIndex].BuildingIsFull)
+            //if (!allBuildings[currentBuildingIndex].BuildingIsFull)
+            //{
+            //    allBuildings[currentBuildingIndex].SpawnDrawing(ImageManagement.LoadSprite(filePath, new Vector2(0.5f, 0.5f), 256f));
+            //}
+            //else
+            //{
+            //    currentBuildingIndex++;
+            //    if (currentBuildingIndex > allBuildings.Count)
+            //    {
+            //        SpawnNewBuilding();
+            //        SpawnGraffiti(filePath);
+            //    }
+            //}
+
+            if (!scroller.TargetBuilding.BuildingIsFull)
             {
-                allBuildings[currentBuildingIndex].SpawnDrawing(ImageManagement.LoadSprite(filePath, new Vector2(0.5f, 0.5f), 256f));
+                bool successfullySpawned = scroller.TargetBuilding.SpawnDrawing
+                    (ImageManagement.LoadSprite(filePath, pivotPoint, pixelsPerUnit));
+                // If we add a graffiti but it fails due to the building now realizing that it is full, then call 
+                // Spawn graffiti again to ensure no graffiti is lost.
+                if (!successfullySpawned)
+                {
+                    SpawnGraffiti(filePath);
+                }
+                Debug.Log("Spawning graffiti " + filePath + " on building " + scroller.TargetBuilding);
             }
             else
             {
-                currentBuildingIndex++;
-                if (currentBuildingIndex > allBuildings.Count)
+                // Attempts to have the scroller find an already existing building that isnt full.
+                if (scroller.FindNewTarget())
                 {
+                    SpawnGraffiti(filePath);
+                }
+                else
+                {
+                    // If there are no valid buildings that arent full, then create a new one.
                     SpawnNewBuilding();
                     SpawnGraffiti(filePath);
                 }
             }
         }
 
+        [Button]
+        private void SpawnTestGraffiti()
+        {
+            SpawnGraffiti(ImageManagement.GetFilePath("GraffitiFile_638752277731768409"));
+        }
     }
 }

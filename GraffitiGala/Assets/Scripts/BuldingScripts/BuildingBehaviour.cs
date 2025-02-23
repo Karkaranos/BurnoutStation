@@ -38,7 +38,7 @@ public class BuildingBehavior : MonoBehaviour
 
     public bool BuildingIsFull { get => buildingIsFull; }
 
-    public void SpawnDrawing(Sprite spawnMe)
+    public bool SpawnDrawing(Sprite spawnMe)
     {
         GameObject g = new GameObject();
         g.transform.parent = this.transform;
@@ -62,13 +62,13 @@ public class BuildingBehavior : MonoBehaviour
                 Debug.Log("Building is full");
                 buildingIsFull = true;
                 Destroy(g);
-                return;
+                return false;
             }
         }
         g.transform.localScale = new Vector3(scaleModifier, scaleModifier, 1);
         g.AddComponent<SpriteRenderer>();
         g.GetComponent<SpriteRenderer>().sprite = spawnMe;
-
+        return true;
     }
 
     // Start is called before the first frame update

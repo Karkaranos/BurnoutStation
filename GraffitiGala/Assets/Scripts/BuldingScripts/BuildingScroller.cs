@@ -11,7 +11,7 @@ namespace GraffitiGala
 {
     public class BuildingScroller : MonoBehaviour
     {
-        [SerializeField] private Camera cam;
+        [SerializeField, Tooltip("The main camera that will display the city block.")] private Camera mainCam;
         [Header("Settings")]
         [SerializeField, Tooltip("The amount of space between each building")]
         private float buildingMargin;
@@ -34,7 +34,7 @@ namespace GraffitiGala
             scrollingRight = MathHelpers.GetSign(buildingScrollSpeed) > 0;
             ReorderPositions();
             // Temporarily set the target to the 3rd index.
-            TargetBuilding = scrollingBuildings[2];
+            //TargetBuilding = scrollingBuildings[2];
         }
 
         /// <summary>
@@ -53,9 +53,11 @@ namespace GraffitiGala
         private void UpdateTarget()
         {
             if (TargetBuilding == null) { return; }
-            if (CheckObjectInCamera(cam, TargetBuilding.Rend))
+            if (CheckObjectInCamera(mainCam, TargetBuilding.Rend))
             {
                 int newIndex = scrollingBuildings.IndexOf(TargetBuilding) + 1;
+                // If there are no other buildings behind this one, then return to avoid out of range exception.
+                if (newIndex >= scrollingBuildings.Count) { return; }
                 //Debug.Log(newIndex);
                 SetTarget(scrollingBuildings[newIndex]);
             }
@@ -79,7 +81,10 @@ namespace GraffitiGala
         private void SetTarget(BuildingBehavior target)
         {
             // Debug color change.
-            TargetBuilding.Rend.color = Color.white;
+            if (TargetBuilding != null) 
+            {
+                TargetBuilding.Rend.color = Color.white;
+            }
             TargetBuilding = target;
             TargetBuilding.Rend.color = Color.red;
         }
@@ -88,7 +93,7 @@ namespace GraffitiGala
         {
             bool ValidTargetPredicate(BuildingBehavior item)
             {
-                return !item.BuildingIsFull && !CheckObjectInCamera(cam, item.Rend);
+                return !item.BuildingIsFull && !CheckObjectInCamera(mainCam, item.Rend);
             }
 
             BuildingBehavior newTarget = scrollingBuildings.Find(ValidTargetPredicate);
@@ -213,7 +218,7 @@ namespace GraffitiGala
 
             if (TargetBuilding == null)
             {
-                SetTarget(null);
+                SetTarget(buildingToAdd);
             }
         }
 
@@ -222,7 +227,8 @@ namespace GraffitiGala
         /// </summary>
         private void ReorderPositions()
         {
-            float currentPosition = 0;
+            if (scrollingBuildings.Count == 0) { return; }
+            float currentPosition = scrollingBuildings[0].transform.localPosition.x;
             for (int i = 0; i < scrollingBuildings.Count; i++)
             {
                 MoveToPosition(scrollingBuildings[i], currentPosition);
