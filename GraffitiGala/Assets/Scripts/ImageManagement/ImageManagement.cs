@@ -57,7 +57,7 @@ namespace GraffitiGala
         /// an error if you attempt to access a directory that does not exist.
         /// </param>
         /// <returns>The file path navigating to that file in StreamingAssets</returns>
-        private static string GetFilePath(string fileName, bool createDirectory = false)
+        public static string GetFilePath(string fileName, bool createDirectory = false)
         {
             if (createDirectory)
             {

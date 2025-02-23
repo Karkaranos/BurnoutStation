@@ -43,5 +43,22 @@ namespace GraffitiGala
         {
             return Mathf.Atan2(vector.y, vector.x);
         }
+
+        /// <summary>
+        /// Gets the sign of a given number.
+        /// </summary>
+        /// <param name="num">The number to evaluate.</param>
+        /// <returns>Either -1 or 1, depending on the sign of the number.</returns>
+        public static int GetSign(float num)
+        {
+            if (num == 0)
+            {
+                // Prevents divide by 0 error.
+                return 0;
+            }
+
+            // Divides the absolute value of number by itself.  Returns either -1 or 1 depending on the sign of the number.
+            return Mathf.RoundToInt(Mathf.Abs(num) / num);
+        }
     }
 }

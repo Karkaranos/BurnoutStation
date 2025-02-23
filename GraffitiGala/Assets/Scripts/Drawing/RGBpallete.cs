@@ -37,7 +37,7 @@ public class RGBpallete : MonoBehaviour
         if (collision.gameObject.name == "MeshBrush(Clone)")
         {
             
-                collision.gameObject.GetComponent<MeshNetBrush>().BrushColor = paint; // makes the pointer red
+                //collision.gameObject.GetComponent<MeshNetBrush>().BrushColor = paint; // makes the pointer red
 
 
         }
