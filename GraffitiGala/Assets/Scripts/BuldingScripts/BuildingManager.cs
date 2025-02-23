@@ -68,14 +68,7 @@ namespace GraffitiGala
 
             if (!scroller.TargetBuilding.BuildingIsFull)
             {
-                bool successfullySpawned = scroller.TargetBuilding.SpawnDrawing
-                    (ImageManagement.LoadSprite(filePath, pivotPoint, pixelsPerUnit));
-                // If we add a graffiti but it fails due to the building now realizing that it is full, then call 
-                // Spawn graffiti again to ensure no graffiti is lost.
-                if (!successfullySpawned)
-                {
-                    SpawnGraffiti(filePath);
-                }
+                scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, pivotPoint, pixelsPerUnit));
                 Debug.Log("Spawning graffiti " + filePath + " on building " + scroller.TargetBuilding);
             }
             else

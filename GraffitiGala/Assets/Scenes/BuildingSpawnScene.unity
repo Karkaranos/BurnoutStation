@@ -753,12 +753,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd4fd00e656f90e41b7f4ded06381846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCam: {fileID: 215591477}
+  cityDisplayCam: {fileID: 215591477}
   buildingMargin: 5
   buildingScrollSpeed: -20
   wrapAroundPosition: -20
   baseline: -9
-  scrollingBuildings: []
 --- !u!1001 &750247849
 PrefabInstance:
   m_ObjectHideFlags: 0

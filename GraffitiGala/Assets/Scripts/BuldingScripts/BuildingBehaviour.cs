@@ -38,7 +38,7 @@ public class BuildingBehavior : MonoBehaviour
 
     public bool BuildingIsFull { get => buildingIsFull; }
 
-    public bool SpawnDrawing(Sprite spawnMe)
+    public void SpawnDrawing(Sprite spawnMe)
     {
         GameObject g = new GameObject();
         g.transform.parent = this.transform;
@@ -46,7 +46,7 @@ public class BuildingBehavior : MonoBehaviour
         localSpawningPosition.x += (normalWidth * scaleModifier) + bufferDistance;
         if (localSpawningPosition.x > validAreas[currentSpawnArea].AreaWidth + validAreas[currentSpawnArea].StartingPosition.x)
         {
-            if (localSpawningPosition.y + bufferDistance + (normalHeight * scaleModifier) > validAreas[currentSpawnArea].StartingPosition.y - validAreas[currentSpawnArea].AreaHeight)
+            if (localSpawningPosition.y - (bufferDistance + (normalHeight * scaleModifier)) > validAreas[currentSpawnArea].StartingPosition.y - validAreas[currentSpawnArea].AreaHeight)
             {
                 localSpawningPosition.y -= bufferDistance + (normalHeight * scaleModifier);
                 localSpawningPosition.x = validAreas[currentSpawnArea].StartingPosition.x;
@@ -61,18 +61,20 @@ public class BuildingBehavior : MonoBehaviour
             {
                 Debug.Log("Building is full");
                 buildingIsFull = true;
-                Destroy(g);
-                return false;
+                // Returning here was preventing the graffiti that takes up the last space on the building to be destroyed.
+                // Because this is predicting where the next spawn point will be, we should let the graffiti spawn normally
+                // so it isnt lost.
+                //Destroy(g);
+                //return;
             }
         }
         g.transform.localScale = new Vector3(scaleModifier, scaleModifier, 1);
         g.AddComponent<SpriteRenderer>();
         g.GetComponent<SpriteRenderer>().sprite = spawnMe;
-        return true;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    // Switched this to Awake so that it gets initialized when the prefab is spawned.
+    void Awake()
     {
         localSpawningPosition = new Vector3(validAreas[0].StartingPosition.x, validAreas[0].StartingPosition.y, -1);
     }

@@ -4,6 +4,7 @@ Brandon Koederitz
 2/23/2025
 Scrolls buildings past the camera and wraps them around.
 ***************************************************/
+using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace GraffitiGala
 {
     public class BuildingScroller : MonoBehaviour
     {
-        [SerializeField, Tooltip("The main camera that will display the city block.")] private Camera mainCam;
+        [SerializeField, Tooltip("The main camera that will display the city block.")] private Camera cityDisplayCam;
         [Header("Settings")]
         [SerializeField, Tooltip("The amount of space between each building")]
         private float buildingMargin;
@@ -22,7 +23,7 @@ namespace GraffitiGala
         [SerializeField, Tooltip("The Y position that all buildings should have their bottom touching, regardless of height.")] 
         private float baseline;
 
-        [SerializeField] private List<BuildingBehavior> scrollingBuildings = new();
+        private readonly List<BuildingBehavior> scrollingBuildings = new();
         public BuildingBehavior TargetBuilding { get; private set; }
         private bool scrollingRight;
 
@@ -53,7 +54,7 @@ namespace GraffitiGala
         private void UpdateTarget()
         {
             if (TargetBuilding == null) { return; }
-            if (CheckObjectInCamera(mainCam, TargetBuilding.Rend))
+            if (CheckObjectInCamera(cityDisplayCam, TargetBuilding.Rend))
             {
                 int newIndex = scrollingBuildings.IndexOf(TargetBuilding) + 1;
                 // If there are no other buildings behind this one, then return to avoid out of range exception.
@@ -93,7 +94,7 @@ namespace GraffitiGala
         {
             bool ValidTargetPredicate(BuildingBehavior item)
             {
-                return !item.BuildingIsFull && !CheckObjectInCamera(mainCam, item.Rend);
+                return !item.BuildingIsFull && !CheckObjectInCamera(cityDisplayCam, item.Rend);
             }
 
             BuildingBehavior newTarget = scrollingBuildings.Find(ValidTargetPredicate);
