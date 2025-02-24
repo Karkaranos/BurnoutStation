@@ -39,6 +39,10 @@ namespace GraffitiGala
                     SpawnNewBuilding();
                 }
             }
+
+            // Load all graffiti when the program begins so that A) people can see work from previous days and B)
+            // In case the event crashes, we can load all existing files people have made.
+            LoadAllGraffiti();
         }
 
         [Button]
@@ -69,7 +73,7 @@ namespace GraffitiGala
             if (!scroller.TargetBuilding.BuildingIsFull)
             {
                 scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, pivotPoint, pixelsPerUnit));
-                Debug.Log("Spawning graffiti " + filePath + " on building " + scroller.TargetBuilding);
+                // Debug.Log("Spawning graffiti " + filePath + " on building " + scroller.TargetBuilding);
             }
             else
             {
@@ -84,6 +88,21 @@ namespace GraffitiGala
                     SpawnNewBuilding();
                     SpawnGraffiti(filePath);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Loads all Graffiti files from StreamingAssets and places them on buildings.
+        /// </summary>
+        private void LoadAllGraffiti()
+        {
+            string[] paths = System.IO.Directory.GetFiles(ImageManagement.FileDirectory);
+            foreach (string path in paths)
+            {
+                // Slightly worried this can cuase some problems if it tries to load too many files at once.  Will
+                // likely need to find a way to buffer this.
+                // May need to spawn over 210 files at FUSE.  Will need to stress test this later.
+                SpawnGraffiti(path);
             }
         }
 
