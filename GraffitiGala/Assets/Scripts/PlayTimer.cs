@@ -1,7 +1,7 @@
 /*************************************************
 Brandon Koederitz
 2/9/2025
-2/9/2025
+2/23/2025
 Syncronized timer that limits a plyer's time in the experience.
 FishNet
 ***************************************************/
@@ -90,6 +90,11 @@ namespace GraffitiGala
                     "at a time.");
                 return;
             }
+            // Sets the host as the owner of this object.
+            if (base.IsHostStarted && !base.IsOwner)
+            {
+                this.GiveOwnership(InstanceFinder.ClientManager.Connection);
+            }
         }
 
         /// <summary>
@@ -115,10 +120,6 @@ namespace GraffitiGala
         /// <param name="asServer">Whether this callback is being run on the server or on a client.</param>
         private void Timer_OnChange(SyncTimerOperation op, float prev, float next, bool asServer)
         {
-            if(asServer && !base.IsOwner)
-            {
-                this.GiveOwnership(InstanceFinder.ClientManager.Connection);
-            }
             switch (op)
             {
                 case SyncTimerOperation.Start:
