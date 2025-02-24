@@ -733,7 +733,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scroller: {fileID: 692225684}
-  minBuildingCount: 1
+  minBuildingCount: 7
   pivotPoint: {x: 0.5, y: 0.5}
   pixelsPerUnit: 100
   buildingPrefabs:
