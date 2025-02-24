@@ -44,7 +44,7 @@ namespace GraffitiGala
             promptText.gameObject.SetActive(true);
             // Do fancier prompt polish here.
             promptText.text = prompt;
-            Debug.Log("RecievedPrompt");
+            //Debug.Log("RecievedPrompt");
         }
     }
 }
