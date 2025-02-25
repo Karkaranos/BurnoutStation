@@ -288,6 +288,7 @@ namespace GraffitiGala
         [Button]
         private void BeginExperience()
         {
+            SetState(ExperienceState.Loading);
             SetState(ExperienceState.Playing);
         }
 
@@ -295,6 +296,7 @@ namespace GraffitiGala
         private void EndExperience()
         {
             SetState(ExperienceState.Finished);
+            SetState(ExperienceState.Waiting);
         }
 
         private void Update()
