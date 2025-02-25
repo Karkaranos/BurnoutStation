@@ -26,7 +26,7 @@ namespace GraffitiGala
         private float time = 120f;
         [SerializeField, Tooltip("Disables sound effects to avoid FMOD errors.")]
         private bool playSoundEffects;
-        [Header("Events")]
+        [Header("Events (Obsolete)")]
         [Header("Client Events")]
         [ReadOnly, SerializeField, Tooltip("Called on all clients when the timer begins.")]
         private UnityEvent OnBeginClient;

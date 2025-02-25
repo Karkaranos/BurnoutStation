@@ -1049,7 +1049,7 @@ GameObject:
   - component: {fileID: 487937601}
   - component: {fileID: 487937600}
   m_Layer: 0
-  m_Name: ConnectionEvents
+  m_Name: ConnectionEvents (Obsolete)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3155,11 +3155,11 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1933812519}
+  - {fileID: 1321683919}
   - {fileID: 567763805}
   - {fileID: 487937602}
   - {fileID: 1259247656}
   - {fileID: 1549895331}
-  - {fileID: 1321683919}
   - {fileID: 1886649678}
   - {fileID: 1559451522}
   - {fileID: 1954582103}
