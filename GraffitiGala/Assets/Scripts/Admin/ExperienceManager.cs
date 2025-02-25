@@ -1,8 +1,8 @@
 /*************************************************
 Brandon Koederitz
 2/23/2025
-2/23/2025
-Broadcasts events that manage the beginning and ending of an experience.
+2/24/2025
+Manages the current state of the experience and broadcasts events when states are moved to.
 FishNet, NaughtyAttributes
 ***************************************************/
 using FishNet;
@@ -32,6 +32,8 @@ namespace GraffitiGala
         private int readyNumber = 3;
         [SerializeField] private ExperienceEvents serverEvents;
         [SerializeField] private ExperienceEvents clientEvents;
+        // Test code.
+        [SerializeField, ReadOnly] private ExperienceState currentStateTest;
 
         private readonly SyncList<NetworkConnection> readiedConnections = new();
         private readonly SyncVar<int> serverReadyCount = new();
@@ -107,11 +109,11 @@ namespace GraffitiGala
         /// </summary>
         private void OnEnable()
         {
-            syncState.OnChange += SyncState_OnChange;
+            syncState.OnChange += SyncState_HandleOnChange;
         }
         private void OnDisable()
         {
-            syncState.OnChange -= SyncState_OnChange;
+            syncState.OnChange -= SyncState_HandleOnChange;
         }
 
         /// <summary>
@@ -121,10 +123,24 @@ namespace GraffitiGala
         {
             if (base.IsServerStarted && !base.IsOwner)
             {
-                Debug.Log("This is the server");
+                //Debug.Log("This is the server");
                 this.GiveOwnership(InstanceFinder.ClientManager.Connection);
                 Server_SetReadyCount(readyNumber);
             }
+            // Change to waiting state automatically on connect.
+            InternalSetState(ExperienceState.Waiting);
+        }
+
+        /// <summary>
+        /// When the client disconnects, immediately call the disconnect events.
+        /// </summary>
+        public override void OnStopClient()
+        {
+            if (base.IsServerStarted)
+            {
+                serverEvents.CallEvent(ExperienceState.Disconnected);
+            }
+            clientEvents.CallEvent(ExperienceState.Disconnected);
         }
         #endregion
 
@@ -162,11 +178,28 @@ namespace GraffitiGala
                 Debug.LogError("No instance of the ExperienceManager exists.");
                 return ExperienceState.Disconnected;
             }
-            return instance.syncState.Value;
+            return instance.InternalGetState();
         }
 
         /// <summary>
-        /// Changes the current state of the experience from the server.
+        /// Gets the experience state from the instance and checks if the client is started.
+        /// </summary>
+        /// <remarks>
+        /// Use this function when getting the state within this script.
+        /// </remarks>
+        /// <returns>The current state of the experience.</returns>
+        private ExperienceState InternalGetState()
+        {
+            // If the client isnt connected to the network, always set it's state as disconnected.
+            if (!base.IsClientStarted)
+            {
+                return ExperienceState.Disconnected;
+            }
+            return syncState.Value;
+        }
+
+        /// <summary>
+        /// Changes the current state of the experience.
         /// </summary>
         /// <remarks>
         /// Only the server is allowed to call this function.
@@ -179,14 +212,17 @@ namespace GraffitiGala
                 Debug.LogError("No instance of the ExperienceManager exists.");
                 return;
             }
-            instance.SetStateServerCheck(state);
+            instance.InternalSetState(state);
         }
 
         /// <summary>
-        /// Sets the state by rerouting through the instance to check if this functions is being run by the server.
+        /// Sets the state through the instance.
         /// </summary>
+        /// <remarks>
+        /// Use this function when working within this script.
+        /// </remarks>
         /// <param name="state">The new state to move to.</param>
-        private void SetStateServerCheck(ExperienceState state)
+        private void InternalSetState(ExperienceState state)
         {
             if (base.IsServerStarted)
             {
@@ -200,7 +236,7 @@ namespace GraffitiGala
         /// <param name="prev">The previous experience state.</param>
         /// <param name="next">The new experience state.</param>
         /// <param name="asServer">Whether this callback is being run on the server.</param>
-        private void SyncState_OnChange(ExperienceState prev, ExperienceState next, bool asServer)
+        private void SyncState_HandleOnChange(ExperienceState prev, ExperienceState next, bool asServer)
         {
             if (asServer)
             {
@@ -212,7 +248,7 @@ namespace GraffitiGala
 
         #region Readying
         /// <summary>
-        /// Readys this client.  Once enough clients are ready, the experience will start.
+        /// Readiess this client.  Once enough clients are ready, the experience will start.
         /// </summary>
         public static void ReadyClient()
         {
@@ -221,8 +257,12 @@ namespace GraffitiGala
                 Debug.LogError("No instance of the ExperienceManager exists.");
                 return;
             }
-            NetworkConnection thisConnection = InstanceFinder.ClientManager.Connection;
-            instance.Server_ReadyClient(thisConnection);
+            // Only allow client to ready if the experience is in the waiting state.
+            if (GetState() == ExperienceState.Waiting)
+            {
+                NetworkConnection thisConnection = InstanceFinder.ClientManager.Connection;
+                instance.Server_ReadyClient(thisConnection);
+            }
         }
 
         /// <summary>
@@ -239,7 +279,6 @@ namespace GraffitiGala
                 // Call just Server_SetState here because we're already in an RPC.  We cant access the instance and
                 // dont need to check if we are the server.
                 Server_SetState(ExperienceState.Loading);
-                // Clear the readied connections.
                 readyConnection.Objects.Clear();
             }
         }
@@ -257,7 +296,11 @@ namespace GraffitiGala
         {
             SetState(ExperienceState.Finished);
         }
+
+        private void Update()
+        {
+            currentStateTest = InternalGetState();
+        }
         #endregion
     }
-
 }
