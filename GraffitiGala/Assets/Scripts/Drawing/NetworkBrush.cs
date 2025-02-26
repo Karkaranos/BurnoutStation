@@ -140,7 +140,7 @@ namespace GraffitiGala.Drawing
         /// Gets the mouse position in world space from the InputAction that tracks it.
         /// </summary>
         /// <returns>The mouse position as a Vector3 in world space.</returns>
-        protected internal Vector2 GetMousePosition()
+        protected internal Vector2 GetPointerPosition()
         {
             return Camera.main.ScreenToWorldPoint(positionAction.ReadValue<Vector2>());
         }
