@@ -4,7 +4,6 @@ Brandon Koederitz
 2/22/2025
 Hides an object on the UI if the player clicks off of the UI.
 ***************************************************/
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;

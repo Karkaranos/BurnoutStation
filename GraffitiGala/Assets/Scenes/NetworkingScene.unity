@@ -2343,7 +2343,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 0}
   displayer: {fileID: 275006552}
   time: 20
-  playSoundEffects: 0
+  playSoundEffects: 1
   OnBeginClient:
     m_PersistentCalls:
       m_Calls:
