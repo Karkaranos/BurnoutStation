@@ -79,6 +79,10 @@ namespace GraffitiGala.Drawing
 
                 // Enable on client start for playtesting.  Later, enable it on a broadcast when the experience starts.
                 //EnableBrush();
+
+                BrushManager.EnableBrushEvent += EnableBrush;
+                BrushManager.ClearLinesEvent += ClearLinesOwner;
+                BrushManager.DisableBrushEvent += DisableBrush;
             }
             else
             {
@@ -89,18 +93,19 @@ namespace GraffitiGala.Drawing
                 return;
             }
 
-            PlayTimer.OnBeginClientStatic += EnableBrush;
-            PlayTimer.OnBeginClientStatic += ClearLinesOwner;
-            PlayTimer.OnFinishClientStatic += DisableBrush;
+            
         }
 
         public override void OnStopClient()
         {
-            DisableBrush();
+            if (base.IsOwner)
+            {
+                DisableBrush();
 
-            PlayTimer.OnBeginClientStatic -= EnableBrush;
-            PlayTimer.OnBeginClientStatic -= ClearLinesOwner;
-            PlayTimer.OnFinishClientStatic -= DisableBrush;
+                BrushManager.EnableBrushEvent -= EnableBrush;
+                BrushManager.ClearLinesEvent -= ClearLinesOwner;
+                BrushManager.DisableBrushEvent -= DisableBrush;
+            }
         }
         #endregion
 

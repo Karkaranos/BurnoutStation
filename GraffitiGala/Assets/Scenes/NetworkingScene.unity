@@ -1049,12 +1049,12 @@ GameObject:
   - component: {fileID: 487937601}
   - component: {fileID: 487937600}
   m_Layer: 0
-  m_Name: ConnectionEvents
+  m_Name: ConnectionEvents (Obsolete)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &487937600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1433,7 +1433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 0
+  buildType: 2
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
@@ -1587,6 +1587,7 @@ GameObject:
   - component: {fileID: 1321683919}
   - component: {fileID: 1321683921}
   - component: {fileID: 1321683920}
+  - component: {fileID: 1321683922}
   m_Layer: 0
   m_Name: ExperienceManager
   m_TagString: Untagged
@@ -1677,18 +1678,269 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 1321683920}
   _networkObjectCache: {fileID: 0}
   readyNumber: 3
-  OnExperienceStartServer:
-    m_PersistentCalls:
-      m_Calls: []
-  OnExperienceEndServer:
-    m_PersistentCalls:
-      m_Calls: []
-  OnExperienceStartClient:
-    m_PersistentCalls:
-      m_Calls: []
-  OnExperienceEndClient:
-    m_PersistentCalls:
-      m_Calls: []
+  serverEvents:
+    OnDisconnect:
+      m_PersistentCalls:
+        m_Calls: []
+    OnWaiting:
+      m_PersistentCalls:
+        m_Calls: []
+    OnLoading:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 567763804}
+          m_TargetAssemblyTypeName: GraffitiGala.ColorSwitching.ColorDistributor,
+            Assembly-CSharp
+          m_MethodName: CreateColorPool
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1607417038}
+          m_TargetAssemblyTypeName: GraffitiGala.PromptDisplayer, Assembly-CSharp
+          m_MethodName: GivePrompt
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    OnPlaying:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1549895330}
+          m_TargetAssemblyTypeName: GraffitiGala.PlayTimer, Assembly-CSharp
+          m_MethodName: StartTimer
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    OnFinished:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1260712203}
+          m_TargetAssemblyTypeName: GraffitiGala.GraffitiPhotographer, Assembly-CSharp
+          m_MethodName: ScreenshotDrawing
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  clientEvents:
+    OnDisconnect:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1475561948}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 48478921}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 425073099}
+          m_TargetAssemblyTypeName: UiButton, Assembly-CSharp
+          m_MethodName: ResetColor
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 425073098}
+          m_TargetAssemblyTypeName: UiButton, Assembly-CSharp
+          m_MethodName: ResetColor
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 425073097}
+          m_TargetAssemblyTypeName: UiButton, Assembly-CSharp
+          m_MethodName: ResetColor
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    OnWaiting:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1475561948}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 48478921}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1321683922}
+          m_TargetAssemblyTypeName: GraffitiGala.Drawing.BrushManager, Assembly-CSharp
+          m_MethodName: ClearLines
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    OnLoading:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 116191905}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 567763804}
+          m_TargetAssemblyTypeName: GraffitiGala.ColorSwitching.ColorDistributor,
+            Assembly-CSharp
+          m_MethodName: RequestColorsFromServer
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    OnPlaying:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1321683922}
+          m_TargetAssemblyTypeName: GraffitiGala.Drawing.BrushManager, Assembly-CSharp
+          m_MethodName: EnableBrush
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    OnFinished:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1475561948}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 116191905}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1321683922}
+          m_TargetAssemblyTypeName: GraffitiGala.Drawing.BrushManager, Assembly-CSharp
+          m_MethodName: DisableBrush
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  currentStateTest: 0
+--- !u!114 &1321683922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321683918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5718798ccef08042b8a77a7551e2756, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1475561948
 GameObject:
   m_ObjectHideFlags: 0
@@ -2903,11 +3155,11 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1933812519}
+  - {fileID: 1321683919}
   - {fileID: 567763805}
   - {fileID: 487937602}
   - {fileID: 1259247656}
   - {fileID: 1549895331}
-  - {fileID: 1321683919}
   - {fileID: 1886649678}
   - {fileID: 1559451522}
   - {fileID: 1954582103}

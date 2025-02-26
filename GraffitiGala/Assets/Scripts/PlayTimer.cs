@@ -26,26 +26,26 @@ namespace GraffitiGala
         private float time = 120f;
         [SerializeField, Tooltip("Disables sound effects to avoid FMOD errors.")]
         private bool playSoundEffects;
-        [Header("Events")]
+        [Header("Events (Obsolete)")]
         [Header("Client Events")]
-        [SerializeField, Tooltip("Called on all clients when the timer begins.")]
+        [ReadOnly, SerializeField, Tooltip("Called on all clients when the timer begins.")]
         private UnityEvent OnBeginClient;
-        [SerializeField, Tooltip("Called on all clients when the timer finishes.")]
+        [ReadOnly, SerializeField, Tooltip("Called on all clients when the timer finishes.")]
         private UnityEvent OnFinishClient;
         [Header("Server Events")]
-        [SerializeField, Tooltip("Called on server/admin clients when the timer begins.")]
+        [ReadOnly, SerializeField, Tooltip("Called on server/admin clients when the timer begins.")]
         private UnityEvent OnBeginServer;
-        [SerializeField, Tooltip("Called on server/admin clients when the timer finishes.")]
+        [ReadOnly, SerializeField, Tooltip("Called on server/admin clients when the timer finishes.")]
         private UnityEvent OnFinishServer;
         private readonly SyncTimer timer = new();
 
         private bool isStarted;
         private Coroutine displayUpdateRoutine;
 
-        public static event Action OnBeginClientStatic;
-        public static event Action OnBeginServerStatic;
-        public static event Action OnFinishClientStatic;
-        public static event Action OnFinishServerStatic;
+        //public static event Action OnBeginClientStatic;
+        //public static event Action OnBeginServerStatic;
+        //public static event Action OnFinishClientStatic;
+        //public static event Action OnFinishServerStatic;
 
         private EventInstance countdown;
 
@@ -164,16 +164,16 @@ namespace GraffitiGala
 
             if (asServer)
             {
-                OnBeginServerStatic?.Invoke();
-                OnBeginServer?.Invoke();
+                //OnBeginServerStatic?.Invoke();
+                //OnBeginServer?.Invoke();
                 if (playSoundEffects)
                 {
                     countdown.start();
                 }
 
             }
-            OnBeginClientStatic?.Invoke();
-            OnBeginClient?.Invoke();
+            //OnBeginClientStatic?.Invoke();
+            //OnBeginClient?.Invoke();
         }
 
         /// <summary>
@@ -197,16 +197,20 @@ namespace GraffitiGala
         {
             if (asServer)
             {
-                OnFinishServer?.Invoke();
-                OnFinishServerStatic?.Invoke();
+                //OnFinishServer?.Invoke();
+                //OnFinishServerStatic?.Invoke();
                 if (playSoundEffects)
                 {
                     countdown.stop(STOP_MODE.IMMEDIATE);
                     AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
                 }
+
+                // Instead of the timer managing events that happen on finish, simply tell the experience manager
+                // to change to the finished state.
+                ExperienceManager.SetState(ExperienceState.Finished);
             }
-            OnFinishClient?.Invoke();
-            OnFinishClientStatic?.Invoke();
+            //OnFinishClient?.Invoke();
+            //OnFinishClientStatic?.Invoke();
             isStarted = false;
         }
 
