@@ -1,7 +1,7 @@
 /*************************************************
 Author:                     Cade Naylor
 Creation Date:              2/13/2025
-Modified Date:              2/13/2025
+Modified Date:              2/23/2025
 Summary:                    Spawns saved images onto buildings
 ***************************************************/
 using System.Collections;
@@ -10,10 +10,12 @@ using UnityEngine;
 
 public class BuildingBehavior : MonoBehaviour
 {
-    [SerializeField, Tooltip("Building Width, in Unity Units")]
-    private float buildingWidth;
-    [SerializeField, Tooltip("Building Height, in Unity Units")]
-    private float buildingHeight;
+    [field: SerializeField, Tooltip("The sprite renderer of this building.")]
+    public SpriteRenderer Rend { get; private set; }
+    [field: SerializeField, Tooltip("Building Width, in Unity Units")]
+    public float BuildingWidth { get; private set; }
+    [field: SerializeField, Tooltip("Building Height, in Unity Units")]
+    public float BuildingHeight { get; private set; }
     [SerializeField, Tooltip("All rectangles on the building that drawings can appear in")]
     private List<DrawingArea> validAreas = new List<DrawingArea>();
     [SerializeField, Range(0f, 2f), Tooltip("Scale modifier for spawned Drawings")]
@@ -44,7 +46,7 @@ public class BuildingBehavior : MonoBehaviour
         localSpawningPosition.x += (normalWidth * scaleModifier) + bufferDistance;
         if (localSpawningPosition.x > validAreas[currentSpawnArea].AreaWidth + validAreas[currentSpawnArea].StartingPosition.x)
         {
-            if (localSpawningPosition.y + bufferDistance + (normalHeight * scaleModifier) > validAreas[currentSpawnArea].StartingPosition.y - validAreas[currentSpawnArea].AreaHeight)
+            if (localSpawningPosition.y - (bufferDistance + (normalHeight * scaleModifier)) > validAreas[currentSpawnArea].StartingPosition.y - validAreas[currentSpawnArea].AreaHeight)
             {
                 localSpawningPosition.y -= bufferDistance + (normalHeight * scaleModifier);
                 localSpawningPosition.x = validAreas[currentSpawnArea].StartingPosition.x;
@@ -59,18 +61,20 @@ public class BuildingBehavior : MonoBehaviour
             {
                 Debug.Log("Building is full");
                 buildingIsFull = true;
-                Destroy(g);
-                return;
+                // Returning here was preventing the graffiti that takes up the last space on the building to be destroyed.
+                // Because this is predicting where the next spawn point will be, we should let the graffiti spawn normally
+                // so it isnt lost.
+                //Destroy(g);
+                //return;
             }
         }
         g.transform.localScale = new Vector3(scaleModifier, scaleModifier, 1);
         g.AddComponent<SpriteRenderer>();
         g.GetComponent<SpriteRenderer>().sprite = spawnMe;
-
     }
 
-    // Start is called before the first frame update
-    void Start()
+    // Switched this to Awake so that it gets initialized when the prefab is spawned.
+    void Awake()
     {
         localSpawningPosition = new Vector3(validAreas[0].StartingPosition.x, validAreas[0].StartingPosition.y, -1);
     }

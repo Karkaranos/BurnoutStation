@@ -26,9 +26,9 @@ public class UiButton : MonoBehaviour
 
     }    
 
-    // Update is called once per frame
-    void Update()
+    public void ResetColor()
     {
-        
+        paint = Color.clear;
+        Image.color = Color.clear;
     }
 }

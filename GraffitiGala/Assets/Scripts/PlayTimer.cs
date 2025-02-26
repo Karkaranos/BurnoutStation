@@ -1,7 +1,7 @@
 /*************************************************
 Brandon Koederitz
 2/9/2025
-2/9/2025
+2/23/2025
 Syncronized timer that limits a plyer's time in the experience.
 FishNet
 ***************************************************/
@@ -22,8 +22,10 @@ namespace GraffitiGala
     public class PlayTimer : NetworkBehaviour
     {
         [SerializeField] private TimeDisplayer displayer;
-        [SerializeField, Tooltip("The amount of time in seconds that this timer will run for.")] 
+        [SerializeField] 
         private float time = 120f;
+        [SerializeField, Tooltip("Disables sound effects to avoid FMOD errors.")]
+        private bool playSoundEffects;
         [Header("Events")]
         [Header("Client Events")]
         [SerializeField, Tooltip("Called on all clients when the timer begins.")]
@@ -88,6 +90,11 @@ namespace GraffitiGala
                     "at a time.");
                 return;
             }
+            // Sets the host as the owner of this object.
+            if (base.IsHostStarted && !base.IsOwner)
+            {
+                this.GiveOwnership(InstanceFinder.ClientManager.Connection);
+            }
         }
 
         /// <summary>
@@ -113,10 +120,6 @@ namespace GraffitiGala
         /// <param name="asServer">Whether this callback is being run on the server or on a client.</param>
         private void Timer_OnChange(SyncTimerOperation op, float prev, float next, bool asServer)
         {
-            if(asServer && !base.IsOwner)
-            {
-                this.GiveOwnership(InstanceFinder.ClientManager.Connection);
-            }
             switch (op)
             {
                 case SyncTimerOperation.Start:
@@ -140,7 +143,10 @@ namespace GraffitiGala
         /// </summary>
         private void Awake()
         {
-            countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Timer);
+            if (playSoundEffects)
+            {
+                countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Timer);
+            }
         }
 
         /// <summary>
@@ -160,7 +166,10 @@ namespace GraffitiGala
             {
                 OnBeginServerStatic?.Invoke();
                 OnBeginServer?.Invoke();
-                countdown.start();
+                if (playSoundEffects)
+                {
+                    countdown.start();
+                }
 
             }
             OnBeginClientStatic?.Invoke();
@@ -190,10 +199,11 @@ namespace GraffitiGala
             {
                 OnFinishServer?.Invoke();
                 OnFinishServerStatic?.Invoke();
-                countdown.stop(STOP_MODE.IMMEDIATE);
-                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
-
-                
+                if (playSoundEffects)
+                {
+                    countdown.stop(STOP_MODE.IMMEDIATE);
+                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
+                }
             }
             OnFinishClient?.Invoke();
             OnFinishClientStatic?.Invoke();

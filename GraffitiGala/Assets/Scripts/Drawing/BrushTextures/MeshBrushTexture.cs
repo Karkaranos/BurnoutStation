@@ -1,7 +1,7 @@
 /*************************************************
 Brandon Koederitz
 1/30/2025
-1/30/2025
+2/22/2025
 Control script for instantiated paint prefabs that use the Mesh drawing system.
 FishNet, InputSystem, NaughtyAttributes
 ***************************************************/
@@ -260,7 +260,7 @@ namespace GraffitiGala.Drawing
         /// <param name="localReferenceLine">
         /// The local placeholder line that was used to keep graphics updated that should be loaded to this line.
         /// </param>
-        public void InitializeAsNetworked(MeshBrushTexture localReferenceLine)
+        public void InitializeAsNetworked(MeshBrushTexture localReferenceLine, ClearLineCallback clc)
         {
             // Creates a new set of mesh information based on the local reference line.
             GetMeshInfo(localReferenceLine.mesh, out Vector3[] verticies, out Vector2[] uv, out int[] triangles);
@@ -278,7 +278,8 @@ namespace GraffitiGala.Drawing
             isNetworked = true;
             // Destroy the local reference line as it is no longer needed, newly initialized network line will
             // be updated instead.
-            Destroy(localReferenceLine.gameObject);
+            clc(localReferenceLine);
+            //Destroy(localReferenceLine.gameObject);
         }
 
         /// <summary>
