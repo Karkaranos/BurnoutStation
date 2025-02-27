@@ -20,9 +20,16 @@ namespace GraffitiGala
         /// </summary>
         public override void OnStartClient()
         {
-            if (BuildManager.CheckBuild(hiddenInBuilds) && base.IsOwner)
+            if (BuildManager.CheckBuild(hiddenInBuilds))
             {
-                Server_HideObject();
+                if (base.IsOwner)
+                {
+                    Server_HideObject();
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
             }
         }
         /// <summary>
