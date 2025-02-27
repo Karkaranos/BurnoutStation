@@ -105,6 +105,8 @@ namespace GraffitiGala
             else
             {
                 instance = this;
+                // Set Resolution debug line to force 1920 x 1080.
+                //Screen.SetResolution(1920, 1080, false);
             }
         }
 
