@@ -20,16 +20,9 @@ namespace GraffitiGala
         /// </summary>
         public override void OnStartClient()
         {
-            if (BuildManager.CheckBuild(hiddenInBuilds))
+            if (BuildManager.CheckBuild(hiddenInBuilds) && base.IsOwner)
             {
-                if (base.IsOwner)
-                {
-                    Server_HideObject();
-                }
-                else
-                {
-                    gameObject.SetActive(false);
-                }
+                Server_HideObject();
             }
         }
         /// <summary>
@@ -43,7 +36,7 @@ namespace GraffitiGala
         /// <summary>
         /// Hides this object on observing clients.
         /// </summary>
-        [ObserversRpc]
+        [ObserversRpc(BufferLast = true)]
         private void Client_HideObject()
         {
             gameObject.SetActive(false);
