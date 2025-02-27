@@ -136,7 +136,7 @@ MonoBehaviour:
   - startingPosition: {x: -0.75, y: 1.7}
     areaWidth: 1.14
     areaHeight: 3.37
-  scaleModifier: 0.3
+  scaleModifier: 0.5
   bufferDistance: 0.2
   normalWidth: 7.6
   normalHeight: 4.7

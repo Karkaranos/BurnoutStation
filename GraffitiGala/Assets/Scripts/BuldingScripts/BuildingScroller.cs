@@ -92,9 +92,13 @@ namespace GraffitiGala
 
         public bool FindNewTarget()
         {
+            //Debug.Log("Finding new target");
             bool ValidTargetPredicate(BuildingBehavior item)
             {
-                return !item.BuildingIsFull && !CheckObjectInCamera(cityDisplayCam, item.Rend);
+                // Ran into a problem here where buildings at the front that were technically out of camera range were
+                // elidgable to be swapped in. Now check if the item has yet to arrive on camera.
+                bool isArriving = scrollingRight ? item.transform.position.x < 0 : item.transform.position.x > 0;
+                return !item.BuildingIsFull && !CheckObjectInCamera(cityDisplayCam, item.Rend) && isArriving;
             }
 
             BuildingBehavior newTarget = scrollingBuildings.Find(ValidTargetPredicate);
@@ -107,6 +111,7 @@ namespace GraffitiGala
 
             // Store the old index of our new target building.  The current target building will be moved to this index later.
             int otherIndex = scrollingBuildings.IndexOf(newTarget);
+            //Debug.Log("New Target Found at index " + otherIndex);
             // Remove the new target here.  This means that when we get the index of the target building, we'll get the correct position
             // after any shifts.
             scrollingBuildings.Remove(newTarget);
@@ -117,7 +122,7 @@ namespace GraffitiGala
             scrollingBuildings.Remove(TargetBuilding);
             // Decrement the other index if the target index came before it as now the correct position has shifted one to the left
             // given the target building has been removed.
-            if (targetIndex > otherIndex) { otherIndex--; }
+            //if (targetIndex > otherIndex) { otherIndex--; }
             scrollingBuildings.Insert(otherIndex, TargetBuilding);
 
             // Reroders the buildings so their positions match their position in the list.

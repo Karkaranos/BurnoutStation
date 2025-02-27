@@ -122,7 +122,7 @@ namespace GraffitiGala.Drawing
                 // Sets the current line that this state is updating to be the temporary localLine that was
                 // created.
                 currentLine = line;
-                lastPosition = brush.GetMousePosition();
+                lastPosition = brush.GetPointerPosition();
             }
 
             /// <summary>
@@ -152,7 +152,7 @@ namespace GraffitiGala.Drawing
                     return;
                 }
 
-                Vector2 currentPosition = brush.GetMousePosition();
+                Vector2 currentPosition = brush.GetPointerPosition();
                 // Calculates the vector representing the change in position from the last to the current..
                 Vector2 moveDelta = currentPosition - lastPosition;
                 // Checks if the new position is outside the range of the drawBuffer.  If the pen as not move enough, 
@@ -190,6 +190,22 @@ namespace GraffitiGala.Drawing
         public override void OnStopClient()
         {
             ClearLocalLines();
+            if (playSoundEffects)
+            {
+                spray.stop(STOP_MODE.IMMEDIATE);
+            }
+        }
+
+        /// <summary>
+        /// Stop sound effects when the brush is disabled.
+        /// </summary>
+        protected override void DisableBrush()
+        {
+            base.DisableBrush();
+            if (playSoundEffects)
+            {
+                spray.stop(STOP_MODE.IMMEDIATE);
+            }
         }
         #endregion
 
@@ -203,12 +219,12 @@ namespace GraffitiGala.Drawing
             //Debug.Log(EventSystem.current.IsPointerOverGameObject());
             // Prevvents drawing if the pointer is over a UI element like a button.
             // Will need to test if it works with drawing pens and touch input.
-            if (!EventSystem.current.IsPointerOverGameObject())
+            if (!UIHelpers.IsPositionOverUI(positionAction.ReadValue<Vector2>()))
             {
                 // Creates a new line and a new drawing state to link to that line.
                 DrawingState drawingState = new DrawingState(CreateNewLine(
                     brushTexturePrefab,
-                    GetMousePosition(),
+                    GetPointerPosition(),
                     DrawingParent,
                     CurrentColor
                     ), this);

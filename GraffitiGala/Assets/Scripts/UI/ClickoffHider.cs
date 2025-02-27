@@ -4,7 +4,6 @@ Brandon Koederitz
 2/22/2025
 Hides an object on the UI if the player clicks off of the UI.
 ***************************************************/
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -15,11 +14,13 @@ namespace GraffitiGala.UI
     public class ClickoffHider : MonoBehaviour
     {
         protected InputAction pressAction;
+        protected InputAction positionAction;
         private void Awake()
         {
             if (TryGetComponent(out PlayerInput input))
             {
                 pressAction = input.currentActionMap.FindAction("Press");
+                positionAction = input.currentActionMap.FindAction("Position");
 
                 pressAction.performed += PressAction_Performed;
             }
@@ -36,7 +37,7 @@ namespace GraffitiGala.UI
         /// <param name="obj">Unused CallbackContext.</param>
         private void PressAction_Performed(InputAction.CallbackContext obj)
         {
-            if (!EventSystem.current.IsPointerOverGameObject())
+            if (!UIHelpers.IsPositionOverUI(positionAction.ReadValue<Vector2>()))
             {
                 gameObject.SetActive(false);
             }

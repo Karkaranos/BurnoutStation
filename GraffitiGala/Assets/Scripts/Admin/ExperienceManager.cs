@@ -30,6 +30,10 @@ namespace GraffitiGala
         [Header("Settings")]
         [SerializeField, Tooltip("The number of clients that need to ready before the experience starts.")] 
         private int readyNumber = 3;
+        [SerializeField, Tooltip("Whether moving between two states should call events for all states in between that" +
+            " were passed through.  Ie.  If you move directly from waiting to playing, should the loading state events" +
+            " also still be called.  The OnDisconnect events are ignored.")]
+        private bool stepThroughStates;
         [SerializeField] private ExperienceEvents serverEvents;
         [SerializeField] private ExperienceEvents clientEvents;
         // Test code.
@@ -101,6 +105,8 @@ namespace GraffitiGala
             else
             {
                 instance = this;
+                // Set Resolution debug line to force 1920 x 1080.
+                //Screen.SetResolution(1920, 1080, false);
             }
         }
 
@@ -238,11 +244,38 @@ namespace GraffitiGala
         /// <param name="asServer">Whether this callback is being run on the server.</param>
         private void SyncState_HandleOnChange(ExperienceState prev, ExperienceState next, bool asServer)
         {
-            if (asServer)
+            //Debug.LogError("Moving from state " + prev + " to " + next);
+            if (stepThroughStates)
             {
-                serverEvents.CallEvent(next);
+                // Calls events for each state that the experience moved through in the event it jumps past a given state.
+                // Each state is only called once and the Disconnected state is ignored.
+                ExperienceState current = prev;
+                while (current != next)
+                {
+                    // Increment current state to call events from.  Skips over the disconnect state.
+                    current++;
+                    if (current > ExperienceState.Finished)
+                    {
+                        current = ExperienceState.Waiting;
+                    }
+
+                    if (asServer)
+                    {
+                        serverEvents.CallEvent(current);
+                    }
+                    clientEvents.CallEvent(current);
+                }
             }
-            clientEvents.CallEvent(next);
+            else
+            {
+                // Only call events for our new state.
+                if (asServer)
+                {
+                    serverEvents.CallEvent(next);
+                }
+                clientEvents.CallEvent(next);
+            }
+
         }
         #endregion
 
@@ -288,14 +321,12 @@ namespace GraffitiGala
         [Button]
         private void BeginExperience()
         {
-            SetState(ExperienceState.Loading);
             SetState(ExperienceState.Playing);
         }
 
         [Button]
         private void EndExperience()
         {
-            SetState(ExperienceState.Finished);
             SetState(ExperienceState.Waiting);
         }
 

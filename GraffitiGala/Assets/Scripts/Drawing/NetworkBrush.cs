@@ -112,7 +112,7 @@ namespace GraffitiGala.Drawing
         /// <summary>
         /// Enables this brush on the owner client by subscribing to input functions.
         /// </summary>
-        private void EnableBrush()
+        protected virtual void EnableBrush()
         {
             if (base.IsOwner)
             {
@@ -125,7 +125,7 @@ namespace GraffitiGala.Drawing
         /// <summary>
         /// Disables this brush on its owner client by unsubscribing from input functions.
         /// </summary>
-        private void DisableBrush()
+        protected virtual void DisableBrush()
         {
             if (base.IsOwner)
             {
@@ -140,7 +140,7 @@ namespace GraffitiGala.Drawing
         /// Gets the mouse position in world space from the InputAction that tracks it.
         /// </summary>
         /// <returns>The mouse position as a Vector3 in world space.</returns>
-        protected internal Vector2 GetMousePosition()
+        protected internal Vector2 GetPointerPosition()
         {
             return Camera.main.ScreenToWorldPoint(positionAction.ReadValue<Vector2>());
         }

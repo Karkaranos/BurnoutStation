@@ -36,7 +36,7 @@ namespace GraffitiGala
         /// <summary>
         /// Hides this object on observing clients.
         /// </summary>
-        [ObserversRpc]
+        [ObserversRpc(BufferLast = true)]
         private void Client_HideObject()
         {
             gameObject.SetActive(false);
