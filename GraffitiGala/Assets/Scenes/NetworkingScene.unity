@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scroller: {fileID: 5064377}
-  minBuildingCount: 5
+  minBuildingCount: 6
   pivotPoint: {x: 0.5, y: 0.5}
   pixelsPerUnit: 256
   buildingPrefabs:
@@ -1261,7 +1261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 0
+  buildType: 1
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
