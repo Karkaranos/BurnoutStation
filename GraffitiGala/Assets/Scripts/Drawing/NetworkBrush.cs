@@ -112,7 +112,7 @@ namespace GraffitiGala.Drawing
         /// <summary>
         /// Enables this brush on the owner client by subscribing to input functions.
         /// </summary>
-        private void EnableBrush()
+        protected virtual void EnableBrush()
         {
             if (base.IsOwner)
             {
@@ -125,7 +125,7 @@ namespace GraffitiGala.Drawing
         /// <summary>
         /// Disables this brush on its owner client by unsubscribing from input functions.
         /// </summary>
-        private void DisableBrush()
+        protected virtual void DisableBrush()
         {
             if (base.IsOwner)
             {

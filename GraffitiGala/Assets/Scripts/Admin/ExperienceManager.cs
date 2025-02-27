@@ -238,6 +238,7 @@ namespace GraffitiGala
         /// <param name="asServer">Whether this callback is being run on the server.</param>
         private void SyncState_HandleOnChange(ExperienceState prev, ExperienceState next, bool asServer)
         {
+            Debug.LogError("Moving from state " + prev + " to " + next);    
             if (asServer)
             {
                 serverEvents.CallEvent(next);

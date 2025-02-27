@@ -190,6 +190,22 @@ namespace GraffitiGala.Drawing
         public override void OnStopClient()
         {
             ClearLocalLines();
+            if (playSoundEffects)
+            {
+                spray.stop(STOP_MODE.IMMEDIATE);
+            }
+        }
+
+        /// <summary>
+        /// Stop sound effects when the brush is disabled.
+        /// </summary>
+        protected override void DisableBrush()
+        {
+            base.DisableBrush();
+            if (playSoundEffects)
+            {
+                spray.stop(STOP_MODE.IMMEDIATE);
+            }
         }
         #endregion
 
