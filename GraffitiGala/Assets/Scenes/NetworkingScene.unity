@@ -1506,6 +1506,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 1321683920}
   _networkObjectCache: {fileID: 0}
   readyNumber: 3
+  stepThroughStates: 1
   serverEvents:
     OnDisconnect:
       m_PersistentCalls:
