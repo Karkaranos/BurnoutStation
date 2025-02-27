@@ -1,9 +1,9 @@
 /*************************************************
 Brandon Koederitz
 1/30/2025
-2/22/2025
+2/26/2025
 Draws images using a mesh that are shared across the network.
-FishNet, InputSystem, NaughtyAttributes
+FishNet, InputSystem, NaughtyAttributes. Calls censorship checks. 
 ***************************************************/
 
 using FishNet.Connection;
@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using PDollarGestureRecognizer;
 
 namespace GraffitiGala.Drawing
 {
@@ -53,6 +54,12 @@ namespace GraffitiGala.Drawing
         private static Transform drawingParent;
 
         private EventInstance spray;
+
+
+        // Used for image recognition. A list of all points within the point cloud
+        private List<Point> points = new List<Point>();
+        // Current number of points. Used for adding values to the point cloud
+        private int vertexCount = 0;
         #endregion
 
         #region Properties
