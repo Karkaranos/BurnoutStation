@@ -234,7 +234,7 @@ namespace GraffitiGala
         /// <summary>
         /// Starts the timer from the beginning.
         /// </summary>
-        [Button]
+        //[Button]
         public void StartTimer()
         {
             timer.StartTimer(time, true);
@@ -244,7 +244,7 @@ namespace GraffitiGala
         /// <summary>
         /// Stops the timer
         /// </summary>
-        [Button]
+        //[Button]
         public void StopTimer()
         {
             timer.StopTimer(true);
