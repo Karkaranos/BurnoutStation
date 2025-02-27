@@ -79,7 +79,7 @@ namespace GraffitiGala.Drawing
         [ServerRpc(RequireOwnership = false)]
         private void Server_RequestMesh(NetworkConnection ownerConnection, NetworkConnection requestingConnection = null)
         {
-            Debug.Log($"Connection {requestingConnection.ClientId} is requesting a mesh from connection {ownerConnection.ClientId}");
+            //Debug.Log($"Connection {requestingConnection.ClientId} is requesting a mesh from connection {ownerConnection.ClientId}");
             Target_RequestMesh(ownerConnection, requestingConnection);
         }
 
@@ -91,7 +91,7 @@ namespace GraffitiGala.Drawing
         [TargetRpc]
         private void Target_RequestMesh(NetworkConnection ownerConnection, NetworkConnection requestingConnection)
         {
-            Debug.Log($"Connection {ownerConnection.ClientId} is providing a mesh for connection {requestingConnection.ClientId}");
+            //Debug.Log($"Connection {ownerConnection.ClientId} is providing a mesh for connection {requestingConnection.ClientId}");
             GetMeshInfo(mesh, out Vector3[] verticies, out Vector2[] uv, out int[] triangles);
             Server_ProvideMesh(requestingConnection, verticies, uv, triangles);
         }
@@ -107,7 +107,7 @@ namespace GraffitiGala.Drawing
         private void Server_ProvideMesh(NetworkConnection requestingConnection, Vector3[] vertices, Vector2[] uv, 
             int[] triangles)
         {
-            Debug.Log($"Connection {requestingConnection.ClientId} is recieving a mesh.");
+            //Debug.Log($"Connection {requestingConnection.ClientId} is recieving a mesh.");
             Target_ProvideMesh(requestingConnection, vertices, uv, triangles);
         }
 
@@ -122,7 +122,7 @@ namespace GraffitiGala.Drawing
         private void Target_ProvideMesh(NetworkConnection requestingConnection, Vector3[] vertices, Vector2[] uv,
             int[] triangles)
         {
-            Debug.Log($"Connection {requestingConnection.ClientId} is recieving a mesh.");
+            //Debug.Log($"Connection {requestingConnection.ClientId} is recieving a mesh.");
             SetMesh(vertices, uv, triangles);
         }
 
