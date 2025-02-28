@@ -60,6 +60,8 @@ namespace GraffitiGala.Drawing
         private List<Point> points = new List<Point>();
         // Current number of points. Used for adding values to the point cloud
         private int vertexCount = 0;
+        // Line currently being drawn
+        private MeshBrushTexture currentLine;
         #endregion
 
         #region Properties
@@ -242,6 +244,11 @@ namespace GraffitiGala.Drawing
             {
                 spray.stop(STOP_MODE.IMMEDIATE);
             }
+            if(FindObjectOfType<CensorshipManager>().Detect(points))
+            {
+                DestroyCensoredLine(currentLine);
+            }
+            points.Clear();
         }
 
         /// <summary>
@@ -295,6 +302,7 @@ namespace GraffitiGala.Drawing
             position.z = GetZLayer();
             // Adds a new point tot he currently draw mesh-based line.
             line.AddPoint(position, drawDirection, pressure);
+            points.Add(new Point(position.x, position.y, 0));
         }
 
         /// <summary>
@@ -323,6 +331,7 @@ namespace GraffitiGala.Drawing
             // Spawns a separate new line over the server.  This line is the actual line that will be used
             // in the drawing, but a temporary local line is created to have better responsiveness.
             Server_CreateNewLine(meshPrefab, position, parent, this.Owner, this, color);
+            currentLine = localLine;
             // Returns the created local line.
             return localLine;
         }
@@ -406,6 +415,28 @@ namespace GraffitiGala.Drawing
         {
             localLines.Remove(localLine);
             Destroy(localLine.gameObject);
+        }
+
+        /// <summary>
+        /// Removes a local line that has created a censored object
+        /// </summary>
+        /// <param name="lineToRemove">The local line to destroy</param>
+        private void DestroyCensoredLine(MeshBrushTexture lineToRemove)
+        {
+            localLines.Remove(lineToRemove);
+            DestroyServerLine(lineToRemove);
+
+        }
+
+        /// <summary>
+        /// In theory, removes a server line that has created a censored object
+        /// Cannot test this
+        /// </summary>
+        /// <param name="lineToRemove"></param>
+        [ServerRpc]
+        private void DestroyServerLine(MeshBrushTexture lineToRemove)
+        {
+            ServerManager.Despawn(lineToRemove.gameObject);
         }
 
         /// <summary>

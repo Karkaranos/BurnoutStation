@@ -16,7 +16,6 @@ namespace PDollarGestureRecognizer
         private List<Gesture> recognizedGestures = new List<Gesture>();
 
 
-		private List<Point> points = new List<Point>();
 		private int strokeId = -1;
 
 		private Vector3 virtualKeyPosition = Vector2.zero;
@@ -59,9 +58,11 @@ namespace PDollarGestureRecognizer
 
 		/// <summary>
 		/// Detects if an object meets existing values
+		/// CANNOT TEST
 		/// </summary>
-		public void Detect()
+		public bool Detect(List<Point> points)
 		{
+			Debug.Log("Hello. Cade cannot call this function without nullrefs");
 			recognized = true;
 			Gesture candidate = new Gesture(points.ToArray());
 			Result gestureResult = PointCloudRecognizer.Classify(candidate, recognizedGestures.ToArray());
@@ -78,10 +79,12 @@ namespace PDollarGestureRecognizer
 
 				//	Check whether it is an allowed gesture
 				Debug.Log("Add logic here later");
+				return true;
 			}
 			else
             {
 				Debug.Log("Not recognized");
+				return false;
             }
 
 		}
