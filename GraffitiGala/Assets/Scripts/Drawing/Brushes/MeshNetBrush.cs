@@ -244,7 +244,7 @@ namespace GraffitiGala.Drawing
             {
                 spray.stop(STOP_MODE.IMMEDIATE);
             }
-            if(FindObjectOfType<CensorshipManager>().Detect(points))
+            if(points.Count > 0 && FindObjectOfType<CensorshipManager>().Detect(points))
             {
                 DestroyCensoredLine(currentLine);
             }
@@ -387,8 +387,10 @@ namespace GraffitiGala.Drawing
                 // Initializes the earlies drawing state in the queue with a reference to the spawned server line
                 // to replace the localLine.
                 brush.drawingStateQueue[0].InitializeLine(line, DestroyLocalLine);
+                // Sorry for my complex code, but we also have to set current line here.
+                currentLine = line;
                 // Removes the newly initialized state from the queue.  If this state is not the current state, then
-                // no references to it will exist and it will be garbate collected.
+                // no references to it will exist and it will be garbage collected.
                 brush.drawingStateQueue.RemoveAt(0);
             }
         }
@@ -423,7 +425,8 @@ namespace GraffitiGala.Drawing
         /// <param name="lineToRemove">The local line to destroy</param>
         private void DestroyCensoredLine(MeshBrushTexture lineToRemove)
         {
-            localLines.Remove(lineToRemove);
+            // Server should destroy the line on this client as well so calling this gives NullRefs.
+            //localLines.Remove(lineToRemove);
             DestroyServerLine(lineToRemove);
 
         }
@@ -436,6 +439,8 @@ namespace GraffitiGala.Drawing
         [ServerRpc]
         private void DestroyServerLine(MeshBrushTexture lineToRemove)
         {
+            //Debug.Log(lineToRemove);
+            //Debug.Log(ServerManager);
             ServerManager.Despawn(lineToRemove.gameObject);
         }
 

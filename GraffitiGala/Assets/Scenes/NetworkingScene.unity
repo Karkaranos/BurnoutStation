@@ -2342,7 +2342,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 1549895329}
   _networkObjectCache: {fileID: 0}
   displayer: {fileID: 275006552}
-  time: 20
+  time: 120
   playSoundEffects: 0
   OnBeginClient:
     m_PersistentCalls:
