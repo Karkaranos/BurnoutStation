@@ -9,6 +9,7 @@ using FishNet;
 using FishNet.Connection;
 using FishNet.Transporting;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 namespace GraffitiGala.ColorSwitching
@@ -61,11 +62,12 @@ namespace GraffitiGala.ColorSwitching
         private void SendColorsToClient(NetworkConnection conn)
         {
             if (conn == null) { return; }
-            if (possibleColors.Count < colorNumber) 
+            if (possibleColors.Count < colorNumber)
             {
-                Debug.LogError("Client requested colors before colors have been assigned.  This means that a request" +
-                    " occurred before the timer started.");
-                return; 
+                StartCoroutine(DelayColorRequest(conn));
+                //Debug.LogError("Client requested colors before colors have been assigned.  This means that a request" +
+                //    " occurred before the timer started.");
+                return;
             }
             Color[] clientColors = new Color[colorNumber];
             for (int i = 0; i < clientColors.Length; i++)
@@ -80,6 +82,22 @@ namespace GraffitiGala.ColorSwitching
             // Then, broadcast that color data over the network.
             ColorData data = new ColorData() { Colors = clientColors, ConnectionID = conn.ClientId };
             InstanceFinder.ServerManager.Broadcast(conn, data);
+        }
+
+        /// <summary>
+        /// Delays a color request until the server has recieved colors.
+        /// </summary>
+        /// <param name="conn">The network connection that requested colors early.</param>
+        /// <returns>Coroutine</returns>
+        private IEnumerator DelayColorRequest(NetworkConnection conn)
+        {
+            Debug.Log("Client requested colors early.");
+            while (possibleColors.Count < colorNumber)
+            {
+                yield return null;
+            }
+            Debug.Log("Reosling early color request.");
+            SendColorsToClient(conn);
         }
 
         /// <summary>
