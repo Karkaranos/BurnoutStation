@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Rend>k__BackingField: {fileID: 7430415273333329768}
-  <BuildingWidth>k__BackingField: 7.43756
-  <BuildingHeight>k__BackingField: 17.88299
+  <BuildingWidth>k__BackingField: 7.590347
+  <BuildingHeight>k__BackingField: 16.86681
   validAreas: []
   scaleModifier: 0.5
   bufferDistance: 0.2
