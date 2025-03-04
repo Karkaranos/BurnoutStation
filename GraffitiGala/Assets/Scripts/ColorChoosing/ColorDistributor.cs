@@ -18,6 +18,8 @@ namespace GraffitiGala.ColorSwitching
     {
         [SerializeField] private ColorChoices colorChoices;
         [SerializeField, Tooltip("The number of colors that are available.")] private int colorNumber;
+        [SerializeField, Tooltip("The builds that need colors from the server.  Should be primarily the tablet stations.")] 
+        private AllowedBuilds colorRequestingBuilds;
 
         private static readonly List<Color> possibleColors = new();
 
@@ -116,6 +118,8 @@ namespace GraffitiGala.ColorSwitching
         /// </summary>
         public void RequestColorsFromServer()
         {
+            // Prevents builds that dont need colors from requesting them.
+            if (!BuildManager.CheckBuild(colorRequestingBuilds)) { return; }
             InstanceFinder.ClientManager.Broadcast(new ColorRequest());
         }
     }

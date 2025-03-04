@@ -6,6 +6,7 @@ Scrolls buildings past the camera and wraps them around.
 ***************************************************/
 using NaughtyAttributes;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GraffitiGala
@@ -234,7 +235,12 @@ namespace GraffitiGala
         private void ReorderPositions()
         {
             if (scrollingBuildings.Count == 0) { return; }
-            float currentPosition = scrollingBuildings[0].transform.localPosition.x;
+            //float currentPosition = scrollingBuildings[0].transform.localPosition.x;
+            // Gets the building that is pysically at the end of the building line instead of the building at element
+            // 0 in case the list has shifted.
+            float currentPosition = scrollingRight ? 
+                scrollingBuildings.Max(item => item.transform.localPosition.x) : 
+                scrollingBuildings.Min(item => item.transform.localPosition.x);
             for (int i = 0; i < scrollingBuildings.Count; i++)
             {
                 MoveToPosition(scrollingBuildings[i], currentPosition);
