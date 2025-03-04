@@ -1,7 +1,7 @@
 /*************************************************
 Author:                     Cade Naylor
 Creation Date:              2/13/2025
-Modified Date:              2/23/2025
+Modified Date:              3/3/2025
 Summary:                    Spawns saved images onto buildings
 ***************************************************/
 using System.Collections;
@@ -26,12 +26,13 @@ namespace GraffitiGala.City
         //private float bufferDistance;
         [SerializeField] private GraffitiSettings graffitiSettings;
 
-        [SerializeField, Tooltip("The unchanged width of a spawned object, in Unity Units")]
-        private float normalWidth;
-        [SerializeField, Tooltip("The unchanged width of a spawned object, in Unity Units")]
-        private float normalHeight;
+        //[SerializeField, Tooltip("The unchanged width of a spawned object, in Unity Units")]
+        //private float normalWidth;
+        //[SerializeField, Tooltip("The unchanged width of a spawned object, in Unity Units")]
+        //private float normalHeight;
 
 
+        // The top left corner of where the sprite will spawn.
         private Vector3 localSpawningPosition;
         private int currentSpawnArea;
 
@@ -45,14 +46,17 @@ namespace GraffitiGala.City
         {
             GameObject g = new GameObject();
             g.transform.parent = this.transform;
+            // Use the bounds of the sprite inherently so that the code has an accurate size of sprites.
+            float width = spawnMe.bounds.size.x * graffitiSettings.ScaleModifier;
+            float height = spawnMe.bounds.size.y * graffitiSettings.ScaleModifier;
             g.transform.localPosition = localSpawningPosition;
-            localSpawningPosition.x += (normalWidth * graffitiSettings.ScaleModifier) + graffitiSettings.BufferDistance;
+            localSpawningPosition.x += width + graffitiSettings.BufferDistance;
             if (localSpawningPosition.x > validAreas[currentSpawnArea].AreaWidth + validAreas[currentSpawnArea].StartingPosition.x)
             {
-                if (localSpawningPosition.y - (graffitiSettings.BufferDistance + (normalHeight * graffitiSettings.ScaleModifier)) > 
+                if (localSpawningPosition.y - (graffitiSettings.BufferDistance + height) > 
                     validAreas[currentSpawnArea].StartingPosition.y - validAreas[currentSpawnArea].AreaHeight)
                 {
-                    localSpawningPosition.y -= graffitiSettings.BufferDistance + (normalHeight * graffitiSettings.ScaleModifier);
+                    localSpawningPosition.y -= graffitiSettings.BufferDistance + height;
                     localSpawningPosition.x = validAreas[currentSpawnArea].StartingPosition.x;
                 }
                 else if (currentSpawnArea < validAreas.Count - 1)
@@ -73,8 +77,8 @@ namespace GraffitiGala.City
                 }
             }
             g.transform.localScale = new Vector3(graffitiSettings.ScaleModifier, graffitiSettings.ScaleModifier, 1);
-            g.AddComponent<SpriteRenderer>();
-            g.GetComponent<SpriteRenderer>().sprite = spawnMe;
+            SpriteRenderer sRend = g.AddComponent<SpriteRenderer>();
+            sRend.sprite = spawnMe;
         }
 
         // Switched this to Awake so that it gets initialized when the prefab is spawned.

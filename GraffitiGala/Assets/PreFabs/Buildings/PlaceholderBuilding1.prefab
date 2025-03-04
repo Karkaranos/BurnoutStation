@@ -61,10 +61,7 @@ MonoBehaviour:
   - startingPosition: {x: 1.84, y: -4.38}
     areaWidth: 0.1
     areaHeight: 0.99
-  scaleModifier: 0.5
-  bufferDistance: 0.2
-  normalWidth: 7.6
-  normalHeight: 4.7
+  graffitiSettings: {fileID: 11400000, guid: cc72ae69617e4fb48940456731c3182c, type: 2}
   testSprite: {fileID: 0}
 --- !u!1 &7829686327523181362
 GameObject:
@@ -137,7 +134,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -615260787
-  m_SortingLayer: 1
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a5d9f58cf4c5d994888b506b47734bcb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

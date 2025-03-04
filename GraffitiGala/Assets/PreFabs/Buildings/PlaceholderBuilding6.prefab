@@ -49,10 +49,7 @@ MonoBehaviour:
   <BuildingWidth>k__BackingField: 7.43756
   <BuildingHeight>k__BackingField: 17.88299
   validAreas: []
-  scaleModifier: 0.5
-  bufferDistance: 0.2
-  normalWidth: 7.6
-  normalHeight: 4.7
+  graffitiSettings: {fileID: 11400000, guid: cc72ae69617e4fb48940456731c3182c, type: 2}
   testSprite: {fileID: 0}
 --- !u!1 &8058869512537998011
 GameObject:
