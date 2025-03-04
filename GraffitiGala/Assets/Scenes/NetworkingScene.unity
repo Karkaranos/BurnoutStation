@@ -170,8 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scroller: {fileID: 5064377}
   minBuildingCount: 6
-  pivotPoint: {x: 0.5, y: 0.5}
-  pixelsPerUnit: 256
+  spriteSettings: {fileID: 11400000, guid: cc72ae69617e4fb48940456731c3182c, type: 2}
   buildingPrefabs:
   - {fileID: 5322851697319025126, guid: 3c24e4f4a9dc19b469a5ea48db3db3fe, type: 3}
   - {fileID: 1815298430683474225, guid: 9018162d059ac6e4f9335f0d6cd8bf48, type: 3}

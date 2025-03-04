@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace GraffitiGala
 {
-    [CreateAssetMenu(fileName = "PromptList", menuName = "Scriptable Objects/Prompt List")]
+    [CreateAssetMenu(fileName = "PromptList", menuName = "Graffiti Gala/Prompt List")]
     public class PromptList : ScriptableObject
     {
         [SerializeField] private string[] prompts;

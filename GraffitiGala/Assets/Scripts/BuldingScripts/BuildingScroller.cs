@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace GraffitiGala
+namespace GraffitiGala.City
 {
     public class BuildingScroller : MonoBehaviour
     {

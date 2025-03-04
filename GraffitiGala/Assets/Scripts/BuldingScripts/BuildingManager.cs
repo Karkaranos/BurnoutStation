@@ -1,23 +1,23 @@
+
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GraffitiGala
+namespace GraffitiGala.City
 {
-
-
     public class BuildingManager : MonoBehaviour
     {
         [SerializeField] private BuildingScroller scroller;
         [Header("Building Settings")]
         [SerializeField, Tooltip("The minimum amount of buildings that should be spawned to ensure that the screen is always scrolling.")]
         private int minBuildingCount;
-        [Header("Sprite Settings")]
-        [SerializeField, Tooltip("The normalized position of graffiti sprite's pivot points.")]
-        private Vector2 pivotPoint = new Vector2(0.5f, 0.5f);
-        [SerializeField]
-        private float pixelsPerUnit = 256f;
+        //[Header("Sprite Settings")]
+        //[SerializeField, Tooltip("The normalized position of graffiti sprite's pivot points.")]
+        //private Vector2 pivotPoint = new Vector2(0.5f, 0.5f);
+        //[SerializeField]
+        //private float pixelsPerUnit = 256f;
+        [SerializeField] private GraffitiSettings spriteSettings;
         [Header("Control Panel")]
         [SerializeField, Tooltip("All buildings that can be spawned. They should all be prefabs.")]
         private BuildingBehavior[] buildingPrefabs;
@@ -72,7 +72,8 @@ namespace GraffitiGala
 
             if (!scroller.TargetBuilding.BuildingIsFull)
             {
-                scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, pivotPoint, pixelsPerUnit));
+                scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, spriteSettings.PivotPoint, 
+                    spriteSettings.PixelsPerUnit));
                 // Debug.Log("Spawning graffiti " + filePath + " on building " + scroller.TargetBuilding);
             }
             else
