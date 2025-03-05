@@ -86,7 +86,7 @@ namespace GraffitiGala.City
             checkEndPoint.x += width;
             checkEndPoint.y -= height;
             // If our end point is outside the bounds, we must find a new position to spawn at.
-            if (!IsWithin(validAreas[currentSpawnArea], checkEndPoint))
+            while (!IsWithin(validAreas[currentSpawnArea], checkEndPoint))
             {
                 // If we have exceeded the bounds, then we move our spawning position and check end point typewriter
                 // style down one and back to the left.
@@ -97,7 +97,8 @@ namespace GraffitiGala.City
                 localSpawningPosition.x = GetBounds(validAreas[currentSpawnArea]).x; //validAreas[currentSpawnArea].offset.x - validAreas[currentSpawnArea].size.x;
                 checkEndPoint = localSpawningPosition + diagonal;
 
-                // Check again if we have a valid area  if we dont then we need to go to the next area
+                // Check again if we have a valid area.  If this second check fails, it means we're beyond the bottom
+                // of the valid area so we must move to the next valid area.
                 if (!IsWithin(validAreas[currentSpawnArea], checkEndPoint))
                 {
                     // If the new theoretical Y position exceeds the bounds of this current valid area, then move to
