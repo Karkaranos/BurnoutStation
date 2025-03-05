@@ -10,6 +10,7 @@ using FishNet.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using FMOD;
 
 namespace GraffitiGala.Drawing
 {
@@ -40,6 +41,7 @@ namespace GraffitiGala.Drawing
         protected InputAction positionAction;
 
         public static Color CurrentColor { protected get; set; }
+        public static float CurrentThickness { protected get; set; }
         #endregion
 
         #region Properties

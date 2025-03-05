@@ -35,6 +35,14 @@ namespace GraffitiGala.Drawing
         //[SerializeField, Tooltip("The material to use for this brush.")]
         //internal Material brushMaterial;
         [SerializeField] private bool playSoundEffects;
+        [SerializeReference, Tooltip("The width of this line when the player is applying" +
+    " the minimum amount of pressure to the pen.  If this value is larger than" +
+    " Max Pressure Width, then the line will appear larger when less pressure is applied.")]
+        private float minPressureWidth;
+        [SerializeReference, Tooltip("The width of this line when the player is applying" +
+            " the maximum amount of pressure to the pen.  If this value is smaller than" +
+            " Min Pressure Width, then the line will appear smaller when more pressure is applied.")]
+        private float maxPressureWidth;
 
         // List of spawned game objects.
         private readonly SyncList<MeshBrushTexture> drawnObjects = new();
@@ -292,6 +300,16 @@ namespace GraffitiGala.Drawing
         }
 
         /// <summary>
+        /// Gets the width of a line based on a given pressure.
+        /// </summary>
+        /// <param name="pressure">The pressure to use when caluclating line width.</param>
+        /// <returns>The width that the line should be.</returns>
+        private float GetWidth(float pressure)
+        {
+            return Mathf.Lerp(minPressureWidth, maxPressureWidth, pressure);
+        }
+
+        /// <summary>
         /// Tells a given line to add a new point to the line.
         /// </summary>
         /// <param name="line">The line to add a point to.</param>
@@ -299,11 +317,12 @@ namespace GraffitiGala.Drawing
         /// <param name="drawDirection">The direction the line is moving to calculate the verticies.</param>
         internal void Draw(MeshBrushTexture line, Vector3 position, Vector2 drawDirection)
         {
-            float pressure = pressureAction.ReadValue<float>();
+            //float thickness = GetWidth(pressureAction.ReadValue<float>());
+            float thickness = CurrentThickness;
             // Gets the z position of this new point on the line so that it overlaps previous points.
             position.z = GetZLayer();
             // Adds a new point tot he currently draw mesh-based line.
-            line.AddPoint(position, drawDirection, pressure);
+            line.AddPoint(position, drawDirection, thickness);
         }
 
         /// <summary>
