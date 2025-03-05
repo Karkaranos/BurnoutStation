@@ -175,6 +175,9 @@ MonoBehaviour:
   - {fileID: 5322851697319025126, guid: 3c24e4f4a9dc19b469a5ea48db3db3fe, type: 3}
   - {fileID: 1815298430683474225, guid: 9018162d059ac6e4f9335f0d6cd8bf48, type: 3}
   - {fileID: 4026122076952700885, guid: 6428311b44530e94d8cb9f7e1e3aebdc, type: 3}
+  - {fileID: 273679467793195761, guid: 355efc50cade3df47af8bae40574a379, type: 3}
+  - {fileID: 4859343679726979042, guid: 0822265e48ef2a04aabb5c46e94a6f0c, type: 3}
+  - {fileID: 3093042562527568165, guid: e0cbf0c05ce9b3d4a8d46b43e2eef089, type: 3}
   allBuildings: []
 --- !u!114 &5064376
 MonoBehaviour:
@@ -217,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cityDisplayCam: {fileID: 33385994}
-  buildingMargin: 5
+  buildingMargin: 3
   buildingScrollSpeed: -2
   wrapAroundPosition: -25
   baseline: -10

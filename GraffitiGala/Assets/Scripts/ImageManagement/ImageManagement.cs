@@ -15,7 +15,7 @@ namespace GraffitiGala
     {
         #region vars
         #region CONSTS
-        private const string FILE_FORMAT = ".png";
+        public const string FILE_FORMAT = ".png";
         private const string FOLDER_NAME = "Drawings";
         #endregion
         private static string fileDirectory;

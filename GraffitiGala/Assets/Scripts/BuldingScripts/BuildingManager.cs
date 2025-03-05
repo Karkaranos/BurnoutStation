@@ -2,6 +2,7 @@
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace GraffitiGala.City
@@ -72,23 +73,29 @@ namespace GraffitiGala.City
 
             if (!scroller.TargetBuilding.BuildingIsFull)
             {
-                scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, spriteSettings.PivotPoint, 
+                // Attempt to spawn the drawing.
+                Debug.Log("Spawning image with path " + filePath);
+                bool placeSuccessful = scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, spriteSettings.PivotPoint, 
                     spriteSettings.PixelsPerUnit));
                 // Debug.Log("Spawning graffiti " + filePath + " on building " + scroller.TargetBuilding);
+                // If drawing spawning fails, then we need to continue the loop.  If spawning was sucessful, we return.
+                if (placeSuccessful)
+                {
+                    return;
+                }
+            }
+            // If code gets to here, that means that the target building is full.
+
+            // Attempts to have the scroller find an already existing building that isnt full.
+            if (scroller.FindNewTarget())
+            {
+                SpawnGraffiti(filePath);
             }
             else
             {
-                // Attempts to have the scroller find an already existing building that isnt full.
-                if (scroller.FindNewTarget())
-                {
-                    SpawnGraffiti(filePath);
-                }
-                else
-                {
-                    // If there are no valid buildings that arent full, then create a new one.
-                    SpawnNewBuilding();
-                    SpawnGraffiti(filePath);
-                }
+                // If there are no valid buildings that arent full, then create a new one.
+                SpawnNewBuilding();
+                SpawnGraffiti(filePath);
             }
         }
 
@@ -100,10 +107,13 @@ namespace GraffitiGala.City
             string[] paths = System.IO.Directory.GetFiles(ImageManagement.FileDirectory);
             foreach (string path in paths)
             {
-                // Slightly worried this can cuase some problems if it tries to load too many files at once.  Will
-                // likely need to find a way to buffer this.
-                // May need to spawn over 210 files at FUSE.  Will need to stress test this later.
-                SpawnGraffiti(path);
+                if(Path.GetExtension(path) == ImageManagement.FILE_FORMAT)
+                {
+                    // Slightly worried this can cuase some problems if it tries to load too many files at once.  Will
+                    // likely need to find a way to buffer this.
+                    // May need to spawn over 210 files at FUSE.  Will need to stress test this later.
+                    SpawnGraffiti(path);
+                }
             }
         }
 
