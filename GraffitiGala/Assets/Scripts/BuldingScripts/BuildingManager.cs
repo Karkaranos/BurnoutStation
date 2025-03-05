@@ -25,7 +25,7 @@ namespace GraffitiGala.City
         [SerializeField, Tooltip("All buildings should exist here")]
         private List<BuildingBehavior> allBuildings = new List<BuildingBehavior>();
 
-        private int currentBuildingIndex = 0;
+        //private int currentBuildingIndex = 0;
 
         // Start is called before the first frame update
         void Start()

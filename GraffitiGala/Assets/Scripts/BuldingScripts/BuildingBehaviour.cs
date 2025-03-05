@@ -129,6 +129,8 @@ namespace GraffitiGala.City
             localSpawningPosition.x += width + graffitiSettings.BufferDistance;
 
             g.transform.localScale = new Vector3(graffitiSettings.ScaleModifier, graffitiSettings.ScaleModifier, 1);
+            // Sets this graffiti element as the one to be highlighted.
+            GraffitiHighlighter.SetHighlightedGraffiti(g.transform, this);
             SpriteRenderer sRend = g.AddComponent<SpriteRenderer>();
             sRend.sprite = spawnMe;
             return true;
