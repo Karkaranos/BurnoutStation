@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace GraffitiGala.ColorSwitching
 {
-    [CreateAssetMenu(fileName = "ColorChoices", menuName = "Scriptable Objects/Color Choices")]
+    [CreateAssetMenu(fileName = "ColorChoices", menuName = "Graffiti Gala/Color Choices")]
     public class ColorChoices : ScriptableObject
     {
         [field: SerializeField] public Color[] Colors { get; private set; }
