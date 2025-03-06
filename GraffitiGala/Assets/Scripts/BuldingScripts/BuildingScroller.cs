@@ -5,6 +5,7 @@ Brandon Koederitz
 Scrolls buildings past the camera and wraps them around.
 ***************************************************/
 using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,6 +24,9 @@ namespace GraffitiGala.City
         private float wrapAroundPosition;
         [SerializeField, Tooltip("The Y position that all buildings should have their bottom touching, regardless of height.")] 
         private float baseline;
+
+        // Called when a building goes to the back of the line.
+        public static event Action<BuildingBehavior> OnBuildingToBack;
 
         private readonly List<BuildingBehavior> scrollingBuildings = new();
         public BuildingBehavior TargetBuilding { get; private set; }
@@ -184,9 +188,8 @@ namespace GraffitiGala.City
             float backOffset = GetBuildingDistance(building, backBuilding) * (scrollingRight ? -1 : 1);
             buildingPos.x = backBuilding.transform.localPosition.x + backOffset;
             building.transform.localPosition = buildingPos;
-            // Passes this building that is being reset to the graffiti highlighter for it to check if it should stop following
-            // a piece of graffiti that was put on this building.
-            GraffitiHighlighter.StopTracking(building);
+            // Call an event to notify listeners that this building has moved to the back of the line.
+            OnBuildingToBack?.Invoke(building);
             // Moves the building to the back of the scrollingBuildings list.
             scrollingBuildings.Remove(building);
             scrollingBuildings.Add(building);

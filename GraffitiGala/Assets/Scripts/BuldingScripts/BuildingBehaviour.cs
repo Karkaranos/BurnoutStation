@@ -131,9 +131,11 @@ namespace GraffitiGala.City
 
             g.transform.localScale = new Vector3(graffitiSettings.ScaleModifier, graffitiSettings.ScaleModifier, 1);
             // Sets this graffiti element as the one to be highlighted.
-            GraffitiHighlighter.SetHighlightedGraffiti(g.transform, this);
+            //GraffitiHighlighter.SetHighlightedGraffiti(g.transform, this);
             SpriteRenderer sRend = g.AddComponent<SpriteRenderer>();
             sRend.sprite = spawnMe;
+            // Add an outline to newly spawned graffiti.
+            g.AddComponent<GraffitiOutliner>().Initialize(graffitiSettings.OutlineMaterial, this, sRend);
             return true;
         }
 

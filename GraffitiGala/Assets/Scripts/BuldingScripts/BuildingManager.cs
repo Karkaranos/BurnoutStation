@@ -75,8 +75,7 @@ namespace GraffitiGala.City
             {
                 // Attempt to spawn the drawing.
                 Debug.Log("Spawning image with path " + filePath);
-                bool placeSuccessful = scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, spriteSettings.PivotPoint, 
-                    spriteSettings.PixelsPerUnit));
+                bool placeSuccessful = scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, spriteSettings));
                 // Debug.Log("Spawning graffiti " + filePath + " on building " + scroller.TargetBuilding);
                 // If drawing spawning fails, then we need to continue the loop.  If spawning was sucessful, we return.
                 if (placeSuccessful)

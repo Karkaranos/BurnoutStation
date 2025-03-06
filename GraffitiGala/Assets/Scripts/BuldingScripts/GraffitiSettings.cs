@@ -18,11 +18,17 @@ namespace GraffitiGala.City
         public Vector2 PivotPoint { get; private set; } = new Vector2(0.5f, 0.5f);
         [field: SerializeField]
         public float PixelsPerUnit { get; private set; } = 256f;
+        [field: SerializeField]
+        public uint Extrude { get; private set; } = 0;
+        [field: SerializeField]
+        public SpriteMeshType MeshType { get; private set; }
 
         [field: Header("Graffiti Display Settings")]
         [field: SerializeField, Range(0f, 2f), Tooltip("Scale modifier for spawned Drawings")]
         public float ScaleModifier { get; private set; }
         [field: SerializeField, Tooltip("Area between each drawing")]
         public float BufferDistance { get; private set; }
+        [field: SerializeField, Tooltip("Area between each drawing")]
+        public Material OutlineMaterial { get; private set; }
     }
 }
