@@ -50,7 +50,8 @@ namespace GraffitiGala.ColorSwitching
             }
             //Debug.LogError("RecievedColors");
             // Sets the default colors of this client's brush to the first color in the color data's array.
-            NetworkBrush.CurrentColor = colorData.Colors[0];
+            // Do this from buttons directly so they can set the active state easier.
+            //NetworkBrush.CurrentColor = colorData.Colors[0];
             OnRecieveColors?.Invoke(colorData.Colors);
         }
     }

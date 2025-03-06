@@ -25,7 +25,7 @@ namespace GraffitiGala.City
         [SerializeField, Tooltip("All buildings should exist here")]
         private List<BuildingBehavior> allBuildings = new List<BuildingBehavior>();
 
-        private int currentBuildingIndex = 0;
+        //private int currentBuildingIndex = 0;
 
         // Start is called before the first frame update
         void Start()
@@ -75,8 +75,7 @@ namespace GraffitiGala.City
             {
                 // Attempt to spawn the drawing.
                 Debug.Log("Spawning image with path " + filePath);
-                bool placeSuccessful = scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, spriteSettings.PivotPoint, 
-                    spriteSettings.PixelsPerUnit));
+                bool placeSuccessful = scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, spriteSettings));
                 // Debug.Log("Spawning graffiti " + filePath + " on building " + scroller.TargetBuilding);
                 // If drawing spawning fails, then we need to continue the loop.  If spawning was sucessful, we return.
                 if (placeSuccessful)

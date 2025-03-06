@@ -4,10 +4,7 @@ Creation Date:              2/13/2025
 Modified Date:              3/5/2025
 Summary:                    Spawns saved images onto buildings
 ***************************************************/
-using System.Collections;
 using System.Collections.Generic;
-using System.Net;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GraffitiGala.City
@@ -29,6 +26,8 @@ namespace GraffitiGala.City
         //[SerializeField, Tooltip("Area between each drawing")]
         //private float bufferDistance;
         [SerializeField] private GraffitiSettings graffitiSettings;
+        [SerializeField, Tooltip("Settings that determine how the graffiti visual will start and be placed on this building.")]
+        private SpriteVisualizerSettings graffitiZoomSettings;
 
         //[SerializeField, Tooltip("The unchanged width of a spawned object, in Unity Units")]
         //private float normalWidth;
@@ -86,7 +85,7 @@ namespace GraffitiGala.City
             checkEndPoint.x += width;
             checkEndPoint.y -= height;
             // If our end point is outside the bounds, we must find a new position to spawn at.
-            if (!IsWithin(validAreas[currentSpawnArea], checkEndPoint))
+            while (!IsWithin(validAreas[currentSpawnArea], checkEndPoint))
             {
                 // If we have exceeded the bounds, then we move our spawning position and check end point typewriter
                 // style down one and back to the left.
@@ -97,7 +96,8 @@ namespace GraffitiGala.City
                 localSpawningPosition.x = GetBounds(validAreas[currentSpawnArea]).x; //validAreas[currentSpawnArea].offset.x - validAreas[currentSpawnArea].size.x;
                 checkEndPoint = localSpawningPosition + diagonal;
 
-                // Check again if we have a valid area  if we dont then we need to go to the next area
+                // Check again if we have a valid area.  If this second check fails, it means we're beyond the bottom
+                // of the valid area so we must move to the next valid area.
                 if (!IsWithin(validAreas[currentSpawnArea], checkEndPoint))
                 {
                     // If the new theoretical Y position exceeds the bounds of this current valid area, then move to
@@ -129,8 +129,13 @@ namespace GraffitiGala.City
             localSpawningPosition.x += width + graffitiSettings.BufferDistance;
 
             g.transform.localScale = new Vector3(graffitiSettings.ScaleModifier, graffitiSettings.ScaleModifier, 1);
+            // Sets this graffiti element as the one to be highlighted.
+            //GraffitiHighlighter.SetHighlightedGraffiti(g.transform, this);
             SpriteRenderer sRend = g.AddComponent<SpriteRenderer>();
             sRend.sprite = spawnMe;
+            // Add an outline to newly spawned graffiti.
+            g.AddComponent<GraffitiOutliner>().Initialize(graffitiSettings.OutlineMaterial, this, sRend);
+            SpritePlaceVisualizer.PlaceSpriteVisual(sRend, graffitiZoomSettings);
             return true;
         }
 

@@ -5,6 +5,7 @@ Brandon Koederitz
 Scrolls buildings past the camera and wraps them around.
 ***************************************************/
 using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,6 +24,9 @@ namespace GraffitiGala.City
         private float wrapAroundPosition;
         [SerializeField, Tooltip("The Y position that all buildings should have their bottom touching, regardless of height.")] 
         private float baseline;
+
+        // Called when a building goes to the back of the line.
+        public static event Action<BuildingBehavior> OnBuildingToBack;
 
         private readonly List<BuildingBehavior> scrollingBuildings = new();
         public BuildingBehavior TargetBuilding { get; private set; }
@@ -55,7 +59,7 @@ namespace GraffitiGala.City
         private void UpdateTarget()
         {
             if (TargetBuilding == null) { return; }
-            if (CheckObjectInCamera(cityDisplayCam, TargetBuilding.Rend))
+            if (cityDisplayCam.CheckObjectInCamera(TargetBuilding.Rend))
             {
                 int newIndex = scrollingBuildings.IndexOf(TargetBuilding) + 1;
                 // If there are no other buildings behind this one, then return to avoid out of range exception.
@@ -63,17 +67,6 @@ namespace GraffitiGala.City
                 //Debug.Log(newIndex);
                 SetTarget(scrollingBuildings[newIndex]);
             }
-        }
-
-        /// <summary>
-        /// Checks if a given sprite renderer is within the planes of a given camera.
-        /// </summary>
-        /// <param name="cam">The camera to check if the sprite is in the planes of.</param>
-        /// <param name="rend">The renderer to check the bounds of.</param>
-        /// <returns>Whether the renderer's bounds appear within the camera.</returns>
-        private bool CheckObjectInCamera(Camera cam, Renderer rend)
-        {
-            return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(cam), rend.bounds);
         }
 
         /// <summary>
@@ -99,7 +92,7 @@ namespace GraffitiGala.City
                 // Ran into a problem here where buildings at the front that were technically out of camera range were
                 // elidgable to be swapped in. Now check if the item has yet to arrive on camera.
                 bool isArriving = scrollingRight ? item.transform.position.x < 0 : item.transform.position.x > 0;
-                return !item.BuildingIsFull && !CheckObjectInCamera(cityDisplayCam, item.Rend) && isArriving;
+                return !item.BuildingIsFull && !cityDisplayCam.CheckObjectInCamera(item.Rend) && isArriving;
             }
 
             BuildingBehavior newTarget = scrollingBuildings.Find(ValidTargetPredicate);
@@ -195,6 +188,8 @@ namespace GraffitiGala.City
             float backOffset = GetBuildingDistance(building, backBuilding) * (scrollingRight ? -1 : 1);
             buildingPos.x = backBuilding.transform.localPosition.x + backOffset;
             building.transform.localPosition = buildingPos;
+            // Call an event to notify listeners that this building has moved to the back of the line.
+            OnBuildingToBack?.Invoke(building);
             // Moves the building to the back of the scrollingBuildings list.
             scrollingBuildings.Remove(building);
             scrollingBuildings.Add(building);
@@ -244,8 +239,9 @@ namespace GraffitiGala.City
             for (int i = 0; i < scrollingBuildings.Count; i++)
             {
                 MoveToPosition(scrollingBuildings[i], currentPosition);
-                int nextIndex = Mathf.Clamp(i, 0, scrollingBuildings.Count - 1);
+                int nextIndex = Mathf.Clamp(i + 1, 0, scrollingBuildings.Count - 1);
                 currentPosition += GetBuildingDistance(scrollingBuildings[i], scrollingBuildings[nextIndex]);
+                //Debug.Log("Distance between center of building " + scrollingBuildings[i] + " and " + scrollingBuildings[nextIndex] + " is " + GetBuildingDistance(scrollingBuildings[i], scrollingBuildings[nextIndex]));
             }
         }
 
