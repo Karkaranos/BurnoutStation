@@ -289,6 +289,7 @@ MonoBehaviour:
   - {fileID: 4279437632636750105}
   - {fileID: 1856608880844809731}
   graffitiSettings: {fileID: 11400000, guid: cc72ae69617e4fb48940456731c3182c, type: 2}
+  graffitiZoomSettings: {fileID: 11400000, guid: b53bdc8d5940e96449d000cd64d7db79, type: 2}
 --- !u!1 &7829686327523181362
 GameObject:
   m_ObjectHideFlags: 0
