@@ -4,10 +4,7 @@ Creation Date:              2/13/2025
 Modified Date:              3/5/2025
 Summary:                    Spawns saved images onto buildings
 ***************************************************/
-using System.Collections;
 using System.Collections.Generic;
-using System.Net;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GraffitiGala.City
@@ -29,6 +26,8 @@ namespace GraffitiGala.City
         //[SerializeField, Tooltip("Area between each drawing")]
         //private float bufferDistance;
         [SerializeField] private GraffitiSettings graffitiSettings;
+        [SerializeField, Tooltip("Settings that determine how the graffiti visual will start and be placed on this building.")]
+        private SpriteVisualizerSettings graffitiZoomSettings;
 
         //[SerializeField, Tooltip("The unchanged width of a spawned object, in Unity Units")]
         //private float normalWidth;
@@ -136,6 +135,7 @@ namespace GraffitiGala.City
             sRend.sprite = spawnMe;
             // Add an outline to newly spawned graffiti.
             g.AddComponent<GraffitiOutliner>().Initialize(graffitiSettings.OutlineMaterial, this, sRend);
+            SpritePlaceVisualizer.PlaceSpriteVisual(sRend, graffitiZoomSettings);
             return true;
         }
 

@@ -4,8 +4,6 @@ Brandon Koederitz
 3/3/2025
 Settings for how graffiti spawns on buildings gathered in an independent object for easier modifications.
 ***************************************************/
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GraffitiGala.City

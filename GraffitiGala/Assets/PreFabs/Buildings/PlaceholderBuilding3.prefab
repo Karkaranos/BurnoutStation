@@ -213,3 +213,4 @@ MonoBehaviour:
   validAreas:
   - {fileID: 6219067485140153414}
   graffitiSettings: {fileID: 11400000, guid: cc72ae69617e4fb48940456731c3182c, type: 2}
+  graffitiZoomSettings: {fileID: 11400000, guid: b53bdc8d5940e96449d000cd64d7db79, type: 2}
