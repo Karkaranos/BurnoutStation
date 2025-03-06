@@ -1,0 +1,74 @@
+/*************************************************
+Brandon Koederitz
+3/5/2025
+3/5/2025
+Allows buttons to modify this client's line thickness.
+***************************************************/
+using GraffitiGala.Drawing;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.PackageManager;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace GraffitiGala.UI
+{
+    [RequireComponent(typeof(Button))]
+    public class ThicknessButton : MonoBehaviour
+    {
+        [SerializeField] private float thicknessValue;
+        [SerializeField] private bool startAsActive;
+
+        private static ThicknessButton currentlyActiveThickness;
+        private static ThicknessButton CurrentlyActiveThickness
+        {
+            get
+            {
+                return currentlyActiveThickness;
+            }
+            set
+            {
+                if (currentlyActiveThickness != null)
+                {
+                    currentlyActiveThickness.OnLoseActive();
+                }
+                currentlyActiveThickness = value;
+                if (currentlyActiveThickness != null)
+                {
+                    currentlyActiveThickness.OnBecomeActive();
+                }
+            }
+        }
+
+        /// <summary>
+        /// If this button is marked as startAsActive, then on start it will set the thickness by default.
+        /// </summary>
+        private void Start()
+        {
+            if (startAsActive)
+            {
+                SetThickness();
+            }
+        }
+
+        /// <summary>
+        /// Sets the thickness of this client's brush.
+        /// </summary>
+        public void SetThickness()
+        {
+            NetworkBrush.CurrentThickness = thicknessValue;
+            CurrentlyActiveThickness = this;
+        }
+
+        private void OnLoseActive()
+        {
+
+        }
+
+        private void OnBecomeActive()
+        {
+
+        }
+    }
+
+}

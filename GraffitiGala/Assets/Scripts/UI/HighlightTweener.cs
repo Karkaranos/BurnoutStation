@@ -24,6 +24,25 @@ namespace GraffitiGala.UI
         [SerializeField] private Vector2 selectedAnchoredPosition;
         [SerializeField] private float tweenSpeed;
 
+        // When this value is true, the object will always be tweened to the selected position.
+        private bool overrideSelected = false;
+        public bool OverrideSelected
+        {
+            get
+            {
+                return overrideSelected;
+            }
+            set
+            {
+                // Always ensure we tween to the correct position when override selected is set.
+                overrideSelected = value;
+                Debug.Log("Override Selected set to " +  value);
+                AutoTween();
+            }
+        }
+
+        private bool isHighlighted;
+
         private Coroutine tweenRoutine;
 
         /// <summary>
@@ -32,7 +51,9 @@ namespace GraffitiGala.UI
         /// <param name="eventData">Unused.</param>
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Tween(selectedAnchoredPosition);
+            isHighlighted = true;
+            //Tween(selectedAnchoredPosition);
+            AutoTween();
         }
         /// <summary>
         /// Tweens the animated object to the unselected anchored position when the pointer enters this UI object.
@@ -40,7 +61,19 @@ namespace GraffitiGala.UI
         /// <param name="eventData">Unused.</param>
         public void OnPointerExit(PointerEventData eventData)
         {
-            Tween(unselectedAnchoredPosition);
+            isHighlighted = false;
+            //Tween(unselectedAnchoredPosition);
+            AutoTween();
+        }
+
+        /// <summary>
+        /// Automatically tweens the image to the correct location based on it's highlighted status and if it is being overwritten.
+        /// </summary>
+        private void AutoTween()
+        {
+            bool shouldBeRaised = isHighlighted | overrideSelected;
+            Vector2 targetPos = shouldBeRaised ? selectedAnchoredPosition : unselectedAnchoredPosition;
+            Tween(targetPos);
         }
 
         /// <summary>
