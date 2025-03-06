@@ -5,9 +5,6 @@ Brandon Koederitz
 Allows buttons to modify this client's line thickness.
 ***************************************************/
 using GraffitiGala.Drawing;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 
