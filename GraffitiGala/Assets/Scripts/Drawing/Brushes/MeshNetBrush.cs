@@ -300,13 +300,13 @@ namespace GraffitiGala.Drawing
         }
 
         /// <summary>
-        /// Gets the width of a line based on a given pressure.
+        /// Gets the width of a line based on either pressure or a set thickness.
         /// </summary>
-        /// <param name="pressure">The pressure to use when caluclating line width.</param>
         /// <returns>The width that the line should be.</returns>
-        private float GetWidth(float pressure)
+        private float GetThickness()
         {
-            return Mathf.Lerp(minPressureWidth, maxPressureWidth, pressure);
+            return CurrentThickness;
+            //return Mathf.Lerp(minPressureWidth, maxPressureWidth, pressureAction.ReadValue<float>());
         }
 
         /// <summary>
@@ -317,12 +317,10 @@ namespace GraffitiGala.Drawing
         /// <param name="drawDirection">The direction the line is moving to calculate the verticies.</param>
         internal void Draw(MeshBrushTexture line, Vector3 position, Vector2 drawDirection)
         {
-            //float thickness = GetWidth(pressureAction.ReadValue<float>());
-            float thickness = CurrentThickness;
             // Gets the z position of this new point on the line so that it overlaps previous points.
             position.z = GetZLayer();
             // Adds a new point tot he currently draw mesh-based line.
-            line.AddPoint(position, drawDirection, thickness);
+            line.AddPoint(position, drawDirection, GetThickness());
         }
 
         /// <summary>
@@ -344,7 +342,7 @@ namespace GraffitiGala.Drawing
             // Instantiate a new line purely on the local client side.
             MeshBrushTexture localLine = Instantiate(meshPrefab, Vector2.zero, Quaternion.identity, parent);
             localLine.Initialize(color);
-            localLine.Local_InitializeMesh(pressureAction.ReadValue<float>(), position);
+            localLine.Local_InitializeMesh(GetThickness(), position);
             // Adds the local line to a list of created local lines.  Keeps track of this to ensure that they are
             // cleared properly if they never are removed by the server.
             localLines.Add(localLine);

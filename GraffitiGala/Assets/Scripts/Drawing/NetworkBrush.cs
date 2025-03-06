@@ -41,7 +41,7 @@ namespace GraffitiGala.Drawing
         protected InputAction positionAction;
 
         public static Color CurrentColor { protected get; set; }
-        public static float CurrentThickness { protected get; set; }
+        public static float CurrentThickness { protected get; set; } = 1f;
         #endregion
 
         #region Properties

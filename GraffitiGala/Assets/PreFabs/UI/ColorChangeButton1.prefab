@@ -118,6 +118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 1
   Image: {fileID: 2093278351200539414}
+  tweener: {fileID: 8679272981110985426}
 --- !u!114 &8679272981110985426
 MonoBehaviour:
   m_ObjectHideFlags: 0
