@@ -14,7 +14,7 @@ public class BlindnessType : MonoBehaviour
     public void Option2()
     {
         gameObject.SetActive(false);
-        gameObject.SetActive(false);
+
 
     }
     public void Option3()
