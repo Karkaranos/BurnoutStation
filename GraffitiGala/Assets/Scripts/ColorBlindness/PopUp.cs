@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 
 public class PopUp : MonoBehaviour
 {
-    [SerializeField] private GameObject self;
+    [SerializeField] private GameObject nextPopUp;
 
 
 
@@ -25,18 +25,15 @@ public class PopUp : MonoBehaviour
     public void Option1()
     {
         
-        self.SetActive(false);
+        gameObject.SetActive(false);
+        nextPopUp.SetActive(true);
 
     }
     public void Option2()
     {
-      self.SetActive(false);
-        self.SetActive(false);
+        gameObject.SetActive(false);
+
 
     }
-    public void Option3()
-    {
-        self.SetActive(false);
-
-    }
+    
 }

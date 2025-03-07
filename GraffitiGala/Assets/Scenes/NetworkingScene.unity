@@ -872,7 +872,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 440137789}
         m_TargetAssemblyTypeName: PopUp, Assembly-CSharp
-        m_MethodName: NoPressed
+        m_MethodName: Option2
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1188,7 +1188,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &440137788
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1223,7 +1223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c002e386a787b746bfc05aa74182a42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  self: {fileID: 440137787}
+  nextPopUp: {fileID: 848560315}
 --- !u!114 &440137790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1608,7 +1608,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &848560316
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1629,7 +1629,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -8.123704, y: 77.90651}
+  m_AnchoredPosition: {x: -8.123704, y: 326}
   m_SizeDelta: {x: 501.63632, y: 173.994}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &848560318
@@ -1682,7 +1682,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c002e386a787b746bfc05aa74182a42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  self: {fileID: 848560315}
+  nextPopUp: {fileID: 0}
 --- !u!1 &872386858
 GameObject:
   m_ObjectHideFlags: 0
@@ -2609,7 +2609,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 440137789}
         m_TargetAssemblyTypeName: PopUp, Assembly-CSharp
-        m_MethodName: YesPressed
+        m_MethodName: Option1
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

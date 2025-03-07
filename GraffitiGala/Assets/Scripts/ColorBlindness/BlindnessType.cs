@@ -5,14 +5,21 @@ using UnityEngine;
 public class BlindnessType : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    public void Option1()
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+        gameObject.SetActive(false);
+
+    }
+    public void Option2()
     {
-        
+        gameObject.SetActive(false);
+        gameObject.SetActive(false);
+
+    }
+    public void Option3()
+    {
+        gameObject.SetActive(false);
+
     }
 }
