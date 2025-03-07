@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 3
+  m_Name: YIPPIE USE ME!
   m_Shader: {fileID: 4800000, guid: eb3c6fb598ded4c71b8968e1c40a3b4d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -81,15 +81,15 @@ Material:
     - _SunDiscExponent: 20000
     - _SunDiscMultiplier: 20000
     - _SunHaloContribution: 0.75
-    - _SunHaloExponent: 607.1
+    - _SunHaloExponent: 125
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _HorizonLineColor: {r: 0.9622642, g: 0, b: 0.89293987, a: 1}
-    - _SkyGradientBottom: {r: 0.7647059, g: 0.7927597, b: 0.8509804, a: 1}
-    - _SkyGradientTop: {r: 0.17254901, g: 0.4349325, b: 0.69411767, a: 1}
+    - _HorizonLineColor: {r: 0.9044118, g: 0.8872592, b: 0.7913603, a: 1}
+    - _SkyGradientBottom: {r: 0.57462114, g: 0.777668, b: 0.91823894, a: 1}
+    - _SkyGradientTop: {r: 0, g: 0.67330694, b: 1, a: 1}
     - _SunDiscColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SunHaloColor: {r: 1, g: 0.7406541, b: 0.49999988, a: 1}
+    - _SunHaloColor: {r: 0.8970588, g: 0.7760561, b: 0.666198, a: 1}
   m_BuildTextureStacks: []
