@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 5
+  m_Name: Nuhuh
   m_Shader: {fileID: 4800000, guid: eb3c6fb598ded4c71b8968e1c40a3b4d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -68,28 +68,28 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HorizonLineContribution: 0.3
-    - _HorizonLineExponent: 6.5
+    - _HorizonLineContribution: 0
+    - _HorizonLineExponent: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _SkyGradientExponent: 2.5
+    - _SkyGradientExponent: 5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SunDiscExponent: 20000
     - _SunDiscMultiplier: 20000
-    - _SunHaloContribution: 0.3
-    - _SunHaloExponent: 125
+    - _SunHaloContribution: 1
+    - _SunHaloExponent: 410
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _HorizonLineColor: {r: 1, g: 0.8275862, b: 0, a: 1}
-    - _SkyGradientBottom: {r: 0.93710685, g: 0.8044973, b: 0.83824253, a: 1}
-    - _SkyGradientTop: {r: 0, g: 0.2706766, b: 1, a: 1}
+    - _HorizonLineColor: {r: 0.9044118, g: 0.8872592, b: 0.7913603, a: 1}
+    - _SkyGradientBottom: {r: 0.92909783, g: 0.9559748, b: 0.7786084, a: 1}
+    - _SkyGradientTop: {r: 0, g: 0.6313726, b: 1, a: 1}
     - _SunDiscColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SunHaloColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SunHaloColor: {r: 0.9622642, g: 0.7942345, b: 0.64453536, a: 1}
   m_BuildTextureStacks: []
