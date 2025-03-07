@@ -221,5 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59d9147e682e86946bcc1587489626a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  image: {fileID: 3812301926643051891}
+  activeSprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   thicknessValue: 0.1
   startAsActive: 0
