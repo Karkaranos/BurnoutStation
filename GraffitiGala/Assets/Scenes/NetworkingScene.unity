@@ -1690,11 +1690,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1597994146233382598, guid: 7dee3e7a4ae22a24ab458b2734cebb69, type: 3}
   m_PrefabInstance: {fileID: 425073094}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &425073096 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2262635495725057127, guid: 7dee3e7a4ae22a24ab458b2734cebb69, type: 3}
-  m_PrefabInstance: {fileID: 425073094}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &425073097 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8900081319684724735, guid: 7dee3e7a4ae22a24ab458b2734cebb69, type: 3}
@@ -2827,7 +2822,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 1
+  buildType: 2
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
@@ -3401,18 +3396,6 @@ MonoBehaviour:
     OnLoading:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
         - m_Target: {fileID: 567763804}
           m_TargetAssemblyTypeName: GraffitiGala.ColorSwitching.ColorDistributor,
             Assembly-CSharp
@@ -3456,34 +3439,10 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 1321683922}
           m_TargetAssemblyTypeName: GraffitiGala.Drawing.BrushManager, Assembly-CSharp
           m_MethodName: DisableBrush
           m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 425073096}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
