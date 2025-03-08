@@ -1,12 +1,5 @@
-using GraffitiGala;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Unity.Burst.Intrinsics;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 public class PromptSelector : MonoBehaviour
 {
     public TMP_Text promptText;
