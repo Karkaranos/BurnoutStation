@@ -9,6 +9,7 @@ using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GraffitiGala.Drawing
@@ -364,21 +365,35 @@ namespace GraffitiGala.Drawing
         /// <param name="thickness">The line thickness of this point.</param>
         private void Local_AddPoint(Vector3 position, Vector2 drawDirection, float thickness)
         {
-            if(isQuad)
+            // Define a new set of array to update the mesh values.
+            Vector3[] verticies;
+            Vector2[] uv;
+            int[] triangles;
+            bool updateLastUV = true;
+
+            if (isQuad)
             {
                 RotateMesh(mesh, originPoint, drawDirection);
+                // Do not add any new verticies or triangles if this mesh is a quad.  Instead, simply update the 
+                // verticies already present.
+                verticies = mesh.vertices;
+                uv = mesh.uv;
+                triangles = mesh.triangles;
+                updateLastUV = false;
                 isQuad = false;
             }
+            else
+            {
+                // Define a new set of array to update the mesh values.
+                verticies = new Vector3[mesh.vertices.Length + 2]; // Add two additional verticies.
+                uv = new Vector2[mesh.uv.Length + 2]; // Add two additional UV positions.
+                triangles = new int[mesh.triangles.Length + 6]; // Add 6 new triangle indicies, 3 for each polygon
 
-            // Define a new set of array to update the mesh values.
-            Vector3[] verticies = new Vector3[mesh.vertices.Length + 2]; // Add two additional verticies.
-            Vector2[] uv = new Vector2[mesh.uv.Length + 2]; // Add two additional UV positions.
-            int[] triangles = new int[mesh.triangles.Length + 6]; // Add 6 new triangle indicies, 3 for each polygon
-
-            // Copy data from the mesh to the new temporary lists.
-            mesh.vertices.CopyTo(verticies, 0);
-            mesh.uv.CopyTo(uv, 0);
-            mesh.triangles.CopyTo(triangles, 0);
+                // Copy data from the mesh to the new temporary lists.
+                mesh.vertices.CopyTo(verticies, 0);
+                mesh.uv.CopyTo(uv, 0);
+                mesh.triangles.CopyTo(triangles, 0);
+            }
 
             // Assigns variables to hold the 4 indicies needed to construct the new line point.
             int lastTopIndex = (verticies.Length - 4) + 0;
@@ -399,9 +414,14 @@ namespace GraffitiGala.Drawing
             verticies[newTopIndex] = newTopPosition;
             verticies[newBottomIndex] = newBottomPosition;
 
-            // Sets the UVs of the last indicies so that they load the middle of the material.
-            uv[lastTopIndex] = new Vector2(0.5f, 1f);
-            uv[lastBottomIndex] = new Vector2(0.5f, 0f);
+            // If this point addition is simply updating the quad verticies, then we shouldnt update the last UVs so
+            // that they keep showing the end of the spray paint texture.
+            if (updateLastUV)
+            {
+                // Sets the UVs of the last indicies so that they load the middle of the material.
+                uv[lastTopIndex] = new Vector2(0.5f, 1f);
+                uv[lastBottomIndex] = new Vector2(0.5f, 0f);
+            }
 
             // Sets the UVs of the new indicies so that they load the edges of the material.
             uv[newTopIndex] = new Vector2(1f, 1f);

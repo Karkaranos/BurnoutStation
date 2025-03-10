@@ -20,6 +20,8 @@ namespace GraffitiGala.City
         public uint Extrude { get; private set; } = 0;
         [field: SerializeField]
         public SpriteMeshType MeshType { get; private set; }
+        [field: SerializeField]
+        public FilterMode SpriteFilterMode { get; private set; }
 
         [field: Header("Graffiti Display Settings")]
         [field: SerializeField, Range(0f, 2f), Tooltip("Scale modifier for spawned Drawings")]

@@ -79,6 +79,7 @@ namespace GraffitiGala
             // Loads the raw image data to a Texture2D.
             Texture2D spriteTexture = new Texture2D(0, 0);
             spriteTexture.LoadImage(rawSpriteData);
+            spriteTexture.filterMode = settings.SpriteFilterMode;
             // Creates a new sprite from the Texture2D.
             Sprite sprite = Sprite.Create(spriteTexture, new Rect(0, 0, spriteTexture.width, spriteTexture.height),
                 settings.PivotPoint, settings.PixelsPerUnit, settings.Extrude, settings.MeshType);

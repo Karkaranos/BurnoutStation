@@ -76,12 +76,12 @@ namespace GraffitiGala.City
         private void SetTarget(BuildingBehavior target)
         {
             // Debug color change.
-            if (TargetBuilding != null) 
-            {
-                TargetBuilding.Rend.color = Color.white;
-            }
+            //if (TargetBuilding != null) 
+            //{
+            //    TargetBuilding.Rend.color = Color.white;
+            //}
             TargetBuilding = target;
-            TargetBuilding.Rend.color = Color.red;
+            //TargetBuilding.Rend.color = Color.red;
         }
 
         public bool FindNewTarget()
