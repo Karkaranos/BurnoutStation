@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cityDisplayCam: {fileID: 33385994}
-  buildingMargin: 1.5
+  buildingMargin: 1
   buildingScrollSpeed: -2
   wrapAroundPosition: -30
   baseline: -10
@@ -2308,7 +2308,7 @@ MonoBehaviour:
   _ipv6BindAddress: 
   _port: 7770
   _maximumClients: 4095
-  _clientAddress: localhost
+  _clientAddress: 172.20.10.2
 --- !u!114 &551068846
 MonoBehaviour:
   m_ObjectHideFlags: 0
