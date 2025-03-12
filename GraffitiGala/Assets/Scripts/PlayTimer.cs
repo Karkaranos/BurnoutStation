@@ -238,7 +238,7 @@ namespace GraffitiGala
         public void StartTimer()
         {
             timer.StartTimer(time, true);
-            Debug.Log("Timer Started");
+            //Debug.Log("Timer Started");
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace GraffitiGala
         public void StopTimer()
         {
             timer.StopTimer(true);
-            Debug.Log("Timer Stopped");
+            //Debug.Log("Timer Stopped");
         }
     }
 }

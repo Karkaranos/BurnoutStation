@@ -5,6 +5,7 @@ Brandon Koederitz
 Controls buttons that hide player contributions.
 ***************************************************/
 using GraffitiGala.Drawing;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -30,6 +31,7 @@ namespace GraffitiGala.Admin
             isVisible = !isVisible;
             foreach (var line in lines)
             {
+                if (line == null) { continue; }
                 line.gameObject.SetActive(isVisible);
             }
             UpdateButtonText();
@@ -51,6 +53,7 @@ namespace GraffitiGala.Admin
         /// <param name="lines">The lines that were drawn by this player.</param>
         public void Setup(MeshBrushTexture[] lines)
         {
+            Debug.Log(lines.Length);
             this.lines = lines;
             isVisible = true;
             UpdateButtonText();

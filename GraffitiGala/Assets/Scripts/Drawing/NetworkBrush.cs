@@ -85,7 +85,6 @@ namespace GraffitiGala.Drawing
                 BrushManager.EnableBrushEvent += EnableBrush;
                 BrushManager.ClearLinesEvent += ClearLinesOwner;
                 BrushManager.DisableBrushEvent += DisableBrush;
-                PlayerHider.LineRequest += ProvideLines;
 
             }
             else
@@ -94,10 +93,17 @@ namespace GraffitiGala.Drawing
                 // it's PlayerInput and this component.
                 playerInput.enabled = false;
                 this.enabled = false;
-                return;
             }
+            // Need to register ProvideLines even for non owner clients.
+            PlayerHider.LineRequest += ProvideLines;
+        }
 
-            
+        /// <summary>
+        /// unsubscribe ProvideLines on disable as disabled brushes should not provide any lines.
+        /// </summary>
+        private void OnDisable()
+        {
+            PlayerHider.LineRequest -= ProvideLines;
         }
 
         public override void OnStopClient()
@@ -109,8 +115,8 @@ namespace GraffitiGala.Drawing
                 BrushManager.EnableBrushEvent -= EnableBrush;
                 BrushManager.ClearLinesEvent -= ClearLinesOwner;
                 BrushManager.DisableBrushEvent -= DisableBrush;
-                PlayerHider.LineRequest -= ProvideLines;
             }
+            PlayerHider.LineRequest -= ProvideLines;
         }
         #endregion
 

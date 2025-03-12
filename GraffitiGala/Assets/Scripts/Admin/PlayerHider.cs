@@ -26,9 +26,9 @@ namespace GraffitiGala.Admin
         /// <param name="conn">The network connection that owns the brush that is providing lines.</param>
         public void ProvideLines(MeshBrushTexture[] lines, NetworkConnection conn)
         {
+            buttons[pointerIndex].gameObject.SetActive(true);
             buttons[pointerIndex].Setup(lines);
-
-            Debug.Log(conn.ClientId);
+            pointerIndex++;
         }
 
         /// <summary>
@@ -48,6 +48,10 @@ namespace GraffitiGala.Admin
         public void Confirm()
         {
             hiderMenu.SetActive(false);
+            foreach (var button in buttons)
+            {
+                button.gameObject.SetActive(false);
+            }
             GraffitiPhotographer.ScreenshotDrawing();
             // Move to the waiting state to reset the experience for the next group.
             ExperienceManager.SetState(ExperienceState.Waiting);

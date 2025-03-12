@@ -455,8 +455,17 @@ namespace GraffitiGala.Drawing
         /// <param name="hider">The PlayerHider component requesting the lines.</param>
         protected override void ProvideLines(PlayerHider hider)
         {
-            //base.ProvideLines(hider);
-            hider.ProvideLines(drawnObjects.ToArray(), base.Owner);
+            // Only active brushes should provide lines.
+            if (gameObject.activeSelf == true)
+            {
+                //base.ProvideLines(hider);
+                MeshBrushTexture[] lines = new MeshBrushTexture[drawnObjects.Count];
+                for (int i = 0; i < drawnObjects.Count; i++)
+                {
+                    lines[i] = drawnObjects[i];
+                }
+                hider.ProvideLines(lines, base.Owner);
+            }
         }
 
         #region Testing
