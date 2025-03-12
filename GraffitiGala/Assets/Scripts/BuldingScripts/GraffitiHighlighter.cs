@@ -79,6 +79,7 @@ namespace GraffitiGala.City
             while (trackedTransform != null)
             {
                 transform.position = trackedTransform.position;
+                transform.localScale = trackedTransform.localScale;
 
                 yield return null;
             }

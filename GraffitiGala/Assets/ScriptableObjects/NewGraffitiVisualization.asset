@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: NewGraffitiVisualization
   m_EditorClassIdentifier: 
   <SpriteMagnification>k__BackingField: 7
+  <SortingLayerName>k__BackingField: Overlay
+  <OrderInLayer>k__BackingField: 10
   <TweenTime>k__BackingField: 1.5
-  <InitialDelay>k__BackingField: 2.5
+  <InitialDelay>k__BackingField: 4
+  <FadeInDuration>k__BackingField: 1
   <TweenCurve>k__BackingField:
     serializedVersion: 2
     m_Curve:
