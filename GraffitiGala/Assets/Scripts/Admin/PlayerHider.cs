@@ -1,0 +1,56 @@
+/*************************************************
+Brandon Koederitz
+3/12/2025
+3/12/2025
+Allows the admin to control which players's contributions end up being shown on the finished graffiti.
+***************************************************/
+using FishNet.Connection;
+using GraffitiGala.Drawing;
+using System;
+using UnityEngine;
+
+namespace GraffitiGala.Admin
+{
+    public class PlayerHider : MonoBehaviour
+    {
+        [SerializeField] private PlayerHiderButton[] buttons;
+        [SerializeField] private GameObject hiderMenu;
+        private int pointerIndex;
+
+        public static event Action<PlayerHider> LineRequest;
+
+        /// <summary>
+        /// Provides an array of lines created by one player.
+        /// </summary>
+        /// <param name="lines">The lines created by that player.</param>
+        /// <param name="conn">The network connection that owns the brush that is providing lines.</param>
+        public void ProvideLines(MeshBrushTexture[] lines, NetworkConnection conn)
+        {
+            buttons[pointerIndex].Setup(lines);
+
+            Debug.Log(conn.ClientId);
+        }
+
+        /// <summary>
+        /// Gives the admin control over the lines that players have drawn.
+        /// </summary>
+        public void AdministrateDrawing()
+        {
+            hiderMenu.SetActive(true);
+            // Request lines
+            pointerIndex = 0;
+            LineRequest?.Invoke(this);
+        }
+
+        /// <summary>
+        /// Confirm's the admin's choices and saves the drawing.
+        /// </summary>
+        public void Confirm()
+        {
+            hiderMenu.SetActive(false);
+            GraffitiPhotographer.ScreenshotDrawing();
+            // Move to the waiting state to reset the experience for the next group.
+            ExperienceManager.SetState(ExperienceState.Waiting);
+        }
+    }
+}

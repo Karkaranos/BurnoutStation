@@ -83,6 +83,7 @@ namespace GraffitiGala.City
                 fadeTimer += Time.deltaTime;
                 yield return null;
             }
+            thisRenderer.color = thisRenderer.color.SetAlpha(1);
 
             yield return new WaitForSeconds(settings.InitialDelay);
 
@@ -115,6 +116,8 @@ namespace GraffitiGala.City
             }
             // Shows the target sprite.
             targetRenderer.enabled = true;
+            // Plays the graffiti highlight once it has been placed
+            GraffitiHighlighter.SetHighlightedGraffiti(targetRenderer);
             Destroy(gameObject);
         }
     }

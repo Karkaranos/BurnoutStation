@@ -7,10 +7,10 @@ FishNet, InputSystem
 ***************************************************/
 
 using FishNet.Object;
+using GraffitiGala.Admin;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System;
-using FMOD;
 
 namespace GraffitiGala.Drawing
 {
@@ -45,7 +45,7 @@ namespace GraffitiGala.Drawing
         #endregion
 
         #region Properties
-        [Obsolete("BrushColor is depreciated.  Use NetworkBrush.CurrentColor instead.")]
+        [Obsolete("BrushColor is obsolete.  Use NetworkBrush.CurrentColor instead.")]
         public Color BrushColor // networkBrush.BrushColor = Blue
         {
 
@@ -85,6 +85,8 @@ namespace GraffitiGala.Drawing
                 BrushManager.EnableBrushEvent += EnableBrush;
                 BrushManager.ClearLinesEvent += ClearLinesOwner;
                 BrushManager.DisableBrushEvent += DisableBrush;
+                PlayerHider.LineRequest += ProvideLines;
+
             }
             else
             {
@@ -107,6 +109,7 @@ namespace GraffitiGala.Drawing
                 BrushManager.EnableBrushEvent -= EnableBrush;
                 BrushManager.ClearLinesEvent -= ClearLinesOwner;
                 BrushManager.DisableBrushEvent -= DisableBrush;
+                PlayerHider.LineRequest -= ProvideLines;
             }
         }
         #endregion
@@ -161,6 +164,8 @@ namespace GraffitiGala.Drawing
         }
 
         protected abstract void ClearLines();
+
+        protected virtual void ProvideLines(PlayerHider hider) { }
 
         #region Input Functions
 
