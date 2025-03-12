@@ -4,6 +4,7 @@ Brandon Koederitz
 3/5/2025
 Allows buttons to modify this client's line thickness.
 ***************************************************/
+using FishNet.Managing.Scened;
 using GraffitiGala.Drawing;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,12 +14,11 @@ namespace GraffitiGala.UI
     [RequireComponent(typeof(Button))]
     public class ThicknessButton : MonoBehaviour
     {
-        [SerializeField] private Image image;
-        [SerializeField] private Sprite activeSprite;
+        [SerializeField] private HighlightAnimator highlightAnim;
+        [SerializeField, Tooltip("During what state should this button be interactable.")]
+        private ExperienceState stateMask;
         [SerializeField] private float thicknessValue;
-        [SerializeField] private bool startAsActive;
-
-        private Sprite savedSprite;
+        //[SerializeField] private bool startAsActive;
 
         private static ThicknessButton currentlyActiveThickness;
         private static ThicknessButton CurrentlyActiveThickness
@@ -41,38 +41,43 @@ namespace GraffitiGala.UI
             }
         }
 
-        /// <summary>
-        /// If this button is marked as startAsActive, then on start it will set the thickness by default.
-        /// </summary>
-        private void Start()
-        {
-            if (startAsActive)
-            {
-                SetThickness();
-            }
-        }
+        ///// <summary>
+        ///// If this button is marked as startAsActive, then on start it will set the thickness by default.
+        ///// </summary>
+        //private void Start()
+        //{
+        //    ResetThickness();
+        //}
 
         /// <summary>
         /// Sets the thickness of this client's brush.
         /// </summary>
         public void SetThickness()
         {
-            NetworkBrush.CurrentThickness = thicknessValue;
-            CurrentlyActiveThickness = this;
+            if (ExperienceManager.GetState() == stateMask)
+            {
+                NetworkBrush.CurrentThickness = thicknessValue;
+                CurrentlyActiveThickness = this;
+            }
+        }
+
+        /// <summary>
+        /// Resets this object to the default thickness if it is meant to start as the active thickness.
+        /// </summary>
+        public void ResetThickness()
+        {
+            CurrentlyActiveThickness = null;
         }
 
         private void OnLoseActive()
         {
-            image.sprite = savedSprite;
+            Debug.Log("Game object " + gameObject.name + " lost active.");
+            highlightAnim.OverrideSelected = false;
         }
 
         private void OnBecomeActive()
         {
-            if (savedSprite == null)
-            {
-                savedSprite = image.sprite;
-            }
-            image.sprite = activeSprite;
+            highlightAnim.OverrideSelected = true;
         }
     }
 
