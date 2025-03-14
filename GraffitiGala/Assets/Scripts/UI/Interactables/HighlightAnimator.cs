@@ -5,9 +5,6 @@ Brandon Koederitz
 Animates a button on selection.  Done manually to A) allow for animating via script instead of having to use the unity 
 animator. B) to make it so that animations only play during certain experience states.
 ***************************************************/
-using GraffitiGala;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,6 +14,8 @@ namespace GraffitiGala.UI
     {
         [SerializeField, Tooltip("During what state should this object animate itself.")]
         protected ExperienceState stateMask;
+        [SerializeField, Tooltip("The game object that indicates that this button is the active button.")]
+        private GameObject overrideObject;
 
         protected bool isHighlighted;
 
@@ -32,6 +31,11 @@ namespace GraffitiGala.UI
             {
                 // Always ensure we tween to the correct position when override selected is set.
                 overrideSelected = value;
+                // Enable and disable the game object that indicates this button is active due to an outside override.
+                if (overrideObject != null)
+                {
+                    overrideObject.SetActive(value);
+                }
                 //Debug.Log("Override Selected set to " + value);
                 Evaluate();
             }
