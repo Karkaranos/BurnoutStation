@@ -23,6 +23,17 @@ namespace GraffitiGala
         {
             return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(cam), rend.bounds);
         }
+
+        /// <summary>
+        /// Sets the alpha value of a color.
+        /// </summary>
+        /// <param name="color">The color to modify.</param>
+        /// <param name="alpha">The alpha value to set.</param>
+        public static Color SetAlpha(this Color color, float alpha)
+        {
+            color.a = alpha;
+            return color;
+        }
     }
 
 }

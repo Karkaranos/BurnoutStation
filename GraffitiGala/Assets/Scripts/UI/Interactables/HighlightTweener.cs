@@ -1,18 +1,17 @@
 /*************************************************
 Brandon Koederitz
 2/23/2025
-2/23/2025
+3/12/2025
 Tweens an RectTransform between two points depending on if a UI object is highlighted or not. 
 Doing it this way to A) Reduce the amount of animation files needed and B) To avoid some of the inconsistencies that 
 the animator can have when used with buttons.
 ***************************************************/
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace GraffitiGala.UI
 {
-    public class HighlightTweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class HighlightTweener : HighlightAnimator
     {
         #region CONSTS
         private const float SNAP_DISTANCE = 0.01f;
@@ -24,54 +23,16 @@ namespace GraffitiGala.UI
         [SerializeField] private Vector2 selectedAnchoredPosition;
         [SerializeField] private float tweenSpeed;
 
-        // When this value is true, the object will always be tweened to the selected position.
-        private bool overrideSelected = false;
-        public bool OverrideSelected
-        {
-            get
-            {
-                return overrideSelected;
-            }
-            set
-            {
-                // Always ensure we tween to the correct position when override selected is set.
-                overrideSelected = value;
-                Debug.Log("Override Selected set to " +  value);
-                AutoTween();
-            }
-        }
-
-        private bool isHighlighted;
-
         private Coroutine tweenRoutine;
 
-        /// <summary>
-        /// Tweens the animated object to the selected anchored position when the pointer enters this UI object.
-        /// </summary>
-        /// <param name="eventData">Unused.</param>
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            isHighlighted = true;
-            //Tween(selectedAnchoredPosition);
-            AutoTween();
-        }
-        /// <summary>
-        /// Tweens the animated object to the unselected anchored position when the pointer enters this UI object.
-        /// </summary>
-        /// <param name="eventData">Unused.</param>
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            isHighlighted = false;
-            //Tween(unselectedAnchoredPosition);
-            AutoTween();
-        }
 
         /// <summary>
-        /// Automatically tweens the image to the correct location based on it's highlighted status and if it is being overwritten.
+        /// Automatically tweens the image to the correct location based on it's highlighted status and if it is being 
+        /// overwritten.
         /// </summary>
-        private void AutoTween()
+        protected override void Evaluate()
         {
-            bool shouldBeRaised = isHighlighted | overrideSelected;
+            bool shouldBeRaised = (isHighlighted | overrideSelected) & ExperienceManager.GetState() == stateMask;
             Vector2 targetPos = shouldBeRaised ? selectedAnchoredPosition : unselectedAnchoredPosition;
             Tween(targetPos);
         }

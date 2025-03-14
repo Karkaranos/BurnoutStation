@@ -7,10 +7,10 @@ FishNet, InputSystem
 ***************************************************/
 
 using FishNet.Object;
+using GraffitiGala.Admin;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System;
-using FMOD;
 
 namespace GraffitiGala.Drawing
 {
@@ -45,7 +45,7 @@ namespace GraffitiGala.Drawing
         #endregion
 
         #region Properties
-        [Obsolete("BrushColor is depreciated.  Use NetworkBrush.CurrentColor instead.")]
+        [Obsolete("BrushColor is obsolete.  Use NetworkBrush.CurrentColor instead.")]
         public Color BrushColor // networkBrush.BrushColor = Blue
         {
 
@@ -85,6 +85,7 @@ namespace GraffitiGala.Drawing
                 BrushManager.EnableBrushEvent += EnableBrush;
                 BrushManager.ClearLinesEvent += ClearLinesOwner;
                 BrushManager.DisableBrushEvent += DisableBrush;
+
             }
             else
             {
@@ -92,10 +93,17 @@ namespace GraffitiGala.Drawing
                 // it's PlayerInput and this component.
                 playerInput.enabled = false;
                 this.enabled = false;
-                return;
             }
+            // Need to register ProvideLines even for non owner clients.
+            PlayerHider.LineRequest += ProvideLines;
+        }
 
-            
+        /// <summary>
+        /// unsubscribe ProvideLines on disable as disabled brushes should not provide any lines.
+        /// </summary>
+        private void OnDisable()
+        {
+            PlayerHider.LineRequest -= ProvideLines;
         }
 
         public override void OnStopClient()
@@ -108,6 +116,7 @@ namespace GraffitiGala.Drawing
                 BrushManager.ClearLinesEvent -= ClearLinesOwner;
                 BrushManager.DisableBrushEvent -= DisableBrush;
             }
+            PlayerHider.LineRequest -= ProvideLines;
         }
         #endregion
 
@@ -161,6 +170,8 @@ namespace GraffitiGala.Drawing
         }
 
         protected abstract void ClearLines();
+
+        protected virtual void ProvideLines(PlayerHider hider) { }
 
         #region Input Functions
 

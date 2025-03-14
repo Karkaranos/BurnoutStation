@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using GraffitiGala;
 using GraffitiGala.Drawing;
 using GraffitiGala.UI;
 using UnityEngine;
@@ -10,7 +11,9 @@ public class UiButton : MonoBehaviour
     public int index;
     private Color paint;
     public Image Image;
-    [SerializeField] private HighlightTweener tweener;
+    [SerializeField] private HighlightAnimator highlightAnim;
+    [SerializeField, Tooltip("During what state is this button be interactable.")]
+    private ExperienceState stateMask;
 
     private static UiButton currentlyActiveColorButton;
     private static UiButton CurrentlyActiveColorButton
@@ -50,23 +53,27 @@ public class UiButton : MonoBehaviour
 
     public void changeBrushCl ()
     {
-        NetworkBrush.CurrentColor = paint;
-        CurrentlyActiveColorButton = this;
+        if (ExperienceManager.GetState() == stateMask)
+        {
+            NetworkBrush.CurrentColor = paint;
+            CurrentlyActiveColorButton = this;
+        }
     }    
 
     public void ResetColor()
     {
-        paint = Color.clear;
-        Image.color = Color.clear;
+        paint = Color.white;
+        Image.color = Color.white;
+        CurrentlyActiveColorButton = null;
     }
 
     // Configures the twener that makes the can graphic move when this button becomes the active and not active button.
     private void OnLoseActive()
     {
-        tweener.OverrideSelected = false;
+        highlightAnim.OverrideSelected = false;
     }
     private void OnBecomeActive()
     {
-        tweener.OverrideSelected = true;
+        highlightAnim.OverrideSelected = true;
     }
 }

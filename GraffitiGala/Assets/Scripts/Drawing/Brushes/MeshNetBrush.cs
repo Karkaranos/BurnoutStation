@@ -10,8 +10,10 @@ using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FMOD.Studio;
+using GraffitiGala.Admin;
 using NaughtyAttributes;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -445,6 +447,25 @@ namespace GraffitiGala.Drawing
                 Destroy(obj.gameObject);
             }
             drawnObjects.Clear();
+        }
+
+        /// <summary>
+        /// Provides the lines created by this brush to the PlayerHider so they can be disabled by the admin.
+        /// </summary>
+        /// <param name="hider">The PlayerHider component requesting the lines.</param>
+        protected override void ProvideLines(PlayerHider hider)
+        {
+            // Only active brushes should provide lines.
+            if (gameObject.activeSelf == true)
+            {
+                //base.ProvideLines(hider);
+                MeshBrushTexture[] lines = new MeshBrushTexture[drawnObjects.Count];
+                for (int i = 0; i < drawnObjects.Count; i++)
+                {
+                    lines[i] = drawnObjects[i];
+                }
+                hider.ProvideLines(lines, base.Owner);
+            }
         }
 
         #region Testing

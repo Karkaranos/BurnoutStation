@@ -47,7 +47,7 @@ namespace GraffitiGala.Drawing
             if(!isSetup)
             {
                 Server_RequestMesh(base.Owner);
-                Debug.Log(" Client " + InstanceFinder.ClientManager.Connection + " Requesting Mesh from Owner " + base.Owner.ClientId);
+                //Debug.Log(" Client " + InstanceFinder.ClientManager.Connection + " Requesting Mesh from Owner " + base.Owner.ClientId);
             }
             // Sets this client as not new at the end of frame.
             if (newClientRoutine == null && !isSetup)

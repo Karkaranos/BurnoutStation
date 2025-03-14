@@ -118,7 +118,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 1
   Image: {fileID: 4220488306269229452}
-  tweener: {fileID: 8679272981110985426}
+  highlightAnim: {fileID: 8679272981110985426}
+  stateMask: 3
 --- !u!114 &8679272981110985426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96bb5fa21c2212a4dbf2ac83ba5d99c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stateMask: 3
   animatedObject: {fileID: 4055788239935857087}
   unselectedAnchoredPosition: {x: 0, y: -20}
   selectedAnchoredPosition: {x: 0, y: 0}
