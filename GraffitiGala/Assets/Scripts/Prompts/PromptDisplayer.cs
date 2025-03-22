@@ -16,6 +16,7 @@ namespace GraffitiGala
     public class PromptDisplayer : MonoBehaviour
     {
         [SerializeField] private PromptList promptList;
+        [SerializeField] private GameObject promptObject;
         [SerializeField] private TMP_Text promptText;
 
 
@@ -61,7 +62,7 @@ namespace GraffitiGala
         /// <param name="channel">Unused channel info</param>
         private void RecievePrompt(PromptData data, Channel channel)
         {
-            promptText.gameObject.SetActive(true);
+            promptObject.SetActive(true);
             // Do fancier prompt polish here.
             promptText.text = data.Prompt;
             //Debug.Log("RecievedPrompt");

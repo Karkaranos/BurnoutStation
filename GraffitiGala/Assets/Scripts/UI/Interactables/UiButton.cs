@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using GraffitiGala;
 using GraffitiGala.Drawing;
 using GraffitiGala.UI;
@@ -13,7 +14,7 @@ public class UiButton : MonoBehaviour
     public Image Image;
     [SerializeField] private HighlightAnimator highlightAnim;
     [SerializeField, Tooltip("During what state is this button be interactable.")]
-    private ExperienceState stateMask;
+    private ExperienceState[] stateMask;
 
     private static UiButton currentlyActiveColorButton;
     private static UiButton CurrentlyActiveColorButton
@@ -53,7 +54,7 @@ public class UiButton : MonoBehaviour
 
     public void changeBrushCl ()
     {
-        if (ExperienceManager.GetState() == stateMask)
+        if (stateMask.Contains(ExperienceManager.GetState()))
         {
             NetworkBrush.CurrentColor = paint;
             CurrentlyActiveColorButton = this;

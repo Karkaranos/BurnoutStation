@@ -6,6 +6,7 @@ Changes the image of a button's image component when it is highlighted.
 ***************************************************/
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,7 +29,7 @@ namespace GraffitiGala.UI
         /// </summary>
         protected override void Evaluate()
         {
-            bool shouldBeActive = (isHighlighted | overrideSelected) & ExperienceManager.GetState() == stateMask;
+            bool shouldBeActive = (isHighlighted | overrideSelected) & stateMask.Contains(ExperienceManager.GetState());
             if (shouldBeActive)
             {
                 image.sprite = activeSprite;
