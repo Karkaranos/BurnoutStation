@@ -84,6 +84,7 @@ namespace GraffitiGala.City
             Vector3 checkEndPoint = localSpawningPosition;
             checkEndPoint.x += width;
             checkEndPoint.y -= height;
+            Debug.Log(new Vector2(width, height));
             // If our end point is outside the bounds, we must find a new position to spawn at.
             while (!IsWithin(validAreas[currentSpawnArea], checkEndPoint))
             {
@@ -106,6 +107,7 @@ namespace GraffitiGala.City
                     {
                         currentSpawnArea++;
                         localSpawningPosition = GetStartingCorner(validAreas[currentSpawnArea]);
+                        checkEndPoint = localSpawningPosition + diagonal;
                     }
                     // If there are no more valid areas on this building, then it is full.
                     else
@@ -185,6 +187,8 @@ namespace GraffitiGala.City
             // If any of the above conditions are true, then the position is outside the bounds of the box and
             // this function should return false.
             return !returnVal;
+            // This line crashes unity for some reason.
+            //return area.bounds.Contains(position);
         }
     }
 

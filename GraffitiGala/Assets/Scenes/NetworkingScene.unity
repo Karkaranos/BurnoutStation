@@ -5531,7 +5531,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 1549895329}
   _networkObjectCache: {fileID: 0}
   displayer: {fileID: 275006552}
-  time: 10
+  time: 30
   playSoundEffects: 1
   OnBeginClient:
     m_PersistentCalls:

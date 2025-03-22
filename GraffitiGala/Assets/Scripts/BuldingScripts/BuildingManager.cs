@@ -119,7 +119,7 @@ namespace GraffitiGala.City
         [Button]
         private void SpawnTestGraffiti()
         {
-            SpawnGraffiti(ImageManagement.GetFilePath("GraffitiFile_638752277731768409"));
+            SpawnGraffiti(ImageManagement.GetFilePath("GraffitiFile_638763508346838019"));
         }
     }
 }
