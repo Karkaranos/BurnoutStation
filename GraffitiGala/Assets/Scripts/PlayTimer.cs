@@ -143,7 +143,7 @@ namespace GraffitiGala
         /// </summary>
         private void Awake()
         {
-            if (playSoundEffects)
+            if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
             {
                 countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Timer);
             }
@@ -199,7 +199,7 @@ namespace GraffitiGala
             {
                 //OnFinishServer?.Invoke();
                 //OnFinishServerStatic?.Invoke();
-                if (playSoundEffects)
+                if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
                 {
                     countdown.stop(STOP_MODE.IMMEDIATE);
                     AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
