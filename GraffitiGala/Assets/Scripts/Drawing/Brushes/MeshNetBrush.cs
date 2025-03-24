@@ -188,7 +188,7 @@ namespace GraffitiGala.Drawing
             // on the client from errors.
              ClearLinesOwner();
 
-            if (playSoundEffects)
+            if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
             {
                 spray = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Spraypaint);
             }

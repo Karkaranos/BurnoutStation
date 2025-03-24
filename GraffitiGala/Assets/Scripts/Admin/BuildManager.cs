@@ -31,6 +31,8 @@ namespace GraffitiGala
                 return bType;
             }
         }
+
+        public BuildType BuildTypeRef { get => buildType;}
         #endregion
 
         /// <summary>
