@@ -198,8 +198,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5064375}
-        m_TargetAssemblyTypeName: GraffitiGala.BuildingManager, Assembly-CSharp
-        m_MethodName: SpawnGraffiti
+        m_TargetAssemblyTypeName: GraffitiGala.City.BuildingManager, Assembly-CSharp
+        m_MethodName: SpawnGraffitiWithPlacement
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4105,7 +4105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 1
+  buildType: 0
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
@@ -4219,6 +4219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eacc669986f3c54195b630eeebfc1bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _manualResolution: {x: 1920, y: 1080}
   _hiddenObjects:
   - {fileID: 1140650163}
   _saveBackup: 0
