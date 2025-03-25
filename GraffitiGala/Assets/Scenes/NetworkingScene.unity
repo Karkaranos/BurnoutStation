@@ -4147,7 +4147,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 0}
   countdownText: {fileID: 807446281}
   countdownObject: {fileID: 1007244745}
-  countdownTime: 3
+  countdownTime: 5
   endingMessage: GO!
   endingMessageDuration: 1
 --- !u!4 &1212167897
@@ -4431,7 +4431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 2
+  buildType: 0
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
@@ -4954,7 +4954,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 0}
+        - m_Target: {fileID: 1212167896}
           m_TargetAssemblyTypeName: GraffitiGala.Admin.StartingCountdown, Assembly-CSharp
           m_MethodName: StartCountdown
           m_Mode: 1
@@ -5012,7 +5012,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 48478921}
+        - m_Target: {fileID: 220098449}
           m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_MethodName: SetActive
           m_Mode: 6
