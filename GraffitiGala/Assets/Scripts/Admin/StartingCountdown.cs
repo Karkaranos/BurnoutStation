@@ -35,7 +35,7 @@ namespace GraffitiGala.Admin
 
         private void OnDisable()
         {
-            syncedCountdown.OnChange += Countdown_OnChange;
+            syncedCountdown.OnChange -= Countdown_OnChange;
         }
 
         /// <summary>
