@@ -4105,7 +4105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 1
+  buildType: 0
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
@@ -5532,7 +5532,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 1549895329}
   _networkObjectCache: {fileID: 0}
   displayer: {fileID: 275006552}
-  time: 10
+  time: 45
   playSoundEffects: 1
   OnBeginClient:
     m_PersistentCalls:
