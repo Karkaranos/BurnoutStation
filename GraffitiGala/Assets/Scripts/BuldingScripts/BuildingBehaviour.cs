@@ -106,6 +106,7 @@ namespace GraffitiGala.City
                     {
                         currentSpawnArea++;
                         localSpawningPosition = GetStartingCorner(validAreas[currentSpawnArea]);
+                        checkEndPoint = localSpawningPosition + diagonal;
                     }
                     // If there are no more valid areas on this building, then it is full.
                     else

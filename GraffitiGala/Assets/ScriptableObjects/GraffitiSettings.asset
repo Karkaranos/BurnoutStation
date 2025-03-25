@@ -17,6 +17,6 @@ MonoBehaviour:
   <Extrude>k__BackingField: 0
   <MeshType>k__BackingField: 0
   <SpriteFilterMode>k__BackingField: 0
-  <ScaleModifier>k__BackingField: 1
+  <ScaleModifier>k__BackingField: 0.8
   <BufferDistance>k__BackingField: 0.2
   <OutlineMaterial>k__BackingField: {fileID: 2100000, guid: 4387a5c018a01004eb4f5957dd54f0ee, type: 2}
