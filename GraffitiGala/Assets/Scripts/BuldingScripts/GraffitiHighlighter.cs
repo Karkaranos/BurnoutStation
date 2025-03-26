@@ -20,6 +20,7 @@ namespace GraffitiGala.City
         //private static BuildingBehavior targetBuilding;
         private static event Action StartTrackingHighlight;
         private Coroutine trackRoutine;
+        private Coroutine fadeRoutine;
 
         //private bool hasEnteredScreen;
 
@@ -79,7 +80,7 @@ namespace GraffitiGala.City
         /// <returns>Coroutine.</returns>
         private IEnumerator TrackingRoutine()
         {
-            StartCoroutine(FadeRoutine(targetOpacity / 255f));
+            StartFadeRoutine(targetOpacity / 255f);
 
             float timer = highlightTime;
             while (timer > 0 && Camera.main.CheckObjectInCamera(trackedObject))
@@ -92,7 +93,21 @@ namespace GraffitiGala.City
             }
             trackedObject = null;
             trackRoutine = null;
-            StartCoroutine(FadeRoutine(0));
+            StartFadeRoutine(0);
+        }
+
+        /// <summary>
+        /// Ensures only 1 fade routine is happening at a time, and overwrites old fade routines with new ones.
+        /// </summary>
+        /// <param name="targetAlpha"></param>
+        private void StartFadeRoutine(float targetAlpha)
+        {
+            if (fadeRoutine != null)
+            {
+                StopCoroutine(fadeRoutine);
+                fadeRoutine = null;
+            }
+            fadeRoutine = StartCoroutine(FadeRoutine(targetAlpha));
         }
 
         /// <summary>

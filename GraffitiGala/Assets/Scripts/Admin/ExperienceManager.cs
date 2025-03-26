@@ -324,12 +324,6 @@ namespace GraffitiGala
             SetState(ExperienceState.Loading);
         }
 
-        [Button]
-        private void EndExperience()
-        {
-            SetState(ExperienceState.Waiting);
-        }
-
         private void Update()
         {
             currentStateTest = InternalGetState();

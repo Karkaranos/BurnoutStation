@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 361924a536b8c7547aa6769c58aa7682, type: 3}
   m_Name: NewGraffitiVisualization
   m_EditorClassIdentifier: 
-  <SpriteMagnification>k__BackingField: 7
+  <SpriteMagnification>k__BackingField: 4
   <SortingLayerName>k__BackingField: Overlay
   <OrderInLayer>k__BackingField: 10
   <TweenTime>k__BackingField: 1.5

@@ -45,7 +45,7 @@ namespace GraffitiGala.City
 
         public bool BuildingIsFull { get => buildingIsFull; }
 
-        public bool SpawnDrawing(Sprite spawnMe)
+        public bool SpawnDrawing(Sprite spawnMe, bool displayEffects)
         {
             // Use the bounds of the sprite inherently so that the code has an accurate size of sprites.
             float width = spawnMe.bounds.size.x * graffitiSettings.ScaleModifier;
@@ -135,9 +135,13 @@ namespace GraffitiGala.City
             //GraffitiHighlighter.SetHighlightedGraffiti(g.transform);
             SpriteRenderer sRend = g.AddComponent<SpriteRenderer>();
             sRend.sprite = spawnMe;
-            // Add an outline to newly spawned graffiti.
-            g.AddComponent<GraffitiOutliner>().Initialize(graffitiSettings.OutlineMaterial, this, sRend);
-            SpritePlaceVisualizer.PlaceSpriteVisual(sRend, graffitiZoomSettings);
+            // Makes displaying the placement and outline effects toggleable.
+            if (displayEffects)
+            {
+                // Add an outline to newly spawned graffiti.
+                g.AddComponent<GraffitiOutliner>().Initialize(graffitiSettings.OutlineMaterial, this, sRend);
+                SpritePlaceVisualizer.PlaceSpriteVisual(sRend, graffitiZoomSettings);
+            }
             return true;
         }
 

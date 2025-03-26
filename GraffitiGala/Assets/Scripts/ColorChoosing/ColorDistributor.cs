@@ -93,12 +93,12 @@ namespace GraffitiGala.ColorSwitching
         /// <returns>Coroutine</returns>
         private IEnumerator DelayColorRequest(NetworkConnection conn)
         {
-            Debug.Log("Client requested colors early.");
+            //Debug.Log("Client requested colors early.");
             while (possibleColors.Count < colorNumber)
             {
                 yield return null;
             }
-            Debug.Log("Reosling early color request.");
+            //Debug.Log("Reosling early color request.");
             SendColorsToClient(conn);
         }
 
