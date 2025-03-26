@@ -13,9 +13,7 @@ using FMOD.Studio;
 using GraffitiGala.Admin;
 using NaughtyAttributes;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace GraffitiGala.Drawing
@@ -446,7 +444,7 @@ namespace GraffitiGala.Drawing
             {
                 Destroy(obj.gameObject);
             }
-            drawnObjects.Clear();
+            localLines.Clear();
         }
 
         /// <summary>

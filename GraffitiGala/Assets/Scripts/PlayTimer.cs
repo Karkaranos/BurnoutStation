@@ -232,6 +232,14 @@ namespace GraffitiGala
         }
 
         /// <summary>
+        /// Resets the time meter on waiting purely to reset the visual.
+        /// </summary>
+        public void ResetTimerDisplay()
+        {
+            displayer.LoadTime(0f);
+        }
+
+        /// <summary>
         /// Starts the timer from the beginning.
         /// </summary>
         //[Button]
