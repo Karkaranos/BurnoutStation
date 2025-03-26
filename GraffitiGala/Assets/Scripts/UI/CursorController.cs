@@ -18,21 +18,19 @@ namespace GraffitiGala.UI
 
         private RectTransform cursorPrefab;
         private RectTransform cursorTransform;
-
-        #region Properties
-        private static Transform CursorParent
+        
+        /// <summary>
+        /// Find the object that will act as the parent of cursors on awake.
+        /// </summary>
+        private void Awake()
         {
-            get
+            // Need to null check here because this line will fail on builds where the canvas is hidden.
+            GameObject go = GameObject.FindGameObjectWithTag("CursorParent");
+            if (go != null)
             {
-                if (cursorParent == null)
-                {
-                    cursorParent = GameObject.FindGameObjectWithTag("CursorParent").transform;
-                }
-                return cursorParent;
+                cursorParent = go.transform;
             }
         }
-        #endregion
-
         /// <summary>
         /// Set the prefab this object uses in OnStartClient as this is when IsOwner is initialized.
         /// </summary>
@@ -47,9 +45,9 @@ namespace GraffitiGala.UI
         /// </summary>
         private void OnEnable()
         {
-            if (cursorTransform == null && cursorPrefab != null)
+            if (cursorTransform == null && cursorParent != null && cursorPrefab != null)
             {
-                cursorTransform = Instantiate(cursorPrefab, CursorParent);
+                cursorTransform = Instantiate(cursorPrefab, cursorParent);
             }
         }
         private void OnDisable()
