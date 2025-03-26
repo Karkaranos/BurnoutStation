@@ -307,7 +307,7 @@ MonoBehaviour:
   index: 1
   Image: {fileID: 4220488306269229452}
   highlightAnim: {fileID: 8679272981110985426}
-  stateMask: 3
+  stateMask: 0200000003000000
 --- !u!114 &8679272981110985426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,7 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96bb5fa21c2212a4dbf2ac83ba5d99c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMask: 3
+  stateMask: 0200000003000000
   overrideObject: {fileID: 4311551922848026260}
   animatedObject: {fileID: 234010569621437780}
   unselectedAnchoredPosition: {x: 0, y: -20}

@@ -6,6 +6,7 @@ Allows buttons to modify this client's line thickness.
 ***************************************************/
 using FishNet.Managing.Scened;
 using GraffitiGala.Drawing;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +17,7 @@ namespace GraffitiGala.UI
     {
         [SerializeField] private HighlightAnimator highlightAnim;
         [SerializeField, Tooltip("During what state should this button be interactable.")]
-        private ExperienceState stateMask;
+        private ExperienceState[] stateMask;
         [SerializeField] private float thicknessValue;
         //[SerializeField] private bool startAsActive;
 
@@ -54,7 +55,7 @@ namespace GraffitiGala.UI
         /// </summary>
         public void SetThickness()
         {
-            if (ExperienceManager.GetState() == stateMask)
+            if (stateMask.Contains(ExperienceManager.GetState()))
             {
                 NetworkBrush.CurrentThickness = thicknessValue;
                 CurrentlyActiveThickness = this;
@@ -71,7 +72,7 @@ namespace GraffitiGala.UI
 
         private void OnLoseActive()
         {
-            Debug.Log("Game object " + gameObject.name + " lost active.");
+            //Debug.Log("Game object " + gameObject.name + " lost active.");
             highlightAnim.OverrideSelected = false;
         }
 

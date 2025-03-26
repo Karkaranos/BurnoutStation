@@ -13,7 +13,7 @@ namespace GraffitiGala.UI
     public abstract class HighlightAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField, Tooltip("During what state should this object animate itself.")]
-        protected ExperienceState stateMask;
+        protected ExperienceState[] stateMask;
         [SerializeField, Tooltip("The game object that indicates that this button is the active button.")]
         private GameObject overrideObject;
 

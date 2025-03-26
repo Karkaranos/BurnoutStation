@@ -53,7 +53,7 @@ namespace GraffitiGala.Admin
         /// <param name="lines">The lines that were drawn by this player.</param>
         public void Setup(MeshBrushTexture[] lines)
         {
-            Debug.Log(lines.Length);
+            //Debug.Log(lines.Length);
             this.lines = lines;
             isVisible = true;
             UpdateButtonText();

@@ -7,6 +7,7 @@ Doing it this way to A) Reduce the amount of animation files needed and B) To av
 the animator can have when used with buttons.
 ***************************************************/
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 namespace GraffitiGala.UI
@@ -32,7 +33,7 @@ namespace GraffitiGala.UI
         /// </summary>
         protected override void Evaluate()
         {
-            bool shouldBeRaised = (isHighlighted | overrideSelected) & ExperienceManager.GetState() == stateMask;
+            bool shouldBeRaised = (isHighlighted | overrideSelected) & stateMask.Contains(ExperienceManager.GetState());
             Vector2 targetPos = shouldBeRaised ? selectedAnchoredPosition : unselectedAnchoredPosition;
             Tween(targetPos);
         }
