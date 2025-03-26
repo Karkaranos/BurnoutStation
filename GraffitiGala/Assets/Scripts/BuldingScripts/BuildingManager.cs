@@ -55,7 +55,12 @@ namespace GraffitiGala.City
             scroller.AddNewBuildingAsTarget(newBuilding);
         }
 
-        public void SpawnGraffiti(string filePath)
+        public void SpawnGraffitiWithPlacement(string filePath)
+        {
+            SpawnGraffiti(filePath, true);
+        }
+
+        public void SpawnGraffiti(string filePath, bool displayEffects)
         {
             //if (!allBuildings[currentBuildingIndex].BuildingIsFull)
             //{
@@ -75,7 +80,7 @@ namespace GraffitiGala.City
             {
                 // Attempt to spawn the drawing.
                 Debug.Log("Spawning image with path " + filePath);
-                bool placeSuccessful = scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, spriteSettings));
+                bool placeSuccessful = scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, spriteSettings), displayEffects);
                 // Debug.Log("Spawning graffiti " + filePath + " on building " + scroller.TargetBuilding);
                 // If drawing spawning fails, then we need to continue the loop.  If spawning was sucessful, we return.
                 if (placeSuccessful)
@@ -88,13 +93,13 @@ namespace GraffitiGala.City
             // Attempts to have the scroller find an already existing building that isnt full.
             if (scroller.FindNewTarget())
             {
-                SpawnGraffiti(filePath);
+                SpawnGraffiti(filePath, displayEffects);
             }
             else
             {
                 // If there are no valid buildings that arent full, then create a new one.
                 SpawnNewBuilding();
-                SpawnGraffiti(filePath);
+                SpawnGraffiti(filePath, displayEffects);
             }
         }
 
@@ -111,7 +116,7 @@ namespace GraffitiGala.City
                     // Slightly worried this can cuase some problems if it tries to load too many files at once.  Will
                     // likely need to find a way to buffer this.
                     // May need to spawn over 210 files at FUSE.  Will need to stress test this later.
-                    SpawnGraffiti(path);
+                    SpawnGraffiti(path, false);
                 }
             }
         }
@@ -119,7 +124,7 @@ namespace GraffitiGala.City
         [Button]
         private void SpawnTestGraffiti()
         {
-            SpawnGraffiti(ImageManagement.GetFilePath("GraffitiFile_638752277731768409"));
+            SpawnGraffiti(ImageManagement.GetFilePath("GraffitiFile_638784273015547046"), true);
         }
     }
 }

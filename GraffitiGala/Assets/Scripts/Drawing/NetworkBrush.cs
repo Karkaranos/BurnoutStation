@@ -70,6 +70,11 @@ namespace GraffitiGala.Drawing
         {
             base.OnStartClient();
 
+            // Need to register ProvideLines even for non owner clients.
+            // Make sure to register ProvideLines first, so that if OnDisable gets called later in OnStartClient
+            // ProvideLines will be correctly unsubscribed.
+            PlayerHider.LineRequest += ProvideLines;
+
             //PlayerInput playerInput = GetComponent<PlayerInput>();
             TryGetComponent(out PlayerInput playerInput);
             if (base.IsOwner)
@@ -92,10 +97,9 @@ namespace GraffitiGala.Drawing
                 // If this object is not owned by this client, then disable
                 // it's PlayerInput and this component.
                 playerInput.enabled = false;
-                this.enabled = false;
+                // We cant disable this component because it is still needed to provide lines to the admin.
+                //this.enabled = false;
             }
-            // Need to register ProvideLines even for non owner clients.
-            PlayerHider.LineRequest += ProvideLines;
         }
 
         /// <summary>

@@ -8,6 +8,7 @@ NaughtyAttributes, FishNet
 using FishNet;
 using NaughtyAttributes;
 using System;
+using System.Threading;
 using UnityEngine;
 
 namespace GraffitiGala
@@ -16,6 +17,9 @@ namespace GraffitiGala
     public class GraffitiPhotographer : MonoBehaviour
     {
         #region vars
+        [SerializeField, Tooltip("Sets the resolution that the capture screenshot of the graffiti will be taken in." +
+            "  Set to 0, 0 to have it automatically use the camera's pixel resolution.")]
+        private Vector2Int _manualResolution = new Vector2Int(1920, 1080);
         [SerializeField, Tooltip("Objects that should be excluded from saved images.")]
         private GameObject[] _hiddenObjects = new GameObject[0];
         [SerializeField, Tooltip("Saves a copy of the saved image to this applications StreamingAssets folder.  " +
@@ -26,6 +30,7 @@ namespace GraffitiGala
         private static bool isInitialized;
         private static bool saveBackup;
         private static GameObject[] hiddenObjects;
+        private static Vector2Int manualRes;
 
         #endregion
 
@@ -42,6 +47,7 @@ namespace GraffitiGala
                     isInitialized = true;
                     hiddenObjects = _hiddenObjects;
                     saveBackup = _saveBackup;
+                    manualRes = _manualResolution;
                 }
             }
             else
@@ -72,9 +78,11 @@ namespace GraffitiGala
         [Button]
         public static void ScreenshotDrawing()
         {
+            int width = manualRes.x == 0 ? captureCamera.pixelWidth : manualRes.x;
+            int height = manualRes.y == 0 ? captureCamera.pixelHeight : manualRes.y;
             // Screen.width and height returns the wrong values when triggered by a NaughtyAttributes button.
             //ScreenshotDrawing(Screen.width, Screen.height);
-            ScreenshotDrawing(captureCamera.pixelWidth, captureCamera.pixelHeight);
+            ScreenshotDrawing(width, height);
         }
 
         /// <summary>
@@ -132,6 +140,8 @@ namespace GraffitiGala
                 if (go == null) { continue; }
                 go.SetActive(true);
             }
+
+            Debug.Log($"Captured screenshot with resolution {screenshotTexture.width} x {screenshotTexture.height}");
 
             // Destroys extra texture objects involved in the screenshot process to ensure they don't persist and
             // take up memory.
