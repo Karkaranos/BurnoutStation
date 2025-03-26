@@ -7,6 +7,7 @@ TagManager:
   - DrawingParent
   - IgnorePointer
   - SpriteVisualizerParent
+  - CursorParent
   layers:
   - Default
   - TransparentFX
