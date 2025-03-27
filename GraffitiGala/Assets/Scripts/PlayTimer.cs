@@ -210,7 +210,7 @@ namespace GraffitiGala
                 if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
                 {
                     warning.stop(STOP_MODE.IMMEDIATE);
-                    //AudioManager.instance.PlayOneShot(FMODEventsManager.instance.TimerEnd, Vector3.zero);
+                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.TimerEnd, Vector3.zero);
                 }
 
                 // Instead of the timer managing events that happen on finish, simply tell the experience manager
@@ -238,6 +238,7 @@ namespace GraffitiGala
                 if(timer.Remaining == (float)warningTime/time && !playedWarning)
                 {
                     warning.start();
+                    playedWarning = true;
                 }
 
                 yield return null;

@@ -53,6 +53,7 @@ namespace GraffitiGala.Admin
                 button.gameObject.SetActive(false);
             }
             GraffitiPhotographer.ScreenshotDrawing();
+            AudioManager.instance.PlayOneShot(FMODEventsManager.instance.GraffitiDisplay, Vector3.zero);
             // Move to the waiting state to reset the experience for the next group.
             ExperienceManager.SetState(ExperienceState.Waiting);
         }

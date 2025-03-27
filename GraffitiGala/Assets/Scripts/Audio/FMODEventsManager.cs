@@ -9,7 +9,8 @@ public class FMODEventsManager : MonoBehaviour
 
     [field:Header("ServerSFX")]
     [field: SerializeField] public EventReference TimerWarning { get; private set; }
-    //[field: SerializeField] public EventReference TimerEnd { get; private set; }
+    [field: SerializeField] public EventReference TimerEnd { get; private set; }
+    [field: SerializeField] public EventReference GraffitiDisplay { get; private set; }
 
 
 
