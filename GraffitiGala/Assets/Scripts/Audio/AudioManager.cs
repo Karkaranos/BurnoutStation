@@ -36,7 +36,7 @@ namespace GraffitiGala
             sfxBus = RuntimeManager.GetBus("bus:/SFX");
             bgmBus = RuntimeManager.GetBus("bus:/BGM");*/
 
-            if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.CityDisplay)
+            if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
             {
                 bgm = CreateEventInstance(FMODEventsManager.instance.BGM);
                 bgm.start();

@@ -147,11 +147,8 @@ namespace GraffitiGala
         /// </summary>
         private void Awake()
         {
-            if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
-            {
-                //countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.TimerWarning);
-                warning = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.TimerWarning);
-            }
+            warning = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.TimerWarning);
+        
         }
 
         /// <summary>
@@ -207,11 +204,8 @@ namespace GraffitiGala
             {
                 //OnFinishServer?.Invoke();
                 //OnFinishServerStatic?.Invoke();
-                if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
-                {
-                    warning.stop(STOP_MODE.IMMEDIATE);
-                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.TimerEnd, Vector3.zero);
-                }
+                warning.stop(STOP_MODE.IMMEDIATE);
+                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.TimerEnd, Vector3.zero);
 
                 // Instead of the timer managing events that happen on finish, simply tell the experience manager
                 // to change to the finished state.
@@ -234,9 +228,9 @@ namespace GraffitiGala
                 if(timer.Paused) { yield return null; }
 
                 displayer.LoadTime(NormalizedTime);
-
-                if(timer.Remaining == (float)warningTime/time && !playedWarning)
+                if(timer.Remaining <= warningTime && !playedWarning)
                 {
+                    print("Entered");
                     warning.start();
                     playedWarning = true;
                 }
