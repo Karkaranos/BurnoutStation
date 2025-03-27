@@ -316,6 +316,58 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3741360979014374946, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: m_AllowRoll
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: lengthInSec
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: simulationSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: InitialModule.size3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: EmissionModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: InitialModule.rotation3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: EmissionModule.rateOverDistance.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283953877585361280, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
+      propertyPath: EmissionModule.rateOverTime.minMaxState
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6608422731160202312, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
       propertyPath: m_Name
       value: Clouds
@@ -326,11 +378,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7546679479391648138, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.9
+      value: 8.4
       objectReference: {fileID: 0}
     - target: {fileID: 7546679479391648138, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 91.4
+      value: 111.1
       objectReference: {fileID: 0}
     - target: {fileID: 7546679479391648138, guid: 93c99e0c16b4989468c97d0a4bb9ec20, type: 3}
       propertyPath: m_LocalRotation.w
