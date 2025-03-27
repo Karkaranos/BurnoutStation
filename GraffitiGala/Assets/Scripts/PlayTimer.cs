@@ -24,6 +24,8 @@ namespace GraffitiGala
         [SerializeField] private TimeDisplayer displayer;
         [SerializeField] 
         private float time = 120f;
+        [SerializeField, Tooltip("Warns the player when this amount of seconds is left")]
+        private int warningTime = 10;
         [SerializeField, Tooltip("Disables sound effects to avoid FMOD errors.")]
         private bool playSoundEffects;
         [Header("Events (Obsolete)")]
@@ -41,6 +43,7 @@ namespace GraffitiGala
 
         private bool isStarted;
         private Coroutine displayUpdateRoutine;
+        private bool playedWarning = false;
 
         //public static event Action OnBeginClientStatic;
         //public static event Action OnBeginServerStatic;
@@ -48,6 +51,7 @@ namespace GraffitiGala
         //public static event Action OnFinishServerStatic;
 
         private EventInstance countdown;
+        private EventInstance warning;
 
         #region Properties
         public float RemainingTime
@@ -145,7 +149,8 @@ namespace GraffitiGala
         {
             if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
             {
-                countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Timer);
+                //countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.TimerWarning);
+                warning = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.TimerWarning);
             }
         }
 
@@ -156,6 +161,9 @@ namespace GraffitiGala
         {
             // Starts a coroutine that displays changes to this timer on the UI.
             isStarted = true;
+
+            playedWarning = false;
+
             if(displayUpdateRoutine != null)
             {
                 StopCoroutine(displayUpdateRoutine);
@@ -168,7 +176,7 @@ namespace GraffitiGala
                 //OnBeginServer?.Invoke();
                 if (playSoundEffects)
                 {
-                    countdown.start();
+                    //countdown.start();
                 }
 
             }
@@ -201,8 +209,8 @@ namespace GraffitiGala
                 //OnFinishServerStatic?.Invoke();
                 if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
                 {
-                    countdown.stop(STOP_MODE.IMMEDIATE);
-                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
+                    warning.stop(STOP_MODE.IMMEDIATE);
+                    //AudioManager.instance.PlayOneShot(FMODEventsManager.instance.TimerEnd, Vector3.zero);
                 }
 
                 // Instead of the timer managing events that happen on finish, simply tell the experience manager
@@ -226,6 +234,12 @@ namespace GraffitiGala
                 if(timer.Paused) { yield return null; }
 
                 displayer.LoadTime(NormalizedTime);
+
+                if(timer.Remaining == (float)warningTime/time && !playedWarning)
+                {
+                    warning.start();
+                }
+
                 yield return null;
             }
             displayUpdateRoutine = null;

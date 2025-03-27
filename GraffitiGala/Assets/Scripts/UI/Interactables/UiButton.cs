@@ -58,6 +58,10 @@ public class UiButton : MonoBehaviour
         {
             NetworkBrush.CurrentColor = paint;
             CurrentlyActiveColorButton = this;
+            if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
+            {
+                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.SwitchCans, Vector3.zero);
+            }
         }
     }    
 

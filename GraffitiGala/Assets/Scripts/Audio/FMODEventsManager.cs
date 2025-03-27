@@ -8,13 +8,14 @@ public class FMODEventsManager : MonoBehaviour
     [field: SerializeField] public EventReference BGM { get; private set; }
 
     [field:Header("ServerSFX")]
-    [field: SerializeField] public EventReference Timer { get; private set; }
-    [field: SerializeField] public EventReference Ring { get; private set; }
+    [field: SerializeField] public EventReference TimerWarning { get; private set; }
+    //[field: SerializeField] public EventReference TimerEnd { get; private set; }
 
 
 
     [field: Header("ClientSFX")]
     [field: SerializeField] public EventReference Spraypaint { get; private set; }
+    [field: SerializeField] public EventReference SwitchCans { get; private set; }
 
     public static FMODEventsManager instance { get; private set; }
 
