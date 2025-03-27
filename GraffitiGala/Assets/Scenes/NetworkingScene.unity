@@ -1078,21 +1078,28 @@ MonoBehaviour:
       Data2: 1123180923
       Data3: -301549131
       Data4: -605875054
-    Path: event:/Background Music
-  <Timer>k__BackingField:
-    Guid:
-      Data1: 1563242516
-      Data2: 1079804303
-      Data3: -867624279
-      Data4: -1242359845
-    Path: event:/Countdown
-  <Ring>k__BackingField:
+    Path: event:/Background Music[NEEDS MIXING]
+  <TimerWarning>k__BackingField:
     Guid:
       Data1: -1907996216
       Data2: 1243529979
       Data3: -454886780
       Data4: -434239755
-    Path: event:/TimerComplete
+    Path: event:/Timer Warning[TEMP]
+  <TimerEnd>k__BackingField:
+    Guid:
+      Data1: 48752452
+      Data2: 1207313659
+      Data3: 1100538262
+      Data4: 552329034
+    Path: event:/Timer End[TEMP]
+  <GraffitiDisplay>k__BackingField:
+    Guid:
+      Data1: -1851258520
+      Data2: 1231843367
+      Data3: -378499181
+      Data4: -1360164319
+    Path: event:/Graffiti On City[TEMP]
   <Spraypaint>k__BackingField:
     Guid:
       Data1: 989903476
@@ -1100,6 +1107,13 @@ MonoBehaviour:
       Data3: 171512194
       Data4: 1716958214
     Path: event:/SprayPaint
+  <SwitchCans>k__BackingField:
+    Guid:
+      Data1: -1017364051
+      Data2: 1145799085
+      Data3: -716880473
+      Data4: -1672644496
+    Path: event:/New Can
 --- !u!4 &205395871
 Transform:
   m_ObjectHideFlags: 0
@@ -5930,6 +5944,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 0}
   displayer: {fileID: 275006552}
   time: 45
+  warningTime: 10
   playSoundEffects: 1
   OnBeginClient:
     m_PersistentCalls:
