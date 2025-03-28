@@ -12,7 +12,7 @@ namespace GraffitiGala
 {
     public class NetworkBuildHider : NetworkBehaviour
     {
-        [SerializeField] private AllowedBuilds hiddenInBuilds;
+        [SerializeField] private HiddenBuilds hiddenInBuilds;
 
         /// <summary>
         /// Hides this object if the BuildManager doesnt contain it's flag.  Seperate from the default BuildHider
@@ -39,6 +39,7 @@ namespace GraffitiGala
         [ObserversRpc(BufferLast = true)]
         private void Client_HideObject()
         {
+            Debug.Log("Recieved hide call for a connection.");
             gameObject.SetActive(false);
         }
     }

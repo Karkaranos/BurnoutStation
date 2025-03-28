@@ -13,6 +13,20 @@ MonoBehaviour:
   m_Name: PromptList
   m_EditorClassIdentifier: 
   prompts:
-  - Test Prompt Here
-  - Test Prompt Here 2
-  - Test Prompt Here 3
+  - Neighborhood
+  - Danger
+  - Alien
+  - Nature
+  - Friends
+  - Metropolis
+  - Surprise
+  - Horror
+  - Rich
+  - Happiness
+  - Sadness
+  - Anger
+  - Dancing
+  - Cozy
+  - Annoying
+  - Ancient
+  - Future

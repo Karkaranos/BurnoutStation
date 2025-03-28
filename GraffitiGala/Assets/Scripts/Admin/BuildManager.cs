@@ -31,6 +31,8 @@ namespace GraffitiGala
                 return bType;
             }
         }
+
+        public BuildType BuildTypeRef { get => buildType;}
         #endregion
 
         /// <summary>
@@ -50,18 +52,18 @@ namespace GraffitiGala
         /// </summary>
         /// <param name="allowed">The allowed builds that an object can show up in.</param>
         /// <returns>Whether or not any of the allowed build types are </returns>
-        public static bool CheckBuild(AllowedBuilds allowed)
+        public static bool CheckBuild(HiddenBuilds allowed)
         {
-            if ((allowed & AllowedBuilds.Admin) == AllowedBuilds.Admin && BuildType == BuildType.Admin)
+            if ((allowed & HiddenBuilds.Admin) == HiddenBuilds.Admin && BuildType == BuildType.Admin)
             {
                 return true;
             }
-            else if ((allowed & AllowedBuilds.CityDisplay) == AllowedBuilds.CityDisplay && BuildType == 
+            else if ((allowed & HiddenBuilds.CityDisplay) == HiddenBuilds.CityDisplay && BuildType == 
                 BuildType.CityDisplay)
             {
                 return true;
             }
-            else if ((allowed & AllowedBuilds.TabletStation) == AllowedBuilds.TabletStation && BuildType == 
+            else if ((allowed & HiddenBuilds.TabletStation) == HiddenBuilds.TabletStation && BuildType == 
                 BuildType.TabletStation)
             {
                 return true;
@@ -84,7 +86,7 @@ namespace GraffitiGala
     }
 
     [Flags]
-    public enum AllowedBuilds
+    public enum HiddenBuilds
     {
         None = 0,
         Admin = 1 << 0,

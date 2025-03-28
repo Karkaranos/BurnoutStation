@@ -6,6 +6,7 @@ Allows for the reading and writing of png image files via StreamingAssets
 IO
 ***************************************************/
 
+using GraffitiGala.City;
 using System.IO;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace GraffitiGala
     {
         #region vars
         #region CONSTS
-        private const string FILE_FORMAT = ".png";
+        public const string FILE_FORMAT = ".png";
         private const string FOLDER_NAME = "Drawings";
         #endregion
         private static string fileDirectory;
@@ -70,18 +71,18 @@ namespace GraffitiGala
         /// Loads a sprite from the streamingAssets at a given file path.
         /// </summary>
         /// <param name="filePath">The file path to load the sprite from.</param>
-        /// <param name="pivotPoint">The normalized position of the sprite's pivot point.</param>
-        /// <param name="pixelsPerUnit">The pixel per unit to create the sprite with.</param>
+        /// <param name="settings">The settings to use for this sprite.</param>
         /// <returns>The loaded image as a sprite object.</returns>
-        public static Sprite LoadSprite(string filePath, Vector2 pivotPoint, float pixelsPerUnit)
+        public static Sprite LoadSprite(string filePath, GraffitiSettings settings)
         {
             byte[] rawSpriteData = File.ReadAllBytes(filePath);
             // Loads the raw image data to a Texture2D.
             Texture2D spriteTexture = new Texture2D(0, 0);
             spriteTexture.LoadImage(rawSpriteData);
+            spriteTexture.filterMode = settings.SpriteFilterMode;
             // Creates a new sprite from the Texture2D.
             Sprite sprite = Sprite.Create(spriteTexture, new Rect(0, 0, spriteTexture.width, spriteTexture.height),
-                pivotPoint, pixelsPerUnit);
+                settings.PivotPoint, settings.PixelsPerUnit, settings.Extrude, settings.MeshType);
             return sprite;
         }
     }

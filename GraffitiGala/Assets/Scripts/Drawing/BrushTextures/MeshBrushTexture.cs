@@ -9,6 +9,7 @@ using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GraffitiGala.Drawing
@@ -26,14 +27,6 @@ namespace GraffitiGala.Drawing
         [Header("Line settings")]
         [SerializeReference, Tooltip("The material to be used by this line. Do not set material in the MeshRenderer.")]
         private Material referenceMaterial;
-        [SerializeReference, Tooltip("The width of this line when the player is applying" +
-            " the minimum amount of pressure to the pen.  If this value is larger than" +
-            " Max Pressure Width, then the line will appear larger when less pressure is applied.")]
-        private float minPressureWidth;
-        [SerializeReference, Tooltip("The width of this line when the player is applying" +
-            " the maximum amount of pressure to the pen.  If this value is smaller than" +
-            " Min Pressure Width, then the line will appear smaller when more pressure is applied.")]
-        private float maxPressureWidth;
 
         private Mesh mesh;
         private bool isNetworked;
@@ -54,7 +47,7 @@ namespace GraffitiGala.Drawing
             if(!isSetup)
             {
                 Server_RequestMesh(base.Owner);
-                Debug.Log(" Client " + InstanceFinder.ClientManager.Connection + " Requesting Mesh from Owner " + base.Owner.ClientId);
+                //Debug.Log(" Client " + InstanceFinder.ClientManager.Connection + " Requesting Mesh from Owner " + base.Owner.ClientId);
             }
             // Sets this client as not new at the end of frame.
             if (newClientRoutine == null && !isSetup)
@@ -138,16 +131,6 @@ namespace GraffitiGala.Drawing
         }
         #endregion
 
-        /// <summary>
-        /// Gets the width of a line based on a given pressure.
-        /// </summary>
-        /// <param name="pressure">The pressure to use when caluclating line width.</param>
-        /// <returns>The width that the line should be.</returns>
-        private float GetWidth(float pressure)
-        {
-            return Mathf.Lerp(minPressureWidth, maxPressureWidth, pressure);
-        }
-
         #region Set Mesh
         /// <summary>
         /// Sets this object's mesh data values.
@@ -214,16 +197,16 @@ namespace GraffitiGala.Drawing
         /// <summary>
         /// Creates a new mesh that this object will use to render it's line.
         /// </summary>
-        /// <param name="pressure"> The pressure of the pen when this line was created.</param>
+        /// <param name="thickness"> The thickness of the line to create.</param>
         /// <param name="position">The position that this line will start from.</param>
-        public void Local_InitializeMesh(float pressure, Vector3 position)
+        public void Local_InitializeMesh(float thickness, Vector3 position)
         {
             // Creates a new set of mesh information
             Vector3[] verticies = new Vector3[4];
             Vector2[] uv = new Vector2[4];
             int[] triangles = new int[6];
 
-            float halfWidth = GetWidth(pressure) / 2;
+            float halfWidth = thickness / 2;
 
             // Uses half the width to create a simple quad whose width is equal to the line width based on pressure.
             verticies[0] = position + new Vector3(-halfWidth, halfWidth, 0); // Top Left
@@ -352,18 +335,18 @@ namespace GraffitiGala.Drawing
         /// </summary>
         /// <param name="position">The position of the new point.</param>
         /// <param name="drawDirection">The direction that this point was drawn from.</param>
-        /// <param name="pressure">The pen pressure when this point was added.</param>
-        public void AddPoint(Vector3 position, Vector2 drawDirection, float pressure)
+        /// <param name="thickness">The thickness of this point.</param>
+        public void AddPoint(Vector3 position, Vector2 drawDirection, float thickness)
         {
             // Adds a point to this line locally.
-            Local_AddPoint(position, drawDirection, pressure);
+            Local_AddPoint(position, drawDirection, thickness);
             // Adds a point to this line for the entire server if this object is set up as a networked object.
             if(isNetworked)
             {
                 // Updates the entire mesh to allow for new connections to load lines correctly.
                 //GetMeshInfo(mesh, out Vector3[] verticies, out Vector2[] uv, out int[] triangles);
                 //Server_SetMesh(verticies, uv, triangles);
-                Server_AddPoint(position, drawDirection, pressure);
+                Server_AddPoint(position, drawDirection, thickness);
             }
 
         }
@@ -379,24 +362,38 @@ namespace GraffitiGala.Drawing
         /// </remarks>
         /// <param name="position">The position of the new point.</param>
         /// <param name="drawDirection">The direction that this point was drawn from.</param>
-        /// <param name="pressure">The pen pressure when this point was added.</param>
-        private void Local_AddPoint(Vector3 position, Vector2 drawDirection, float pressure)
+        /// <param name="thickness">The line thickness of this point.</param>
+        private void Local_AddPoint(Vector3 position, Vector2 drawDirection, float thickness)
         {
-            if(isQuad)
+            // Define a new set of array to update the mesh values.
+            Vector3[] verticies;
+            Vector2[] uv;
+            int[] triangles;
+            bool updateLastUV = true;
+
+            if (isQuad)
             {
                 RotateMesh(mesh, originPoint, drawDirection);
+                // Do not add any new verticies or triangles if this mesh is a quad.  Instead, simply update the 
+                // verticies already present.
+                verticies = mesh.vertices;
+                uv = mesh.uv;
+                triangles = mesh.triangles;
+                updateLastUV = false;
                 isQuad = false;
             }
+            else
+            {
+                // Define a new set of array to update the mesh values.
+                verticies = new Vector3[mesh.vertices.Length + 2]; // Add two additional verticies.
+                uv = new Vector2[mesh.uv.Length + 2]; // Add two additional UV positions.
+                triangles = new int[mesh.triangles.Length + 6]; // Add 6 new triangle indicies, 3 for each polygon
 
-            // Define a new set of array to update the mesh values.
-            Vector3[] verticies = new Vector3[mesh.vertices.Length + 2]; // Add two additional verticies.
-            Vector2[] uv = new Vector2[mesh.uv.Length + 2]; // Add two additional UV positions.
-            int[] triangles = new int[mesh.triangles.Length + 6]; // Add 6 new triangle indicies, 3 for each polygon
-
-            // Copy data from the mesh to the new temporary lists.
-            mesh.vertices.CopyTo(verticies, 0);
-            mesh.uv.CopyTo(uv, 0);
-            mesh.triangles.CopyTo(triangles, 0);
+                // Copy data from the mesh to the new temporary lists.
+                mesh.vertices.CopyTo(verticies, 0);
+                mesh.uv.CopyTo(uv, 0);
+                mesh.triangles.CopyTo(triangles, 0);
+            }
 
             // Assigns variables to hold the 4 indicies needed to construct the new line point.
             int lastTopIndex = (verticies.Length - 4) + 0;
@@ -406,7 +403,7 @@ namespace GraffitiGala.Drawing
 
             // Calculates a vector that will be used to calculate the vertex positions based on the given point 
             // position.
-            Vector3 drawParallel = Vector3.Cross(drawDirection.normalized, SCREEN_NORMAL) * (GetWidth(pressure) / 2);
+            Vector3 drawParallel = Vector3.Cross(drawDirection.normalized, SCREEN_NORMAL) * thickness / 2;
             //Debug.Log(drawDirection);
             //Debug.Log(drawParallel);
             // Calculates the new vertex positions.
@@ -417,9 +414,14 @@ namespace GraffitiGala.Drawing
             verticies[newTopIndex] = newTopPosition;
             verticies[newBottomIndex] = newBottomPosition;
 
-            // Sets the UVs of the last indicies so that they load the middle of the material.
-            uv[lastTopIndex] = new Vector2(0.5f, 1f);
-            uv[lastBottomIndex] = new Vector2(0.5f, 0f);
+            // If this point addition is simply updating the quad verticies, then we shouldnt update the last UVs so
+            // that they keep showing the end of the spray paint texture.
+            if (updateLastUV)
+            {
+                // Sets the UVs of the last indicies so that they load the middle of the material.
+                uv[lastTopIndex] = new Vector2(0.5f, 1f);
+                uv[lastBottomIndex] = new Vector2(0.5f, 0f);
+            }
 
             // Sets the UVs of the new indicies so that they load the edges of the material.
             uv[newTopIndex] = new Vector2(1f, 1f);
@@ -444,11 +446,11 @@ namespace GraffitiGala.Drawing
         /// </summary>
         /// <param name="position">The position of the new point.</param>
         /// <param name="drawDirection">The direction that this point was drawn from.</param>
-        /// <param name="pressure">The pen pressure when this point was added.</param>
+        /// <param name="thickness">The the line thickness of this point.</param>
         [ServerRpc]
-        private void Server_AddPoint(Vector3 position, Vector2 drawDirection, float pressure)
+        private void Server_AddPoint(Vector3 position, Vector2 drawDirection, float thickness)
         {
-            Client_AddPoint(position, drawDirection, pressure);
+            Client_AddPoint(position, drawDirection, thickness);
         }
 
         /// <summary>
@@ -456,11 +458,11 @@ namespace GraffitiGala.Drawing
         /// </summary>
         /// <param name="position">The position of the new point.</param>
         /// <param name="drawDirection">The direction that this point was drawn from.</param>
-        /// <param name="pressure">The pen pressure when this point was added.</param>
+        /// <param name="thickness">The line thickness of this point.</param>
         [ObserversRpc(ExcludeOwner = true)]
-        private void Client_AddPoint(Vector3 position, Vector2 drawDirection, float pressure)
+        private void Client_AddPoint(Vector3 position, Vector2 drawDirection, float thickness)
         {
-            Local_AddPoint(position, drawDirection, pressure);
+            Local_AddPoint(position, drawDirection, thickness);
         }
 
         /// <summary>

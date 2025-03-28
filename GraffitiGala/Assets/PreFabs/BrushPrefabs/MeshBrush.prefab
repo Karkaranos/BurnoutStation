@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 7791339827098185091}
   - component: {fileID: 3111724708073153260}
   - component: {fileID: 5259239407043942537}
-  - component: {fileID: 1613052933419491834}
   - component: {fileID: 1161096938040531545}
   - component: {fileID: 7956376751250134918}
   - component: {fileID: 6722046548934211994}
   - component: {fileID: 3547245522247427985}
+  - component: {fileID: 6752798646375424432}
   m_Layer: 0
   m_Name: MeshBrush
   m_TagString: Untagged
@@ -58,6 +58,8 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: 3111724708073153260}
   - {fileID: 6722046548934211994}
+  - {fileID: 3547245522247427985}
+  - {fileID: 6752798646375424432}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -151,58 +153,6 @@ MonoBehaviour:
   _overrideType: 3
   _updateHostVisibility: 1
   _observerConditions: []
---- !u!212 &1613052933419491834
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4096138338718352979}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: dd2a76027478bf540b7194d78248edf8, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 0.16, y: 0.16}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
 --- !u!114 &1161096938040531545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,6 +216,8 @@ MonoBehaviour:
   drawBuffer: 0.1
   brushTexturePrefab: {fileID: 6192131541430378155, guid: d9f01cdccd0792940b59ddd250536f87, type: 3}
   playSoundEffects: 1
+  minPressureWidth: 0
+  maxPressureWidth: 0
   testObjects: []
 --- !u!114 &3547245522247427985
 MonoBehaviour:
@@ -279,7 +231,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f38e700a0c58984a89516c5f111f0da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 7791339827098185091}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 7791339827098185091}
   hiddenInBuilds: 3
+--- !u!114 &6752798646375424432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4096138338718352979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8dffed70a475ff4bbc0bd0bc45cf14a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 3
+  _addedNetworkObject: {fileID: 7791339827098185091}
+  _networkObjectCache: {fileID: 7791339827098185091}
+  ownerCursorPrefab: {fileID: 6100372313624147922, guid: 068fa7eca9588a4489bb40b832e0f1c1, type: 3}
+  otherCursorPrefab: {fileID: 7704460672970904266, guid: 3a4213022bde3964487763ad160ae580, type: 3}

@@ -6,6 +6,8 @@ TagManager:
   tags:
   - DrawingParent
   - IgnorePointer
+  - SpriteVisualizerParent
+  - CursorParent
   layers:
   - Default
   - TransparentFX
@@ -43,6 +45,15 @@ TagManager:
   - name: Background
     uniqueID: 542354407
     locked: 0
+  - name: BackgroundEnvironment
+    uniqueID: 4218354457
+    locked: 0
+  - name: Buildings
+    uniqueID: 3679706509
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Overlay
+    uniqueID: 513027359
     locked: 0

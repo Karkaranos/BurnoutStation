@@ -7,9 +7,10 @@ FishNet, InputSystem
 ***************************************************/
 
 using FishNet.Object;
+using GraffitiGala.Admin;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System;
 
 namespace GraffitiGala.Drawing
 {
@@ -40,10 +41,11 @@ namespace GraffitiGala.Drawing
         protected InputAction positionAction;
 
         public static Color CurrentColor { protected get; set; }
+        public static float CurrentThickness { protected get; set; } = 1f;
         #endregion
 
         #region Properties
-        [Obsolete("BrushColor is depreciated.  Use NetworkBrush.CurrentColor instead.")]
+        [Obsolete("BrushColor is obsolete.  Use NetworkBrush.CurrentColor instead.")]
         public Color BrushColor // networkBrush.BrushColor = Blue
         {
 
@@ -68,6 +70,11 @@ namespace GraffitiGala.Drawing
         {
             base.OnStartClient();
 
+            // Need to register ProvideLines even for non owner clients.
+            // Make sure to register ProvideLines first, so that if OnDisable gets called later in OnStartClient
+            // ProvideLines will be correctly unsubscribed.
+            PlayerHider.LineRequest += ProvideLines;
+
             //PlayerInput playerInput = GetComponent<PlayerInput>();
             TryGetComponent(out PlayerInput playerInput);
             if (base.IsOwner)
@@ -83,17 +90,24 @@ namespace GraffitiGala.Drawing
                 BrushManager.EnableBrushEvent += EnableBrush;
                 BrushManager.ClearLinesEvent += ClearLinesOwner;
                 BrushManager.DisableBrushEvent += DisableBrush;
+
             }
             else
             {
                 // If this object is not owned by this client, then disable
                 // it's PlayerInput and this component.
                 playerInput.enabled = false;
-                this.enabled = false;
-                return;
+                // We cant disable this component because it is still needed to provide lines to the admin.
+                //this.enabled = false;
             }
+        }
 
-            
+        /// <summary>
+        /// unsubscribe ProvideLines on disable as disabled brushes should not provide any lines.
+        /// </summary>
+        private void OnDisable()
+        {
+            PlayerHider.LineRequest -= ProvideLines;
         }
 
         public override void OnStopClient()
@@ -106,6 +120,7 @@ namespace GraffitiGala.Drawing
                 BrushManager.ClearLinesEvent -= ClearLinesOwner;
                 BrushManager.DisableBrushEvent -= DisableBrush;
             }
+            PlayerHider.LineRequest -= ProvideLines;
         }
         #endregion
 
@@ -159,6 +174,8 @@ namespace GraffitiGala.Drawing
         }
 
         protected abstract void ClearLines();
+
+        protected virtual void ProvideLines(PlayerHider hider) { }
 
         #region Input Functions
 

@@ -10,10 +10,10 @@ using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FMOD.Studio;
+using GraffitiGala.Admin;
 using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace GraffitiGala.Drawing
@@ -35,6 +35,14 @@ namespace GraffitiGala.Drawing
         //[SerializeField, Tooltip("The material to use for this brush.")]
         //internal Material brushMaterial;
         [SerializeField] private bool playSoundEffects;
+        [SerializeReference, Tooltip("The width of this line when the player is applying" +
+    " the minimum amount of pressure to the pen.  If this value is larger than" +
+    " Max Pressure Width, then the line will appear larger when less pressure is applied.")]
+        private float minPressureWidth;
+        [SerializeReference, Tooltip("The width of this line when the player is applying" +
+            " the maximum amount of pressure to the pen.  If this value is smaller than" +
+            " Min Pressure Width, then the line will appear smaller when more pressure is applied.")]
+        private float maxPressureWidth;
 
         // List of spawned game objects.
         private readonly SyncList<MeshBrushTexture> drawnObjects = new();
@@ -178,7 +186,7 @@ namespace GraffitiGala.Drawing
             // on the client from errors.
              ClearLinesOwner();
 
-            if (playSoundEffects)
+            if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
             {
                 spray = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Spraypaint);
             }
@@ -292,6 +300,16 @@ namespace GraffitiGala.Drawing
         }
 
         /// <summary>
+        /// Gets the width of a line based on either pressure or a set thickness.
+        /// </summary>
+        /// <returns>The width that the line should be.</returns>
+        private float GetThickness()
+        {
+            return CurrentThickness;
+            //return Mathf.Lerp(minPressureWidth, maxPressureWidth, pressureAction.ReadValue<float>());
+        }
+
+        /// <summary>
         /// Tells a given line to add a new point to the line.
         /// </summary>
         /// <param name="line">The line to add a point to.</param>
@@ -299,11 +317,10 @@ namespace GraffitiGala.Drawing
         /// <param name="drawDirection">The direction the line is moving to calculate the verticies.</param>
         internal void Draw(MeshBrushTexture line, Vector3 position, Vector2 drawDirection)
         {
-            float pressure = pressureAction.ReadValue<float>();
             // Gets the z position of this new point on the line so that it overlaps previous points.
             position.z = GetZLayer();
             // Adds a new point tot he currently draw mesh-based line.
-            line.AddPoint(position, drawDirection, pressure);
+            line.AddPoint(position, drawDirection, GetThickness());
         }
 
         /// <summary>
@@ -325,7 +342,7 @@ namespace GraffitiGala.Drawing
             // Instantiate a new line purely on the local client side.
             MeshBrushTexture localLine = Instantiate(meshPrefab, Vector2.zero, Quaternion.identity, parent);
             localLine.Initialize(color);
-            localLine.Local_InitializeMesh(pressureAction.ReadValue<float>(), position);
+            localLine.Local_InitializeMesh(GetThickness(), position);
             // Adds the local line to a list of created local lines.  Keeps track of this to ensure that they are
             // cleared properly if they never are removed by the server.
             localLines.Add(localLine);
@@ -427,7 +444,26 @@ namespace GraffitiGala.Drawing
             {
                 Destroy(obj.gameObject);
             }
-            drawnObjects.Clear();
+            localLines.Clear();
+        }
+
+        /// <summary>
+        /// Provides the lines created by this brush to the PlayerHider so they can be disabled by the admin.
+        /// </summary>
+        /// <param name="hider">The PlayerHider component requesting the lines.</param>
+        protected override void ProvideLines(PlayerHider hider)
+        {
+            // Only active brushes should provide lines.
+            if (gameObject.activeSelf == true)
+            {
+                //base.ProvideLines(hider);
+                MeshBrushTexture[] lines = new MeshBrushTexture[drawnObjects.Count];
+                for (int i = 0; i < drawnObjects.Count; i++)
+                {
+                    lines[i] = drawnObjects[i];
+                }
+                hider.ProvideLines(lines, base.Owner);
+            }
         }
 
         #region Testing

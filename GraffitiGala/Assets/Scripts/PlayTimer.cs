@@ -24,6 +24,8 @@ namespace GraffitiGala
         [SerializeField] private TimeDisplayer displayer;
         [SerializeField] 
         private float time = 120f;
+        [SerializeField, Tooltip("Warns the player when this amount of seconds is left")]
+        private int warningTime = 10;
         [SerializeField, Tooltip("Disables sound effects to avoid FMOD errors.")]
         private bool playSoundEffects;
         [Header("Events (Obsolete)")]
@@ -41,6 +43,7 @@ namespace GraffitiGala
 
         private bool isStarted;
         private Coroutine displayUpdateRoutine;
+        private bool playedWarning = false;
 
         //public static event Action OnBeginClientStatic;
         //public static event Action OnBeginServerStatic;
@@ -48,6 +51,7 @@ namespace GraffitiGala
         //public static event Action OnFinishServerStatic;
 
         private EventInstance countdown;
+        private EventInstance warning;
 
         #region Properties
         public float RemainingTime
@@ -143,10 +147,8 @@ namespace GraffitiGala
         /// </summary>
         private void Awake()
         {
-            if (playSoundEffects)
-            {
-                countdown = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.Timer);
-            }
+            warning = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.TimerWarning);
+        
         }
 
         /// <summary>
@@ -156,6 +158,9 @@ namespace GraffitiGala
         {
             // Starts a coroutine that displays changes to this timer on the UI.
             isStarted = true;
+
+            playedWarning = false;
+
             if(displayUpdateRoutine != null)
             {
                 StopCoroutine(displayUpdateRoutine);
@@ -168,7 +173,7 @@ namespace GraffitiGala
                 //OnBeginServer?.Invoke();
                 if (playSoundEffects)
                 {
-                    countdown.start();
+                    //countdown.start();
                 }
 
             }
@@ -199,11 +204,8 @@ namespace GraffitiGala
             {
                 //OnFinishServer?.Invoke();
                 //OnFinishServerStatic?.Invoke();
-                if (playSoundEffects)
-                {
-                    countdown.stop(STOP_MODE.IMMEDIATE);
-                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.Ring, Vector3.zero);
-                }
+                warning.stop(STOP_MODE.IMMEDIATE);
+                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.TimerEnd, Vector3.zero);
 
                 // Instead of the timer managing events that happen on finish, simply tell the experience manager
                 // to change to the finished state.
@@ -226,9 +228,24 @@ namespace GraffitiGala
                 if(timer.Paused) { yield return null; }
 
                 displayer.LoadTime(NormalizedTime);
+                if(timer.Remaining <= warningTime && !playedWarning)
+                {
+                    print("Entered");
+                    warning.start();
+                    playedWarning = true;
+                }
+
                 yield return null;
             }
             displayUpdateRoutine = null;
+        }
+
+        /// <summary>
+        /// Resets the time meter on waiting purely to reset the visual.
+        /// </summary>
+        public void ResetTimerDisplay()
+        {
+            displayer.LoadTime(0f);
         }
 
         /// <summary>
@@ -238,7 +255,7 @@ namespace GraffitiGala
         public void StartTimer()
         {
             timer.StartTimer(time, true);
-            Debug.Log("Timer Started");
+            //Debug.Log("Timer Started");
         }
 
         /// <summary>
@@ -248,7 +265,7 @@ namespace GraffitiGala
         public void StopTimer()
         {
             timer.StopTimer(true);
-            Debug.Log("Timer Stopped");
+            //Debug.Log("Timer Stopped");
         }
     }
 }

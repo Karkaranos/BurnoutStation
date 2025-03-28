@@ -12,7 +12,7 @@ namespace GraffitiGala
 {
     public class BuildHider : MonoBehaviour
     {
-        [SerializeField] private AllowedBuilds hiddenInBuilds;
+        [SerializeField] private HiddenBuilds hiddenInBuilds;
 
         /// <summary>
         /// Hides this object if the BuildManager doesnt contain it's flag.
