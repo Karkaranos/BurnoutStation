@@ -12,6 +12,6 @@ namespace GraffitiGala.ColorSwitching
 {
     public struct ColorRequest : IBroadcast
     {
-        // No information needed here since network connection is automatically passed through the broadcast.
+        public int Channel { get; set; }
     }
 }
