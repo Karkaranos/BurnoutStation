@@ -39,7 +39,15 @@ namespace GraffitiGala.Admin
             hiderMenu.SetActive(true);
             // Request lines
             pointerIndex = 0;
-            LineRequest?.Invoke(this);
+            // The event system was causing a lot of problems with unsubscribing the event, so I am going to have this
+            // script find the objects when it needs to instead.
+            //LineRequest?.Invoke(this);
+            // Instead of an event, find all mesh net brushes and manually call the ProvideLines function.
+            MeshNetBrush[] brushes = FindObjectsOfType<MeshNetBrush>();
+            foreach (MeshNetBrush brush in brushes)
+            {
+                brush.ProvideLines(this);
+            }
         }
 
         /// <summary>

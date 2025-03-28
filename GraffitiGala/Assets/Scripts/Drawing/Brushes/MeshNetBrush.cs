@@ -451,7 +451,7 @@ namespace GraffitiGala.Drawing
         /// Provides the lines created by this brush to the PlayerHider so they can be disabled by the admin.
         /// </summary>
         /// <param name="hider">The PlayerHider component requesting the lines.</param>
-        protected override void ProvideLines(PlayerHider hider)
+        public override void ProvideLines(PlayerHider hider)
         {
             // Only active brushes should provide lines.
             if (gameObject.activeSelf == true)

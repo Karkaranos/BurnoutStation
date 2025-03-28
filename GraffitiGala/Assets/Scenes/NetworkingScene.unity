@@ -2644,7 +2644,7 @@ MonoBehaviour:
   _ipv6BindAddress: 
   _port: 7770
   _maximumClients: 4095
-  _clientAddress: 10.41.45.63
+  _clientAddress: 172.20.10.2
 --- !u!1 &567365820
 GameObject:
   m_ObjectHideFlags: 0
@@ -4517,7 +4517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 2
+  buildType: 0
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
@@ -6717,14 +6717,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BlindnessType
       objectReference: {fileID: 0}
-    - target: {fileID: 4554223271987578875, guid: 51dbe9a67ba4d9645b54ca48b3a00153, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6206847273265971006, guid: 51dbe9a67ba4d9645b54ca48b3a00153, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 6630005876703095049, guid: 51dbe9a67ba4d9645b54ca48b3a00153, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6804,10 +6796,6 @@ PrefabInstance:
     - target: {fileID: 6630005876703095049, guid: 51dbe9a67ba4d9645b54ca48b3a00153, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6976705570202950068, guid: 51dbe9a67ba4d9645b54ca48b3a00153, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

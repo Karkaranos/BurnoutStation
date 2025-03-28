@@ -9,6 +9,7 @@ FishNet, InputSystem
 using FishNet.Object;
 using GraffitiGala.Admin;
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -70,10 +71,17 @@ namespace GraffitiGala.Drawing
         {
             base.OnStartClient();
 
+            // Extra null check for if this object exists in case this function gets called from the server when the
+            // client has disconnected and this gameobjecct no longer exists.
+            if (gameObject == null)
+            {
+                return;
+            }
             // Need to register ProvideLines even for non owner clients.
             // Make sure to register ProvideLines first, so that if OnDisable gets called later in OnStartClient
             // ProvideLines will be correctly unsubscribed.
-            PlayerHider.LineRequest += ProvideLines;
+            //Debug.Log("Subscribed");
+            //PlayerHider.LineRequest += ProvideLines;
 
             //PlayerInput playerInput = GetComponent<PlayerInput>();
             TryGetComponent(out PlayerInput playerInput);
@@ -102,13 +110,14 @@ namespace GraffitiGala.Drawing
             }
         }
 
-        /// <summary>
-        /// unsubscribe ProvideLines on disable as disabled brushes should not provide any lines.
-        /// </summary>
-        private void OnDisable()
-        {
-            PlayerHider.LineRequest -= ProvideLines;
-        }
+        ///// <summary>
+        ///// unsubscribe ProvideLines on disable as disabled brushes should not provide any lines.
+        ///// </summary>
+        //private void OnDisable()
+        //{
+        //    Debug.Log("Unsubscribed from Disable");
+        //    PlayerHider.LineRequest -= ProvideLines;
+        //}
 
         public override void OnStopClient()
         {
@@ -120,7 +129,8 @@ namespace GraffitiGala.Drawing
                 BrushManager.ClearLinesEvent -= ClearLinesOwner;
                 BrushManager.DisableBrushEvent -= DisableBrush;
             }
-            PlayerHider.LineRequest -= ProvideLines;
+            //Debug.Log("Unsubscribed from StopClient");
+            //PlayerHider.LineRequest -= ProvideLines;
         }
         #endregion
 
@@ -175,7 +185,7 @@ namespace GraffitiGala.Drawing
 
         protected abstract void ClearLines();
 
-        protected virtual void ProvideLines(PlayerHider hider) { }
+        public virtual void ProvideLines(PlayerHider hider) { }
 
         #region Input Functions
 
