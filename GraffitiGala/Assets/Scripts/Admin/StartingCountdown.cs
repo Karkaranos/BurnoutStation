@@ -133,5 +133,14 @@ namespace GraffitiGala.Admin
                 syncedCountdown.StartTimer(countdownTime, true);
             }
         }
+
+        /// <summary>
+        /// Resets the countdown.
+        /// </summary>
+        public void ResetCountdown()
+        {
+            countdownObject.gameObject.SetActive(false);
+            isCountdown = false;
+        }
     }
 }

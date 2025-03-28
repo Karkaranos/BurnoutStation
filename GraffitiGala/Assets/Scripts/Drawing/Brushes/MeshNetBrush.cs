@@ -401,7 +401,7 @@ namespace GraffitiGala.Drawing
         {
             if(this.IsOwner)
             {
-                // Initializes the earlies drawing state in the queue with a reference to the spawned server line
+                // Initializes the earliest drawing state in the queue with a reference to the spawned server line
                 // to replace the localLine.
                 brush.drawingStateQueue[0].InitializeLine(line, DestroyLocalLine);
                 // Removes the newly initialized state from the queue.  If this state is not the current state, then

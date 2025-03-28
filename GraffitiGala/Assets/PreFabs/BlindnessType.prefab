@@ -121,8 +121,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6874143549094810940}
-        m_TargetAssemblyTypeName: PopUp, Assembly-CSharp
+      - m_Target: {fileID: 3532755304634933103}
+        m_TargetAssemblyTypeName: BlindnessType, Assembly-CSharp
         m_MethodName: Option2
         m_Mode: 1
         m_Arguments:
@@ -254,8 +254,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6874143549094810940}
-        m_TargetAssemblyTypeName: PopUp, Assembly-CSharp
+      - m_Target: {fileID: 3532755304634933103}
+        m_TargetAssemblyTypeName: BlindnessType, Assembly-CSharp
         m_MethodName: Option1
         m_Mode: 1
         m_Arguments:
@@ -387,8 +387,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6874143549094810940}
-        m_TargetAssemblyTypeName: PopUp, Assembly-CSharp
+      - m_Target: {fileID: 3532755304634933103}
+        m_TargetAssemblyTypeName: BlindnessType, Assembly-CSharp
         m_MethodName: Option3
         m_Mode: 1
         m_Arguments:
@@ -812,7 +812,7 @@ GameObject:
   - component: {fileID: 6630005876703095049}
   - component: {fileID: 3617329569941083542}
   - component: {fileID: 6560046879983183400}
-  - component: {fileID: 6874143549094810940}
+  - component: {fileID: 3532755304634933103}
   m_Layer: 5
   m_Name: BlindnessType
   m_TagString: Untagged
@@ -827,7 +827,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4077781661845292425}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.00044819713}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
@@ -881,7 +881,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6874143549094810940
+--- !u!114 &3532755304634933103
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -890,10 +890,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4077781661845292425}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c002e386a787b746bfc05aa74182a42, type: 3}
+  m_Script: {fileID: 11500000, guid: bc1e4d5e89842b14a8ef9eb4d26dae49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextPopUp: {fileID: 0}
 --- !u!1 &8582155045022542656
 GameObject:
   m_ObjectHideFlags: 0
