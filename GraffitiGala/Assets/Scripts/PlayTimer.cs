@@ -78,6 +78,8 @@ namespace GraffitiGala
                 return timer.Elapsed / timer.Duration;
             }
         }
+
+        public float Time { get => time; }
         #endregion
 
         /// <summary>
@@ -147,7 +149,10 @@ namespace GraffitiGala
         /// </summary>
         private void Awake()
         {
-            warning = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.TimerWarning);
+            if(FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+            {
+                warning = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.TimerWarning);
+            }
         
         }
 
@@ -190,7 +195,7 @@ namespace GraffitiGala
             // Sets the displayer to display no time remaining.
             if(displayer != null)
             {
-                displayer.LoadTime(0);
+                displayer.LoadTime(0f);
             }
         }
 
@@ -204,8 +209,11 @@ namespace GraffitiGala
             {
                 //OnFinishServer?.Invoke();
                 //OnFinishServerStatic?.Invoke();
-                warning.stop(STOP_MODE.IMMEDIATE);
-                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.TimerEnd, Vector3.zero);
+                if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                {
+                    warning.stop(STOP_MODE.IMMEDIATE);
+                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.TimerEnd, Vector3.zero);
+                }
 
                 // Instead of the timer managing events that happen on finish, simply tell the experience manager
                 // to change to the finished state.
@@ -226,9 +234,8 @@ namespace GraffitiGala
             {
                 // Dont update the timer's display if it is paused.
                 if(timer.Paused) { yield return null; }
-
                 displayer.LoadTime(NormalizedTime);
-                if(timer.Remaining <= warningTime && !playedWarning)
+                if(timer.Remaining <= warningTime && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
                 {
                     print("Entered");
                     warning.start();
@@ -254,7 +261,7 @@ namespace GraffitiGala
         //[Button]
         public void StartTimer()
         {
-            timer.StartTimer(time, true);
+            timer.StartTimer(Time, true);
             //Debug.Log("Timer Started");
         }
 
