@@ -4,6 +4,7 @@ using System.Linq;
 using GraffitiGala;
 using GraffitiGala.Drawing;
 using GraffitiGala.UI;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,11 @@ public class UiButton : MonoBehaviour
     [SerializeField] private HighlightAnimator highlightAnim;
     [SerializeField, Tooltip("During what state is this button be interactable.")]
     private ExperienceState[] stateMask;
+
+    [SerializeField] private GameObject highlighter;
+    [SerializeField] private GameObject canCap;
+
+
 
     private static UiButton currentlyActiveColorButton;
     private static UiButton CurrentlyActiveColorButton
@@ -57,6 +63,8 @@ public class UiButton : MonoBehaviour
         if (stateMask.Contains(ExperienceManager.GetState()))
         {
             NetworkBrush.CurrentColor = paint;
+            highlighter.GetComponent<Image>().color = paint;
+            canCap.GetComponent<Image>().color = paint;
             CurrentlyActiveColorButton = this;
             if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
             {
@@ -69,6 +77,9 @@ public class UiButton : MonoBehaviour
     {
         paint = Color.white;
         Image.color = Color.white;
+        highlighter.GetComponent<Image>().color = Color.white;
+        canCap.GetComponent<Image>().color = Color.white;
+
         CurrentlyActiveColorButton = null;
     }
 
