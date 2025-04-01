@@ -79,7 +79,7 @@ namespace GraffitiGala.UI
         /// <summary>
         /// Starts/Stops the connection to the server.
         /// </summary>
-        public void OnClick()
+        public void ConnectToServer()
         {
             if (networkManager == null)
                 return;
