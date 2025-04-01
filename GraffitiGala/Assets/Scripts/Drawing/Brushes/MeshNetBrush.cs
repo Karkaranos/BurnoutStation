@@ -401,7 +401,7 @@ namespace GraffitiGala.Drawing
         {
             if(this.IsOwner)
             {
-                // Initializes the earlies drawing state in the queue with a reference to the spawned server line
+                // Initializes the earliest drawing state in the queue with a reference to the spawned server line
                 // to replace the localLine.
                 brush.drawingStateQueue[0].InitializeLine(line, DestroyLocalLine);
                 // Removes the newly initialized state from the queue.  If this state is not the current state, then
@@ -451,7 +451,7 @@ namespace GraffitiGala.Drawing
         /// Provides the lines created by this brush to the PlayerHider so they can be disabled by the admin.
         /// </summary>
         /// <param name="hider">The PlayerHider component requesting the lines.</param>
-        protected override void ProvideLines(PlayerHider hider)
+        public override void ProvideLines(PlayerHider hider)
         {
             // Only active brushes should provide lines.
             if (gameObject.activeSelf == true)
