@@ -1,3 +1,4 @@
+using GraffitiGala;
 using GraffitiGala.ColorSwitching;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,19 +13,20 @@ public class BlindnessType : MonoBehaviour
         // Color channel 1 is for colorblindness type ""
         ColorDistributor.ColorChannel = 1;
         gameObject.SetActive(false);
-
+        ExperienceManager.ReadyClient();
     }
     public void Option2()
     {
         // Color channel 2 is for colorblindness type ""
         ColorDistributor.ColorChannel = 2;
         gameObject.SetActive(false);
+        ExperienceManager.ReadyClient();
     }
     public void Option3()
     {
         // Color channel 3 is for colorblindness type ""
         ColorDistributor.ColorChannel = 3;
         gameObject.SetActive(false);
-
+        ExperienceManager.ReadyClient();
     }
 }

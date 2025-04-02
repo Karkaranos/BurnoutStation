@@ -11,6 +11,8 @@ using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using NaughtyAttributes;
 using System;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -133,12 +135,22 @@ namespace GraffitiGala
                 this.GiveOwnership(InstanceFinder.ClientManager.Connection);
                 Server_SetReadyCount(readyNumber);
             }
+            // If we're already in the waiting state, then we arent going to recieve waiting callbacks again
+            // automatically so manually re-call waiting events here.
+            if (syncState.Value == ExperienceState.Waiting)
+            {
+                if (base.IsServerStarted)
+                {
+                    serverEvents.CallEvent(ExperienceState.Waiting);
+                }
+                clientEvents.CallEvent(ExperienceState.Waiting);
+            }
             // Change to waiting state automatically on connect.
             InternalSetState(ExperienceState.Waiting);
         }
 
         /// <summary>
-        /// When the client disconnects, immediately call the disconnect events.
+        /// When the client disconnects, immediately call the disconnect events and unready the client.
         /// </summary>
         public override void OnStopClient()
         {
@@ -305,15 +317,28 @@ namespace GraffitiGala
         [ServerRpc(RequireOwnership = false)]
         private void Server_ReadyClient(NetworkConnection readyConnection)
         {
+            // Remove all null elements because networkConnections that no longer exist should be null and therefore
+            // unready.
+            readiedConnections.RemoveAll(item => item == null);
             readiedConnections.Add(readyConnection);
             // Once enough clients have readied, then the server begins the experience.
-            if (readyConnection.Objects.Count >= serverReadyCount.Value)
+            if (readiedConnections.Count >= serverReadyCount.Value)
             {
                 // Call just Server_SetState here because we're already in an RPC.  We cant access the instance and
                 // dont need to check if we are the server.
                 Server_SetState(ExperienceState.Loading);
-                readyConnection.Objects.Clear();
+                readiedConnections.Clear();
             }
+        }
+
+        /// <summary>
+        /// Removes a client from the readied list.
+        /// </summary>
+        /// <param name="readyConnection">The network connection to remove as readied.</param>
+        [ServerRpc(RequireOwnership = false)]
+        private void Server_UnreadyClient(NetworkConnection readyConnection)
+        {
+            readiedConnections.Remove(readyConnection);
         }
         #endregion
 
@@ -322,6 +347,15 @@ namespace GraffitiGala
         private void BeginExperience()
         {
             SetState(ExperienceState.Loading);
+        }
+
+        [Button]
+        private void LogReadied()
+        {
+            foreach (var item in readiedConnections)
+            {
+                Debug.Log(item);
+            }
         }
 
         private void Update()
