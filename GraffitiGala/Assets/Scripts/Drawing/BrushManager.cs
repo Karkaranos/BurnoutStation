@@ -20,6 +20,7 @@ namespace GraffitiGala.Drawing
         /// </summary>
         public void EnableBrush()
         {
+            NetworkBrush.IsEnabled = true;
             EnableBrushEvent?.Invoke();
         }
 
@@ -28,6 +29,7 @@ namespace GraffitiGala.Drawing
         /// </summary>
         public void DisableBrush()
         {
+            NetworkBrush.IsEnabled = false;
             DisableBrushEvent?.Invoke();
         }
 

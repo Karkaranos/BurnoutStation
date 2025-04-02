@@ -41,7 +41,7 @@ namespace GraffitiGala
         // Test code.
         [SerializeField, ReadOnly] private ExperienceState currentStateTest;
 
-        private readonly SyncList<NetworkConnection> readiedConnections = new();
+        private readonly SyncList<int> readiedConnections = new();
         private readonly SyncVar<int> serverReadyCount = new();
         private readonly SyncVar<ExperienceState> syncState = new();
         private static ExperienceManager instance;
@@ -139,11 +139,7 @@ namespace GraffitiGala
             // automatically so manually re-call waiting events here.
             if (syncState.Value == ExperienceState.Waiting)
             {
-                if (base.IsServerStarted)
-                {
-                    serverEvents.CallEvent(ExperienceState.Waiting);
-                }
-                clientEvents.CallEvent(ExperienceState.Waiting);
+                CallEvents(ExperienceState.Waiting);
             }
             // Change to waiting state automatically on connect.
             InternalSetState(ExperienceState.Waiting);
@@ -154,11 +150,20 @@ namespace GraffitiGala
         /// </summary>
         public override void OnStopClient()
         {
-            if (base.IsServerStarted)
+            CallEvents(ExperienceState.Disconnected);
+        }
+
+        private void OnApplicationFocus(bool focus)
+        {
+            if (!focus)
             {
-                serverEvents.CallEvent(ExperienceState.Disconnected);
+                // Unreadies this client if the application loses focus to avoid inactive clients being counted
+                // as ready.
+                NetworkConnection thisConnection = InstanceFinder.ClientManager.Connection;
+                Server_UnreadyClient(thisConnection.ClientId);
+                // Call the waiting events again to ensure the ready popup re-appears.
+                CallEvents(ExperienceState.Waiting);
             }
-            clientEvents.CallEvent(ExperienceState.Disconnected);
         }
         #endregion
 
@@ -291,6 +296,19 @@ namespace GraffitiGala
         }
         #endregion
 
+        /// <summary>
+        /// Calls events associated with a certain state manually.
+        /// </summary>
+        /// <param name="state">The state to call events for.</param>
+        private void CallEvents(ExperienceState state)
+        {
+            if (base.IsServerStarted)
+            {
+                serverEvents.CallEvent(state);
+            }
+            clientEvents.CallEvent(state);
+        }
+
         #region Readying
         /// <summary>
         /// Readiess this client.  Once enough clients are ready, the experience will start.
@@ -306,21 +324,20 @@ namespace GraffitiGala
             if (GetState() == ExperienceState.Waiting)
             {
                 NetworkConnection thisConnection = InstanceFinder.ClientManager.Connection;
-                instance.Server_ReadyClient(thisConnection);
+                instance.Server_ReadyClient(thisConnection.ClientId);
             }
         }
 
         /// <summary>
         /// Readies a given client.  Once enough clients are ready, the experience will start.
         /// </summary>
-        /// <param name="readyConnection">The network connection to mark as readied.</param>
+        /// <param name="readyID">The client ID of the network connection to mark as readied.</param>
         [ServerRpc(RequireOwnership = false)]
-        private void Server_ReadyClient(NetworkConnection readyConnection)
+        private void Server_ReadyClient(int readyID)
         {
-            // Remove all null elements because networkConnections that no longer exist should be null and therefore
-            // unready.
-            readiedConnections.RemoveAll(item => item == null);
-            readiedConnections.Add(readyConnection);
+            // Prevent clients from readying twice.
+            if (readiedConnections.Contains(readyID)) { return; }
+            readiedConnections.Add(readyID);
             // Once enough clients have readied, then the server begins the experience.
             if (readiedConnections.Count >= serverReadyCount.Value)
             {
@@ -334,11 +351,12 @@ namespace GraffitiGala
         /// <summary>
         /// Removes a client from the readied list.
         /// </summary>
-        /// <param name="readyConnection">The network connection to remove as readied.</param>
+        /// <param name="readyID">The client id of the network connection to remove as readied.</param>
         [ServerRpc(RequireOwnership = false)]
-        private void Server_UnreadyClient(NetworkConnection readyConnection)
+        private void Server_UnreadyClient(int readyID)
         {
-            readiedConnections.Remove(readyConnection);
+            Debug.Log("Unreadying client " + readyID);
+            readiedConnections.Remove(readyID);
         }
         #endregion
 
