@@ -11,7 +11,7 @@ public class UiButton : MonoBehaviour
 {
     public int index;
     private Color paint;
-    public Image Image;
+    [SerializeField] private Image[] coloredImages;
     [SerializeField] private HighlightAnimator highlightAnim;
     [SerializeField, Tooltip("During what state is this button be interactable.")]
     private ExperienceState[] stateMask;
@@ -42,7 +42,7 @@ public class UiButton : MonoBehaviour
         if (index - 1 < paintStorage.Length)
         {
             paint = paintStorage[index - 1]; // if first sphere grab 1st color in the array  
-            Image.color = paint; // makes the sample red
+            SetImageColor(paint);
             // When we recieve colors from the server, the first button with an index of 1 is set as the active color.
             if (index == 1)
             {
@@ -68,8 +68,21 @@ public class UiButton : MonoBehaviour
     public void ResetColor()
     {
         paint = Color.white;
-        Image.color = Color.white;
+        SetImageColor(Color.white);
+
         CurrentlyActiveColorButton = null;
+    }
+
+    /// <summary>
+    /// Changes the color of all images whose color should update to match this button's color.
+    /// </summary>
+    /// <param name="color">The color to set for the images.</param>
+    private void SetImageColor(Color color)
+    {
+        foreach (Image img in coloredImages)
+        {
+            img.color = color; // makes the sample red
+        }
     }
 
     // Configures the twener that makes the can graphic move when this button becomes the active and not active button.
