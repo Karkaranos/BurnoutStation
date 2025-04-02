@@ -1,3 +1,4 @@
+using GraffitiGala.ColorSwitching;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,18 +23,18 @@ public class PopUp : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void Option1()
+    public void IsColorblind()
     {
         
         gameObject.SetActive(false);
         nextPopUp.SetActive(true);
 
     }
-    public void Option2()
+    public void NotColorblind()
     {
+        // Set colorblindness to the default channel.
+        ColorDistributor.ColorChannel = 0;
         gameObject.SetActive(false);
-
-
     }
     
 }
