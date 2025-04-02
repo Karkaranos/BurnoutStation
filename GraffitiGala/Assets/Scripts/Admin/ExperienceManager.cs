@@ -12,6 +12,8 @@ using FishNet.Object.Synchronizing;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -337,6 +339,15 @@ namespace GraffitiGala
         {
             // Prevent clients from readying twice.
             if (readiedConnections.Contains(readyID)) { return; }
+            // Remove timed out and disconnected ready clients.
+            int[] validConnections = InstanceFinder.ServerManager.Clients.Values.Select(item => item.ClientId).ToArray();
+            foreach (int i in readiedConnections)
+            {
+                if (!validConnections.Contains(i))
+                {
+                    readiedConnections.Remove(i);
+                }
+            }
             readiedConnections.Add(readyID);
             // Once enough clients have readied, then the server begins the experience.
             if (readiedConnections.Count >= serverReadyCount.Value)
