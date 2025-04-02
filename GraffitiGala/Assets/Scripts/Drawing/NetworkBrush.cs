@@ -43,6 +43,9 @@ namespace GraffitiGala.Drawing
 
         public static Color CurrentColor { protected get; set; }
         public static float CurrentThickness { protected get; set; } = 1f;
+        // Secondary precaution to ensure that brushes are properly disabled in the case of brushes dying before
+        // events get called.
+        public static bool IsEnabled { protected get; set; }
         #endregion
 
         #region Properties
@@ -124,7 +127,7 @@ namespace GraffitiGala.Drawing
             if (base.IsOwner)
             {
                 DisableBrush();
-
+                IsEnabled = false;
                 BrushManager.EnableBrushEvent -= EnableBrush;
                 BrushManager.ClearLinesEvent -= ClearLinesOwner;
                 BrushManager.DisableBrushEvent -= DisableBrush;

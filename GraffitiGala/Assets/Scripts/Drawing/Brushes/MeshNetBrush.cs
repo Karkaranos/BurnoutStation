@@ -224,6 +224,8 @@ namespace GraffitiGala.Drawing
         /// <param name="obj">Unused.</param>
         protected override void PressAction_Started(InputAction.CallbackContext obj)
         {
+            // Dont process any inputs if this client is not set ot have brushes enabled.
+            if (!IsEnabled) { return; }
             //Debug.Log(EventSystem.current.IsPointerOverGameObject());
             // Prevvents drawing if the pointer is over a UI element like a button.
             // Will need to test if it works with drawing pens and touch input.
@@ -253,6 +255,8 @@ namespace GraffitiGala.Drawing
         /// <param name="obj">Unused.</param>
         protected override void PressAction_Canceled(InputAction.CallbackContext obj)
         {
+            // Dont process any inputs if this client is not set ot have brushes enabled.
+            if (!IsEnabled) { return; }
             // Sets the current state to not drawing.
             state = new NotDrawingState();
             if (playSoundEffects)
@@ -267,6 +271,8 @@ namespace GraffitiGala.Drawing
         /// <param name="obj">Unused.</param>
         protected override void MoveAction_Performed(InputAction.CallbackContext obj)
         {
+            // Dont process any inputs if this client is not set ot have brushes enabled.
+            if (!IsEnabled) { return; }
             // Delegates control to the current state.
             state.HandleBrushMove(this);
         }
