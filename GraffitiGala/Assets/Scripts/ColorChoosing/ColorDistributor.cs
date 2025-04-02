@@ -17,11 +17,16 @@ namespace GraffitiGala.ColorSwitching
 {
     public class ColorDistributor : MonoBehaviour
     {
-        [SerializeField] private ColorChoices[] colorChoices;
-        [SerializeField, Tooltip("The number of colors that are available.")] private int colorNumber;
+        [SerializeField, Tooltip("All the potential color palettes that can be pulled from.  Items from each" +
+            " palette are mutually exclusive, so only one player can have the item at index 1, etc.  The color" +
+            " choices object at index 0 should be the default color palette, the rest should be color blind" +
+            " palettes.")] 
+        private ColorChoices[] colorChoices;
+        [SerializeField, Tooltip("The number of colors that are available to players.")] private int colorNumber;
         [SerializeField, Tooltip("The builds that need colors from the server.  Should be primarily the tablet stations.")] 
         private HiddenBuilds colorRequestingBuilds;
 
+        // This determines the color palette to choose from, and is set by color blindness options.
         public static int ColorChannel { get; set; }
 
         private static readonly List<int> possibleColorIndicies = new();
@@ -93,6 +98,7 @@ namespace GraffitiGala.ColorSwitching
             }
             else
             {
+                // A channel out of bounds will be set to the default palette automatically.
                 choicesForThisRequest = colorChoices.FirstOrDefault().Colors;
             }
             for (int i = 0; i < clientColors.Length; i++)
@@ -105,7 +111,8 @@ namespace GraffitiGala.ColorSwitching
                 int colorIndex = possibleIndicies[rand];
                 Color col = choicesForThisRequest[colorIndex];
                 clientColors[i] = col;
-                // Remove the index we used to get that color from the list off colors.
+                // Remove the index we used to get that color from the list off colors.  Each index can only be used
+                // once.
                 possibleColorIndicies.Remove(rand);
             }
             // Create a new set of color data from the color array and the client id of the current client.
