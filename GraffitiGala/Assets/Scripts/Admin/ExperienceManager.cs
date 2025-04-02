@@ -341,11 +341,13 @@ namespace GraffitiGala
             if (readiedConnections.Contains(readyID)) { return; }
             // Remove timed out and disconnected ready clients.
             int[] validConnections = InstanceFinder.ServerManager.Clients.Values.Select(item => item.ClientId).ToArray();
-            foreach (int i in readiedConnections)
+            for(int i = 0; i < readiedConnections.Count; i++)
             {
-                if (!validConnections.Contains(i))
+                int id = readiedConnections[i];
+                if (!validConnections.Contains(id))
                 {
-                    readiedConnections.Remove(i);
+                    readiedConnections.Remove(id);
+                    i--;
                 }
             }
             readiedConnections.Add(readyID);
