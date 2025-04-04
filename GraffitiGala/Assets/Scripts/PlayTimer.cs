@@ -28,6 +28,8 @@ namespace GraffitiGala
         private int warningTime = 10;
         [SerializeField, Tooltip("Disables sound effects to avoid FMOD errors.")]
         private bool playSoundEffects;
+        [SerializeField, Tooltip("Enables/Disables lights")]
+        private GameObject policeLightParent;
         [Header("Events (Obsolete)")]
         [Header("Client Events")]
         [ReadOnly, SerializeField, Tooltip("Called on all clients when the timer begins.")]
@@ -40,6 +42,7 @@ namespace GraffitiGala
         [ReadOnly, SerializeField, Tooltip("Called on server/admin clients when the timer finishes.")]
         private UnityEvent OnFinishServer;
         private readonly SyncTimer timer = new();
+
 
         private bool isStarted;
         private Coroutine displayUpdateRoutine;
@@ -153,6 +156,7 @@ namespace GraffitiGala
             {
                 warning = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.TimerWarning);
             }
+            policeLightParent.SetActive(false);
         
         }
 
@@ -213,6 +217,7 @@ namespace GraffitiGala
                 {
                     warning.stop(STOP_MODE.IMMEDIATE);
                     AudioManager.instance.PlayOneShot(FMODEventsManager.instance.TimerEnd, Vector3.zero);
+                    policeLightParent.SetActive(false);
                 }
 
                 // Instead of the timer managing events that happen on finish, simply tell the experience manager
@@ -239,6 +244,8 @@ namespace GraffitiGala
                 {
                     print("Entered");
                     warning.start();
+                    policeLightParent.SetActive(true);
+
                     playedWarning = true;
                 }
 

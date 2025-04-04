@@ -107,11 +107,17 @@ namespace GraffitiGala.Admin
         /// <returns></returns>
         private IEnumerator CountdownUpdateRoutine()
         {
+            bool triggerShake = false;
             countdownObject.gameObject.SetActive(true);
             while (isCountdown)
             {
                 syncedCountdown.Update();
                 countdownText.text = ((int)syncedCountdown.Remaining + 1).ToString();
+                if(!triggerShake && syncedCountdown.Remaining <= 1.2)
+                {
+                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.GameStart, Vector3.zero);
+                    triggerShake = true;
+                }
                 yield return null;
             }
             // Displays the ending message, then dissappears after a short duration.
