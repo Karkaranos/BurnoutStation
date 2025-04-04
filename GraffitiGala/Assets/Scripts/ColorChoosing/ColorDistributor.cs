@@ -113,7 +113,7 @@ namespace GraffitiGala.ColorSwitching
                 clientColors[i] = col;
                 // Remove the index we used to get that color from the list off colors.  Each index can only be used
                 // once.
-                possibleColorIndicies.Remove(rand);
+                possibleColorIndicies.Remove(colorIndex);
             }
             // Create a new set of color data from the color array and the client id of the current client.
             // Then, broadcast that color data over the network.

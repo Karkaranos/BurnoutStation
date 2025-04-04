@@ -1,3 +1,4 @@
+using GraffitiGala;
 using GraffitiGala.ColorSwitching;
 using System;
 using System.Collections;
@@ -35,6 +36,7 @@ public class PopUp : MonoBehaviour
         // Set colorblindness to the default channel.
         ColorDistributor.ColorChannel = 0;
         gameObject.SetActive(false);
+        ExperienceManager.ReadyClient();
     }
     
 }

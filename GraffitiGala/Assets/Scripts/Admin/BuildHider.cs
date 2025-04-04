@@ -24,6 +24,10 @@ namespace GraffitiGala
                 //Debug.Log("Hiding object " + name);
                 gameObject.SetActive(false);
             }
+            if(hiddenInBuilds != HiddenBuilds.CityDisplay)
+            {
+                GameObject.Find("MainCanvas").GetComponent<Canvas>().worldCamera = GameObject.Find("CanvasCamera").GetComponent<Camera>();
+            }
         }
     }
 
