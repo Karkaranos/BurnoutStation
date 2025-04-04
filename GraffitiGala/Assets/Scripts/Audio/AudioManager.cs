@@ -49,6 +49,7 @@ namespace GraffitiGala
         public void PlayOneShot(EventReference sound, Vector3 worldPos)
         {
             RuntimeManager.PlayOneShot(sound, worldPos);
+            print("One shot of" + sound);
         }
 
         public EventInstance CreateEventInstance(EventReference eventReference)

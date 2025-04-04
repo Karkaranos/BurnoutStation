@@ -28,6 +28,11 @@ namespace GraffitiGala
         private int warningTime = 10;
         [SerializeField, Tooltip("Disables sound effects to avoid FMOD errors.")]
         private bool playSoundEffects;
+        [SerializeField, Tooltip("Enables/Disables lights")]
+        private GameObject policeLights;
+        [SerializeField]
+        private Transform refForPoliceLights;
+        private GameObject lights;
         [Header("Events (Obsolete)")]
         [Header("Client Events")]
         [ReadOnly, SerializeField, Tooltip("Called on all clients when the timer begins.")]
@@ -40,6 +45,7 @@ namespace GraffitiGala
         [ReadOnly, SerializeField, Tooltip("Called on server/admin clients when the timer finishes.")]
         private UnityEvent OnFinishServer;
         private readonly SyncTimer timer = new();
+
 
         private bool isStarted;
         private Coroutine displayUpdateRoutine;
@@ -195,8 +201,15 @@ namespace GraffitiGala
             // Sets the displayer to display no time remaining.
             if(displayer != null)
             {
+
                 displayer.LoadTime(0f);
             }
+            /*if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
+            {
+                GameObject g = lights;
+                Destroy(g);
+                lights = null;
+            }*/
         }
 
         /// <summary>
@@ -221,6 +234,12 @@ namespace GraffitiGala
             }
             //OnFinishClient?.Invoke();
             //OnFinishClientStatic?.Invoke();
+            /*else if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
+            {
+                GameObject g = lights;
+                Destroy(g);
+                lights = null;
+            }*/
             isStarted = false;
         }
 
@@ -239,8 +258,13 @@ namespace GraffitiGala
                 {
                     print("Entered");
                     warning.start();
+
                     playedWarning = true;
                 }
+                /*else if(timer.Remaining <= warningTime+2 && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
+                {
+                    lights = Instantiate(policeLights, refForPoliceLights);
+                }*/
 
                 yield return null;
             }

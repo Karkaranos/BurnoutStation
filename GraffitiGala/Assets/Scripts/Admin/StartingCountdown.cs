@@ -24,6 +24,7 @@ namespace GraffitiGala.Admin
 
         private readonly SyncTimer syncedCountdown = new SyncTimer();
         private bool isCountdown;
+        private Coroutine soundCount = null;
 
         /// <summary>
         /// Subscribe/Unsubscribe from the timer's OnChange function.
@@ -107,6 +108,11 @@ namespace GraffitiGala.Admin
         /// <returns></returns>
         private IEnumerator CountdownUpdateRoutine()
         {
+            if (soundCount == null)
+            {
+                soundCount = StartCoroutine(ConcurrentForSound());
+            }
+            bool triggerShake = false;
             countdownObject.gameObject.SetActive(true);
             while (isCountdown)
             {
@@ -120,6 +126,21 @@ namespace GraffitiGala.Admin
             countdownObject.gameObject.SetActive(false);
             // Clears the countdown text to avoid possible jittering when the countdown begins.
             countdownText.text = "";
+        }
+
+        private IEnumerator ConcurrentForSound()
+        {
+            bool triggerShake = false;
+            while (isCountdown)
+            {
+                if (!triggerShake && syncedCountdown.Remaining <= 1.2 && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                {
+                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.GameStart, Vector3.zero);
+                    triggerShake = true;
+                }
+                yield return new WaitForSeconds(.1f);
+            }
+            soundCount = null;
         }
 
         /// <summary>
