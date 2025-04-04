@@ -29,7 +29,10 @@ namespace GraffitiGala
         [SerializeField, Tooltip("Disables sound effects to avoid FMOD errors.")]
         private bool playSoundEffects;
         [SerializeField, Tooltip("Enables/Disables lights")]
-        private GameObject policeLightParent;
+        private GameObject policeLights;
+        [SerializeField]
+        private Transform refForPoliceLights;
+        private GameObject lights;
         [Header("Events (Obsolete)")]
         [Header("Client Events")]
         [ReadOnly, SerializeField, Tooltip("Called on all clients when the timer begins.")]
@@ -156,7 +159,6 @@ namespace GraffitiGala
             {
                 warning = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.TimerWarning);
             }
-            policeLightParent.SetActive(false);
         
         }
 
@@ -199,8 +201,15 @@ namespace GraffitiGala
             // Sets the displayer to display no time remaining.
             if(displayer != null)
             {
+
                 displayer.LoadTime(0f);
             }
+            /*if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
+            {
+                GameObject g = lights;
+                Destroy(g);
+                lights = null;
+            }*/
         }
 
         /// <summary>
@@ -217,7 +226,6 @@ namespace GraffitiGala
                 {
                     warning.stop(STOP_MODE.IMMEDIATE);
                     AudioManager.instance.PlayOneShot(FMODEventsManager.instance.TimerEnd, Vector3.zero);
-                    policeLightParent.SetActive(false);
                 }
 
                 // Instead of the timer managing events that happen on finish, simply tell the experience manager
@@ -226,6 +234,12 @@ namespace GraffitiGala
             }
             //OnFinishClient?.Invoke();
             //OnFinishClientStatic?.Invoke();
+            /*else if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
+            {
+                GameObject g = lights;
+                Destroy(g);
+                lights = null;
+            }*/
             isStarted = false;
         }
 
@@ -244,10 +258,13 @@ namespace GraffitiGala
                 {
                     print("Entered");
                     warning.start();
-                    policeLightParent.SetActive(true);
 
                     playedWarning = true;
                 }
+                /*else if(timer.Remaining <= warningTime+2 && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
+                {
+                    lights = Instantiate(policeLights, refForPoliceLights);
+                }*/
 
                 yield return null;
             }

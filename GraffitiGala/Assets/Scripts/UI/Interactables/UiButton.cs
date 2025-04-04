@@ -56,7 +56,7 @@ public class UiButton : MonoBehaviour
 
     public void changeBrushCl ()
     {
-        if (stateMask.Contains(ExperienceManager.GetState()))
+        if (stateMask.Contains(ExperienceManager.GetState()) && CurrentlyActiveColorButton!=this)
         {
             NetworkBrush.CurrentColor = paint;
             CurrentlyActiveColorButton = this;

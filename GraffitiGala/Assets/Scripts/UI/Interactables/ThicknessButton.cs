@@ -57,6 +57,8 @@ namespace GraffitiGala.UI
         {
             if (stateMask.Contains(ExperienceManager.GetState()))
             {
+                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.ButtonClick, Vector3.zero);
+
                 NetworkBrush.CurrentThickness = thicknessValue;
                 CurrentlyActiveThickness = this;
             }
