@@ -11,12 +11,14 @@ public class FMODEventsManager : MonoBehaviour
     [field: SerializeField] public EventReference TimerWarning { get; private set; }
     [field: SerializeField] public EventReference TimerEnd { get; private set; }
     [field: SerializeField] public EventReference GraffitiDisplay { get; private set; }
+    [field: SerializeField] public EventReference GameStart { get; private set; }
 
 
 
     [field: Header("ClientSFX")]
     [field: SerializeField] public EventReference Spraypaint { get; private set; }
     [field: SerializeField] public EventReference SwitchCans { get; private set; }
+    [field: SerializeField] public EventReference ButtonClick { get; private set; }
 
     public static FMODEventsManager instance { get; private set; }
 

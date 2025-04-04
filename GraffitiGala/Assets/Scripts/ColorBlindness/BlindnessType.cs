@@ -10,6 +10,7 @@ public class BlindnessType : MonoBehaviour
     // for.
     public void Option1()
     {
+        AudioManager.instance.PlayOneShot(FMODEventsManager.instance.ButtonClick, Vector3.zero);
         // Color channel 1 is for colorblindness type ""
         ColorDistributor.ColorChannel = 1;
         gameObject.SetActive(false);
@@ -17,6 +18,7 @@ public class BlindnessType : MonoBehaviour
     }
     public void Option2()
     {
+        AudioManager.instance.PlayOneShot(FMODEventsManager.instance.ButtonClick, Vector3.zero);
         // Color channel 2 is for colorblindness type ""
         ColorDistributor.ColorChannel = 2;
         gameObject.SetActive(false);
@@ -24,6 +26,7 @@ public class BlindnessType : MonoBehaviour
     }
     public void Option3()
     {
+        AudioManager.instance.PlayOneShot(FMODEventsManager.instance.ButtonClick, Vector3.zero);
         // Color channel 3 is for colorblindness type ""
         ColorDistributor.ColorChannel = 3;
         gameObject.SetActive(false);

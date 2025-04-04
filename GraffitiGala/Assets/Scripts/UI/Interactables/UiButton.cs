@@ -16,6 +16,8 @@ public class UiButton : MonoBehaviour
     [SerializeField, Tooltip("During what state is this button be interactable.")]
     private ExperienceState[] stateMask;
 
+    private bool startFix = false;
+
     private static UiButton currentlyActiveColorButton;
     private static UiButton CurrentlyActiveColorButton
     {
@@ -60,7 +62,15 @@ public class UiButton : MonoBehaviour
             CurrentlyActiveColorButton = this;
             if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
             {
-                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.SwitchCans, Vector3.zero);
+                if(!startFix)
+                {
+                    startFix = true;
+                }
+                else
+                {
+                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.SwitchCans, Vector3.zero);
+                }
+
             }
         }
     }    

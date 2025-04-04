@@ -26,13 +26,14 @@ public class PopUp : MonoBehaviour
     // Update is called once per frame
     public void IsColorblind()
     {
-        
+        AudioManager.instance.PlayOneShot(FMODEventsManager.instance.ButtonClick, Vector3.zero);
         gameObject.SetActive(false);
         nextPopUp.SetActive(true);
 
     }
     public void NotColorblind()
     {
+        AudioManager.instance.PlayOneShot(FMODEventsManager.instance.ButtonClick, Vector3.zero);
         // Set colorblindness to the default channel.
         ColorDistributor.ColorChannel = 0;
         gameObject.SetActive(false);
