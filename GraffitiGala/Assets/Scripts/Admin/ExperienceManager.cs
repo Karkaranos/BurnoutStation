@@ -157,7 +157,7 @@ namespace GraffitiGala
 
         private void OnApplicationFocus(bool focus)
         {
-            if (!focus)
+            if (!focus && GetState() == ExperienceState.Waiting)
             {
                 // Unreadies this client if the application loses focus to avoid inactive clients being counted
                 // as ready.

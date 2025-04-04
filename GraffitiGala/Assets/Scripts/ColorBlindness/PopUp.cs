@@ -13,6 +13,7 @@ using UnityEngine.SceneManagement;
 public class PopUp : MonoBehaviour
 {
     [SerializeField] private GameObject nextPopUp;
+    [SerializeField] private GameObject waitingForPlayersText;
 
 
 
@@ -38,6 +39,7 @@ public class PopUp : MonoBehaviour
         ColorDistributor.ColorChannel = 0;
         gameObject.SetActive(false);
         ExperienceManager.ReadyClient();
+        waitingForPlayersText.SetActive(true);
     }
     
 }
