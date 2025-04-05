@@ -12,6 +12,10 @@ namespace GraffitiGala.UI
     public abstract class TimeDisplayer : MonoBehaviour
     {
         public abstract void LoadTime(float normalizedTime);
+
+        public abstract void Pulse(float normalizedTime);
+
+        public abstract void ResetValues();
     }
 
 }

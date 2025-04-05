@@ -254,12 +254,17 @@ namespace GraffitiGala
                 // Dont update the timer's display if it is paused.
                 if(timer.Paused) { yield return null; }
                 displayer.LoadTime(NormalizedTime);
-                if(timer.Remaining <= warningTime && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
-                {
-                    print("Entered");
-                    warning.start();
 
-                    playedWarning = true;
+                if(timer.Remaining <= warningTime)
+                {
+                    if (!playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                    {
+                        print("Entered");
+                        warning.start();
+
+                        playedWarning = true;
+                    }
+                    displayer.Pulse(NormalizedTime);
                 }
                 /*else if(timer.Remaining <= warningTime+2 && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
                 {
@@ -268,6 +273,7 @@ namespace GraffitiGala
 
                 yield return null;
             }
+            displayer.ResetValues();
             displayUpdateRoutine = null;
         }
 
