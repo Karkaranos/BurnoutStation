@@ -6112,7 +6112,7 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 1104702274}
           m_TargetAssemblyTypeName: GraffitiGala.UI.ThicknessButton, Assembly-CSharp
-          m_MethodName: SetThickness
+          m_MethodName: SetThicknessNoSound
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
