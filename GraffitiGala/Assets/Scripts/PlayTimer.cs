@@ -86,6 +86,7 @@ namespace GraffitiGala
         }
 
         public float Time { get => time; }
+        public int WarningTime { get => warningTime;}
         #endregion
 
         /// <summary>
@@ -254,17 +255,18 @@ namespace GraffitiGala
                 // Dont update the timer's display if it is paused.
                 if(timer.Paused) { yield return null; }
                 displayer.LoadTime(NormalizedTime);
-                if(timer.Remaining <= warningTime && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                if (timer.Remaining <= WarningTime && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
                 {
                     print("Entered");
                     warning.start();
 
                     playedWarning = true;
                 }
-                /*else if(timer.Remaining <= warningTime+2 && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation)
+                else if (timer.Remaining <= WarningTime + 1 && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation && lights == null)
                 {
                     lights = Instantiate(policeLights, refForPoliceLights);
-                }*/
+                    print("ran");
+                }
 
                 yield return null;
             }
