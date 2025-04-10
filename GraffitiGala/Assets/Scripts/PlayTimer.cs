@@ -257,10 +257,14 @@ namespace GraffitiGala
                 displayer.LoadTime(NormalizedTime);
                 if (timer.Remaining <= WarningTime && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
                 {
-                    print("Entered");
-                    warning.start();
+                    if (!playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                    {
+                        print("Entered");
+                        warning.start();
 
-                    playedWarning = true;
+                        playedWarning = true;
+                    }
+                    displayer.Pulse(NormalizedTime);
                 }
                 else if (timer.Remaining <= WarningTime + 1 && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation && lights == null)
                 {
@@ -270,6 +274,7 @@ namespace GraffitiGala
 
                 yield return null;
             }
+            displayer.ResetValues();
             displayUpdateRoutine = null;
         }
 

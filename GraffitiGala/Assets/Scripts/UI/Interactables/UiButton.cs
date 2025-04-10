@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using GraffitiGala;
 using GraffitiGala.Drawing;
 using GraffitiGala.UI;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +14,7 @@ public class UiButton : MonoBehaviour
     [SerializeField, Tooltip("During what state is this button be interactable.")]
     private ExperienceState[] stateMask;
 
-    private bool startFix = false;
+    private bool startFix = true;
 
     private static UiButton currentlyActiveColorButton;
     private static UiButton CurrentlyActiveColorButton
@@ -48,6 +46,9 @@ public class UiButton : MonoBehaviour
             // When we recieve colors from the server, the first button with an index of 1 is set as the active color.
             if (index == 1)
             {
+                // Set StartFix to false here so that the sound is only skipped when the default button is selected.
+                // Pressing into another button for the first time wont skip the sound.
+                startFix = false;
                 changeBrushCl();
             }
 

@@ -21,6 +21,8 @@ namespace GraffitiGala.UI
         [SerializeField] private float thicknessValue;
         //[SerializeField] private bool startAsActive;
 
+        private bool soundAllowed = true;
+
         private static ThicknessButton currentlyActiveThickness;
         private static ThicknessButton CurrentlyActiveThickness
         {
@@ -57,11 +59,24 @@ namespace GraffitiGala.UI
         {
             if (stateMask.Contains(ExperienceManager.GetState()))
             {
-                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.ButtonClick, Vector3.zero);
+                if (soundAllowed)
+                {
+                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.ButtonClick, Vector3.zero);
+                }
+                else
+                {
+                    soundAllowed = true;
+                }
 
                 NetworkBrush.CurrentThickness = thicknessValue;
                 CurrentlyActiveThickness = this;
             }
+        }
+
+        public void SetThicknessNoSound()
+        {
+            soundAllowed = false;
+            SetThickness();
         }
 
         /// <summary>

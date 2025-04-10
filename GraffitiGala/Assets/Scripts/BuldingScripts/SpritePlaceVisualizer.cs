@@ -118,6 +118,11 @@ namespace GraffitiGala.City
             targetRenderer.enabled = true;
             // Plays the graffiti highlight once it has been placed
             GraffitiHighlighter.SetHighlightedGraffiti(targetRenderer);
+            // Play the end sound again.
+            if (BuildManager.BuildType == BuildType.CityDisplay)
+            {
+                AudioManager.instance.PlayOneShot(FMODEventsManager.instance.GraffitiDisplay, Vector3.zero);
+            }
             Destroy(gameObject);
         }
     }

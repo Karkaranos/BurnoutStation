@@ -8,6 +8,7 @@ FishNet
 using FishNet;
 using FishNet.Object;
 using FishNet.Transporting;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -18,6 +19,8 @@ namespace GraffitiGala
         [SerializeField] private PromptList promptList;
         [SerializeField] private GameObject promptObject;
         [SerializeField] private TMP_Text promptText;
+        [SerializeField] private Animator promptAnim;
+
 
 
         /// <summary>
@@ -62,10 +65,10 @@ namespace GraffitiGala
         /// <param name="channel">Unused channel info</param>
         private void RecievePrompt(PromptData data, Channel channel)
         {
-            promptObject.SetActive(true);
             // Do fancier prompt polish here.
             promptText.text = data.Prompt;
-            //Debug.Log("RecievedPrompt");
+            promptObject.SetActive(true);
+            promptAnim.SetTrigger("DisplayPrompt");
         }
     }
 }
