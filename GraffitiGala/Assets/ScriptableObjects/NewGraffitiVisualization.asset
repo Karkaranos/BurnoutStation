@@ -15,8 +15,8 @@ MonoBehaviour:
   <SpriteMagnification>k__BackingField: 4
   <SortingLayerName>k__BackingField: Overlay
   <OrderInLayer>k__BackingField: 10
-  <TweenTime>k__BackingField: 1.5
-  <InitialDelay>k__BackingField: 4
+  <TweenTime>k__BackingField: 1
+  <InitialDelay>k__BackingField: 2
   <FadeInDuration>k__BackingField: 1
   <TweenCurve>k__BackingField:
     serializedVersion: 2
