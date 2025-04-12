@@ -55,15 +55,38 @@ namespace GraffitiGala.Admin
         /// </summary>
         public void Confirm()
         {
-            hiderMenu.SetActive(false);
-            foreach (var button in buttons)
-            {
-                button.gameObject.SetActive(false);
-            }
+            ToggleMenu(false);
             GraffitiPhotographer.ScreenshotDrawing();
             AudioManager.instance.PlayOneShot(FMODEventsManager.instance.GraffitiDisplay, Vector3.zero);
             // Move to the waiting state to reset the experience for the next group.
             ExperienceManager.SetState(ExperienceState.Waiting);
+        }
+
+        /// <summary>
+        /// Denies an entire drawing and prevents it from going on the city at all.
+        /// </summary>
+        public void Deny()
+        {
+            ToggleMenu(false);
+
+            // Play Censorshup audio here.
+
+            // Move to the waiting state to reset the experience for the next group.
+            ExperienceManager.SetState(ExperienceState.Waiting);
+        }
+
+        /// <summary>
+        /// Toggles the visibility of the admin menu.
+        /// </summary>
+        /// <param name="toggle">Whether to enable to disable the menu.</param>
+        private void ToggleMenu(bool toggle)
+        {
+            // Disable the menu and buttons.
+            hiderMenu.SetActive(toggle);
+            foreach (var button in buttons)
+            {
+                button.gameObject.SetActive(toggle);
+            }
         }
     }
 }
