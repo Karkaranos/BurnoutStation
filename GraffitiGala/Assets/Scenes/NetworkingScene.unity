@@ -5553,7 +5553,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 1
+  buildType: 2
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
@@ -6012,7 +6012,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5f0215408d9e0524e9bc704b0dcf8241, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a87807d171efd954888d320eadc73a83, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
