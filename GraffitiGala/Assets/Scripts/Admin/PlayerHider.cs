@@ -17,7 +17,7 @@ namespace GraffitiGala.Admin
         [SerializeField] private GameObject hiderMenu;
         private int pointerIndex;
 
-        public static event Action<PlayerHider> LineRequest;
+        //public static event Action<PlayerHider> LineRequest;
 
         /// <summary>
         /// Provides an array of lines created by one player.

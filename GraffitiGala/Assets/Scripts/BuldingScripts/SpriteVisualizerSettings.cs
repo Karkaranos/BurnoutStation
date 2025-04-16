@@ -22,6 +22,8 @@ namespace GraffitiGala.City
         public int OrderInLayer { get; private set; }
         [field: Header("Background Settings")]
         [field: SerializeField]
+        public bool ShowBackground { get; private set; }
+        [field: SerializeField]
         public Sprite BackgroundSprite { get; private set; }
         [field: SerializeField]
         public float BackgroundScaleMoifier { get; private set; }

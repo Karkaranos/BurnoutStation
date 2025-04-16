@@ -4,6 +4,7 @@ Brandon Koederitz
 3/6/2025
 Creates a visually large sprite on screen and scales it down to place it on it's renderer.  Purely a visual script.
 ***************************************************/
+using NaughtyAttributes;
 using System.Collections;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -51,12 +52,23 @@ namespace GraffitiGala.City
 
             // Creates the sprite renderer object for the graffiti itself.
             SpriteRenderer graffitiRend = CreateVisualRenderer(renderer.sprite, parentTransform, renderer.color);
-            // Creates the sprite renderer object for the background sprite.
-            SpriteRenderer backgroundRend = CreateVisualRenderer(settings.BackgroundSprite, graffitiRend.transform, Color.white, -1, settings.BackgroundScaleMoifier);
-
             SpritePlaceVisualizer visualizer = graffitiRend.gameObject.AddComponent<SpritePlaceVisualizer>();
-            // This makes the assumption that the camera we are using is the main camera.
-            visualizer.Tween(renderer, new SpriteRenderer[] { graffitiRend, backgroundRend }, settings, Camera.main);
+
+            if (settings.ShowBackground)
+            {
+                // Creates the sprite renderer object for the background sprite.
+                SpriteRenderer backgroundRend = CreateVisualRenderer(settings.BackgroundSprite, graffitiRend.transform,
+                    Color.white, -1, settings.BackgroundScaleMoifier);
+
+                // This makes the assumption that the camera we are using is the main camera.
+                visualizer.Tween(renderer, new SpriteRenderer[] { graffitiRend, backgroundRend }, settings, Camera.main);
+            }
+            else
+            {
+                // This makes the assumption that the camera we are using is the main camera.
+                visualizer.Tween(renderer, new SpriteRenderer[] { graffitiRend }, settings, Camera.main);
+            }
+
         }
 
 
@@ -100,6 +112,7 @@ namespace GraffitiGala.City
             {
                 foreach(SpriteRenderer s in updateRenderers)
                 {
+                    if (s == null) { continue; }
                     s.color = s.color.SetAlpha(value);
                 }
             }
