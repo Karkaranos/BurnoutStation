@@ -84,7 +84,7 @@ namespace GraffitiGala.City
             Vector3 checkEndPoint = localSpawningPosition;
             checkEndPoint.x += width;
             checkEndPoint.y -= height;
-            Debug.Log(new Vector2(width, height));
+            //Debug.Log(new Vector2(width, height));
             // If our end point is outside the bounds, we must find a new position to spawn at.
             while (!IsWithin(validAreas[currentSpawnArea], checkEndPoint))
             {

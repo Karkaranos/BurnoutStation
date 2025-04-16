@@ -4,9 +4,7 @@ Brandon Koederitz
 3/6/2025
 Creates a visually large sprite on screen and scales it down to place it on it's renderer.  Purely a visual script.
 ***************************************************/
-using NaughtyAttributes;
 using System.Collections;
-using UnityEditor.UIElements;
 using UnityEngine;
 
 namespace GraffitiGala.City
