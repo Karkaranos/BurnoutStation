@@ -139,7 +139,7 @@ namespace GraffitiGala.City
             if (displayEffects)
             {
                 // Add an outline to newly spawned graffiti.
-                g.AddComponent<GraffitiOutliner>().Initialize(graffitiSettings.OutlineMaterial, this, sRend);
+                //g.AddComponent<GraffitiOutliner>().Initialize(graffitiSettings.OutlineMaterial, this, sRend);
                 SpritePlaceVisualizer.PlaceSpriteVisual(sRend, graffitiZoomSettings);
             }
             return true;

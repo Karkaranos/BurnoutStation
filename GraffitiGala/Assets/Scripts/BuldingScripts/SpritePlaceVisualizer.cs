@@ -5,6 +5,7 @@ Brandon Koederitz
 Creates a visually large sprite on screen and scales it down to place it on it's renderer.  Purely a visual script.
 ***************************************************/
 using System.Collections;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
 
@@ -28,23 +29,33 @@ namespace GraffitiGala.City
                 parentTransform = GameObject.FindGameObjectWithTag(PARENT_TAG).transform;
             }
 
-            GameObject go = new GameObject();
-            go.transform.SetParent(parentTransform, false);
-            // Set up the sprite renderer object.
-            SpriteRenderer sRend = go.AddComponent<SpriteRenderer>();
-            sRend.sprite = renderer.sprite;
-            sRend.sortingLayerName = settings.SortingLayerName;
-            sRend.sortingOrder = settings.OrderInLayer;
-            // Sets the color of the temporary sprite renderer to match the target renderer, except it is transparent.
-            // The sprite will fade in as it appears on screen.
-            sRend.color = renderer.color;
-            sRend.color = sRend.color.SetAlpha(0);
-            SpritePlaceVisualizer visualizer = go.AddComponent<SpritePlaceVisualizer>();
-            go.transform.localScale = new Vector3(settings.SpriteMagnification, settings.SpriteMagnification, 1);
-            go.transform.localPosition = Vector3.zero;
-            // This makes the assumption that the camera we are using is the main camera.
-            visualizer.Tween(renderer, sRend, settings, Camera.main);
+            // Creates a visualizer with a given sprite and color.
+            void CreateVisualizer(Sprite visualizerSprite, Color color, int layerOffset, bool playSFX = false)
+            {
+                GameObject go = new GameObject();
+                go.transform.SetParent(parentTransform, false);
+                // Set up the sprite renderer object.
+                SpriteRenderer sRend = go.AddComponent<SpriteRenderer>();
+                sRend.sprite = visualizerSprite;
+                sRend.sortingLayerName = settings.SortingLayerName;
+                sRend.sortingOrder = settings.OrderInLayer + layerOffset;
+                // Sets the color of the temporary sprite renderer to match the target renderer, except it is transparent.
+                // The sprite will fade in as it appears on screen.
+                sRend.color = color;
+                sRend.color = sRend.color.SetAlpha(0);
+                SpritePlaceVisualizer visualizer = go.AddComponent<SpritePlaceVisualizer>();
+                go.transform.localScale = new Vector3(settings.SpriteMagnification, settings.SpriteMagnification, 1);
+                go.transform.localPosition = Vector3.zero;
+                // This makes the assumption that the camera we are using is the main camera.
+                visualizer.Tween(renderer, sRend, settings, Camera.main, playSFX);
+            }
+
+            // Creates the visualizer for the graffiti itself.
+            CreateVisualizer(renderer.sprite, renderer.color, 0, true);
+            // Creates the visualizer for the background sprite.
+            CreateVisualizer(settings.BackgroundSprite, Color.white, -1, false);
         }
+
 
         /// <summary>
         /// Tweens this object's transform to match the target transform.
@@ -53,10 +64,14 @@ namespace GraffitiGala.City
         /// <param name="thisRenderer">The sprite renderer on this object.</param>
         /// <param name="settings">The settings to use for this sprite tween.</param>
         /// <param name="targetCam">The camera that this sprite will be displayed on.</param>
+        /// <param name="playSFX">
+        /// Whether this visualizer should play sound effects when it gets placed.  here to prevent double sounds from
+        /// happening when a background is placed.
+        /// </param>
         private void Tween(SpriteRenderer targetRenderer, SpriteRenderer thisRenderer, 
-            SpriteVisualizerSettings settings, Camera targetCam)
+            SpriteVisualizerSettings settings, Camera targetCam, bool playSFX = false)
         {
-            StartCoroutine(TweenCoroutine(targetRenderer, thisRenderer, settings, targetCam));
+            StartCoroutine(TweenCoroutine(targetRenderer, thisRenderer, settings, targetCam, playSFX));
         }
 
         /// <summary>
@@ -66,9 +81,13 @@ namespace GraffitiGala.City
         /// <param name="thisRenderer">The sprite renderer on this object.</param>
         /// <param name="settings">The settings to use for this sprite tween.</param>
         /// <param name="targetCam">The camera that this sprite will be displayed on.</param>
+        /// <param name="playSFX">
+        /// Whether this visualizer should play sound effects when it gets placed.  here to prevent double sounds from
+        /// happening when a background is placed.
+        /// </param>
         /// <returns>Coroutine.</returns>
         private IEnumerator TweenCoroutine(SpriteRenderer targetRenderer, SpriteRenderer thisRenderer,
-            SpriteVisualizerSettings settings, Camera targetCam)
+            SpriteVisualizerSettings settings, Camera targetCam, bool playSFX = false)
         {
             Transform targetTransform = targetRenderer.transform;
             // Hides the target sprite.
@@ -119,7 +138,7 @@ namespace GraffitiGala.City
             // Plays the graffiti highlight once it has been placed
             GraffitiHighlighter.SetHighlightedGraffiti(targetRenderer);
             // Play the end sound again.
-            if (BuildManager.BuildType == BuildType.CityDisplay)
+            if (BuildManager.BuildType == BuildType.CityDisplay && playSFX)
             {
                 AudioManager.instance.PlayOneShot(FMODEventsManager.instance.GraffitiDisplay, Vector3.zero);
             }

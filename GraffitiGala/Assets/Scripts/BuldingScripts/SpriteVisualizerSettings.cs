@@ -19,6 +19,8 @@ namespace GraffitiGala.City
         public string SortingLayerName { get; private set; }
         [field: SerializeField]
         public int OrderInLayer { get; private set; }
+        [field: SerializeField]
+        public Sprite BackgroundSprite { get; private set; }
         [field: Header("Animation Settings")]
         [field: SerializeField, Tooltip("The amount of time the sprite tween should take.")]
         public float TweenTime { get; private set; }
