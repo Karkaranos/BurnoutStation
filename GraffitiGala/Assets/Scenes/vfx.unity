@@ -1044,10 +1044,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4150836b3a967b243a923cfdb35cdb21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pulseFrequency: 0
+  scaleMultiplier: 0
   displayObject: {fileID: 579223342}
-  minPosition: {x: 0, y: -300, z: 0}
-  maxPosition: {x: 0, y: 0, z: 0}
-  timerHandler: {fileID: 1549895328}
 --- !u!114 &155807365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1325,14 +1324,14 @@ MonoBehaviour:
       Data2: 1243529979
       Data3: -454886780
       Data4: -434239755
-    Path: event:/Timer Warning[TEMP]
+    Path: event:/Police Sirens[TEMP]
   <TimerEnd>k__BackingField:
     Guid:
       Data1: 48752452
       Data2: 1207313659
       Data3: 1100538262
       Data4: 552329034
-    Path: event:/Timer End[TEMP]
+    Path: event:/Voice Lines [IN PROGRESS]/Timer End 1
   <GraffitiDisplay>k__BackingField:
     Guid:
       Data1: -1851258520
@@ -1340,6 +1339,13 @@ MonoBehaviour:
       Data3: -378499181
       Data4: -1360164319
     Path: event:/Graffiti On City
+  <GameStart>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   <Spraypaint>k__BackingField:
     Guid:
       Data1: 989903476
@@ -1354,6 +1360,13 @@ MonoBehaviour:
       Data3: -716880473
       Data4: -1672644496
     Path: event:/New Can
+  <ButtonClick>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!4 &205395871
 Transform:
   m_ObjectHideFlags: 0
@@ -1762,10 +1775,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4150836b3a967b243a923cfdb35cdb21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pulseFrequency: 0
+  scaleMultiplier: 0
   displayObject: {fileID: 579223342}
-  minPosition: {x: 0, y: -300, z: 0}
-  maxPosition: {x: 0, y: 0, z: 0}
-  timerHandler: {fileID: 1549895328}
 --- !u!1 &304068407
 GameObject:
   m_ObjectHideFlags: 0
@@ -16471,6 +16483,8 @@ MonoBehaviour:
   time: 45
   warningTime: 10
   playSoundEffects: 1
+  policeLights: {fileID: 0}
+  refForPoliceLights: {fileID: 0}
   OnBeginClient:
     m_PersistentCalls:
       m_Calls:
@@ -17054,6 +17068,7 @@ MonoBehaviour:
   promptList: {fileID: 11400000, guid: ad36344e68008a647bd5804ff31009db, type: 2}
   promptObject: {fileID: 220098449}
   promptText: {fileID: 48478923}
+  promptAnim: {fileID: 0}
 --- !u!1 &1607874112
 GameObject:
   m_ObjectHideFlags: 0

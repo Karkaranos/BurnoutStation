@@ -49,7 +49,8 @@ namespace GraffitiGala
 
         private bool isStarted;
         private Coroutine displayUpdateRoutine;
-        private bool playedWarning = false;
+        private bool startedSirens = false;
+        private bool playedWarningOneShot;
 
         //public static event Action OnBeginClientStatic;
         //public static event Action OnBeginServerStatic;
@@ -158,7 +159,7 @@ namespace GraffitiGala
         {
             if(FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
             {
-                warning = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.TimerWarning);
+                warning = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.PoliceSirens);
             }
         
         }
@@ -171,7 +172,7 @@ namespace GraffitiGala
             // Starts a coroutine that displays changes to this timer on the UI.
             isStarted = true;
 
-            playedWarning = false;
+            startedSirens = false;
 
             if(displayUpdateRoutine != null)
             {
@@ -226,7 +227,7 @@ namespace GraffitiGala
                 if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
                 {
                     warning.stop(STOP_MODE.IMMEDIATE);
-                    AudioManager.instance.PlayOneShot(FMODEventsManager.instance.TimerEnd, Vector3.zero);
+                    AudioManager.instance.PlayEnding(Vector3.zero);
                 }
 
                 // Instead of the timer managing events that happen on finish, simply tell the experience manager
@@ -255,18 +256,27 @@ namespace GraffitiGala
                 // Dont update the timer's display if it is paused.
                 if(timer.Paused) { yield return null; }
                 displayer.LoadTime(NormalizedTime);
-                if (timer.Remaining <= WarningTime && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                if (timer.Remaining <= WarningTime && !startedSirens && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
                 {
-                    if (!playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                    if (!startedSirens && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
                     {
                         print("Entered");
                         warning.start();
 
-                        playedWarning = true;
+                        startedSirens = true;
                     }
                     displayer.Pulse(NormalizedTime);
                 }
-                else if (timer.Remaining <= WarningTime + 1 && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation && lights == null)
+                else if (timer.Remaining <= 30 && !startedSirens && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                {
+                    if(!playedWarningOneShot)
+                    {
+                        AudioManager.instance.PlayWarning(Vector3.zero);
+                        playedWarningOneShot = true;
+                    }
+
+                }
+                else if (timer.Remaining <= WarningTime + 1 && !startedSirens && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation && lights == null)
                 {
                     lights = Instantiate(policeLights, refForPoliceLights);
                     print("ran");

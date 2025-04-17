@@ -1213,20 +1213,113 @@ MonoBehaviour:
       Data3: -301549131
       Data4: -605875054
     Path: event:/Background Music[NEEDS MIXING]
-  <TimerWarning>k__BackingField:
+  <TimerWarnings>k__BackingField:
+  - Guid:
+      Data1: 2112209417
+      Data2: 1109062305
+      Data3: -235871577
+      Data4: 1100013914
+    Path: event:/Voice Lines [IN PROGRESS]/Halfway Timer Warning 1
+  - Guid:
+      Data1: -598387387
+      Data2: 1083074142
+      Data3: 1068592315
+      Data4: -1398343482
+    Path: event:/Voice Lines [IN PROGRESS]/Halfway Timer Warning 2
+  - Guid:
+      Data1: -1372592801
+      Data2: 1159746841
+      Data3: 1113177022
+      Data4: 732319437
+    Path: event:/Voice Lines [IN PROGRESS]/Halfway Timer Warning 3
+  - Guid:
+      Data1: 119564317
+      Data2: 1249597322
+      Data3: -1834653251
+      Data4: -1960613772
+    Path: event:/Voice Lines [IN PROGRESS]/Halfway Timer Warning 4
+  <PoliceSirens>k__BackingField:
     Guid:
       Data1: -1907996216
       Data2: 1243529979
       Data3: -454886780
       Data4: -434239755
-    Path: event:/Timer Warning[TEMP]
-  <TimerEnd>k__BackingField:
-    Guid:
+    Path: event:/Police Sirens[TEMP]
+  <EndingLines>k__BackingField:
+  - Guid:
       Data1: 48752452
       Data2: 1207313659
       Data3: 1100538262
       Data4: 552329034
-    Path: event:/Timer End[TEMP]
+    Path: event:/Voice Lines [IN PROGRESS]/Timer End 1
+  - Guid:
+      Data1: -634422876
+      Data2: 1341356304
+      Data3: -1980853354
+      Data4: 642221082
+    Path: event:/Voice Lines [IN PROGRESS]/Timer End 2
+  - Guid:
+      Data1: 806009044
+      Data2: 1310977089
+      Data3: 1194023865
+      Data4: 1104215617
+    Path: event:/Voice Lines [IN PROGRESS]/Timer End 3
+  - Guid:
+      Data1: 207008539
+      Data2: 1095264625
+      Data3: -1971914586
+      Data4: 696817855
+    Path: event:/Voice Lines [IN PROGRESS]/Timer End 4
+  <ApprovalLines>k__BackingField:
+  - Guid:
+      Data1: -800339014
+      Data2: 1170341509
+      Data3: -1979534929
+      Data4: -2012588624
+    Path: event:/Voice Lines [IN PROGRESS]/Approval 1
+  - Guid:
+      Data1: 714187042
+      Data2: 1195414051
+      Data3: 2060235177
+      Data4: 854172826
+    Path: event:/Voice Lines [IN PROGRESS]/Approval 2
+  - Guid:
+      Data1: 1060193316
+      Data2: 1241780290
+      Data3: -540373083
+      Data4: -1298616293
+    Path: event:/Voice Lines [IN PROGRESS]/Approval 3
+  - Guid:
+      Data1: 105916324
+      Data2: 1150631580
+      Data3: 1526920067
+      Data4: -588947561
+    Path: event:/Voice Lines [IN PROGRESS]/Approval 4
+  <CensorshipLines>k__BackingField:
+  - Guid:
+      Data1: 2104098102
+      Data2: 1104374750
+      Data3: 1055114375
+      Data4: 1549338053
+    Path: event:/Voice Lines [IN PROGRESS]/Censored 1
+  - Guid:
+      Data1: -1094155172
+      Data2: 1267906467
+      Data3: -885602166
+      Data4: -1403502413
+    Path: event:/Voice Lines [IN PROGRESS]/Censored 2
+  - Guid:
+      Data1: 1447586566
+      Data2: 1121246798
+      Data3: 1187547310
+      Data4: 2092653103
+    Path: event:/Voice Lines [IN PROGRESS]/Censored 3
+  - Guid:
+      Data1: 223587323
+      Data2: 1236974726
+      Data3: -1188241776
+      Data4: 1539788942
+    Path: event:/Voice Lines [IN PROGRESS]/Censored 4
   <GraffitiDisplay>k__BackingField:
     Guid:
       Data1: -1851258520
