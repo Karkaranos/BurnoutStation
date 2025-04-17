@@ -9,14 +9,10 @@ using UnityEngine;
 
 namespace GraffitiGala.City
 {
-    public class BuildingBehavior : MonoBehaviour
+    public class BuildingBehavior : CityBehavior
     {
         [field: SerializeField, Tooltip("The sprite renderer of this building.")]
         public SpriteRenderer Rend { get; private set; }
-        [field: SerializeField, Tooltip("Building Width, in Unity Units")]
-        public float BuildingWidth { get; private set; }
-        [field: SerializeField, Tooltip("Building Height, in Unity Units")]
-        public float BuildingHeight { get; private set; }
         //[SerializeField, Tooltip("All rectangles on the building that drawings can appear in")]
         //private List<DrawingArea> validAreas = new List<DrawingArea>();
         [SerializeField, Tooltip("All rectangles on the building that drawings can appear in")]
