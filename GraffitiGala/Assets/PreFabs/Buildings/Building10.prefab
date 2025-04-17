@@ -14,11 +14,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1096800206034758014, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: <ObjectWidth>k__BackingField
-      value: 8.209801
+      value: 9.258059
       objectReference: {fileID: 0}
     - target: {fileID: 1096800206034758014, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: <ObjectHeight>k__BackingField
-      value: 18.3
+      value: 18.1
       objectReference: {fileID: 0}
     - target: {fileID: 1096800206034758014, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: <BuildingWidth>k__BackingField
@@ -30,27 +30,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3272306922077734511, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Size.x
-      value: 7.018128
+      value: 6.9965615
       objectReference: {fileID: 0}
     - target: {fileID: 3272306922077734511, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Size.y
-      value: 13.021084
+      value: 12.793844
       objectReference: {fileID: 0}
     - target: {fileID: 3272306922077734511, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Offset.x
-      value: -0.11234689
+      value: -0.03742385
       objectReference: {fileID: 0}
     - target: {fileID: 3272306922077734511, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Offset.y
-      value: 0.054226637
+      value: 0.16784668
       objectReference: {fileID: 0}
     - target: {fileID: 6382579479298848868, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Size.x
-      value: 8.47
+      value: 6.75
       objectReference: {fileID: 0}
     - target: {fileID: 6382579479298848868, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Size.y
-      value: 16.72
+      value: 12.37
       objectReference: {fileID: 0}
     - target: {fileID: 6382579479298848868, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Sprite

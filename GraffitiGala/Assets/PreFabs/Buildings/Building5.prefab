@@ -64,7 +64,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 4.833418, y: -0.023182154}
+  m_Offset: {x: 4.833418, y: -0.3160696}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -75,7 +75,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 6.401371, y: 11.6636505}
+  m_Size: {x: 6.401371, y: 11.761278}
   m_EdgeRadius: 0
 --- !u!1001 &4183816354422229109
 PrefabInstance:
@@ -103,11 +103,11 @@ PrefabInstance:
       objectReference: {fileID: 922879131881807244}
     - target: {fileID: 1096800206034758014, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: <ObjectWidth>k__BackingField
-      value: 17.93063
+      value: 18.14556
       objectReference: {fileID: 0}
     - target: {fileID: 1096800206034758014, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: <ObjectHeight>k__BackingField
-      value: 20.2
+      value: 20.9
       objectReference: {fileID: 0}
     - target: {fileID: 1096800206034758014, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: <BuildingWidth>k__BackingField
@@ -119,19 +119,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3272306922077734511, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Size.x
-      value: 3.9460652
+      value: 3.5880907
       objectReference: {fileID: 0}
     - target: {fileID: 3272306922077734511, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Size.y
-      value: 12.637291
+      value: 12.604748
       objectReference: {fileID: 0}
     - target: {fileID: 3272306922077734511, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Offset.x
-      value: -2.0046387
+      value: -2.1836257
       objectReference: {fileID: 0}
     - target: {fileID: 3272306922077734511, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Offset.y
-      value: 0.023181915
+      value: -0.35106468
       objectReference: {fileID: 0}
     - target: {fileID: 6382579479298848868, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Size.x

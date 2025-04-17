@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1096800206034758014, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: <ObjectWidth>k__BackingField
-      value: 8.967384
+      value: 9.570759
       objectReference: {fileID: 0}
     - target: {fileID: 1096800206034758014, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: <ObjectHeight>k__BackingField
@@ -43,6 +43,14 @@ PrefabInstance:
     - target: {fileID: 3272306922077734511, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Offset.y
       value: -0.58205235
+      objectReference: {fileID: 0}
+    - target: {fileID: 6382579479298848868, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
+      propertyPath: m_Size.x
+      value: 22.409061
+      objectReference: {fileID: 0}
+    - target: {fileID: 6382579479298848868, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
+      propertyPath: m_Size.y
+      value: 43.46
       objectReference: {fileID: 0}
     - target: {fileID: 6382579479298848868, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: m_Sprite
