@@ -5432,7 +5432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 1
+  buildType: 0
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
@@ -10001,6 +10001,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 140191950}
     m_Modifications:
+    - target: {fileID: 24970041040742068, guid: 18a4fd906439693429d42f047b949a64, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5143142916852257163, guid: 18a4fd906439693429d42f047b949a64, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7251746799440059510, guid: 18a4fd906439693429d42f047b949a64, type: 3}
       propertyPath: m_Name
       value: SmallestThickness
@@ -10083,6 +10091,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7844925723640731920, guid: 18a4fd906439693429d42f047b949a64, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9047442802313648769, guid: 18a4fd906439693429d42f047b949a64, type: 3}
+      propertyPath: m_Type
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
