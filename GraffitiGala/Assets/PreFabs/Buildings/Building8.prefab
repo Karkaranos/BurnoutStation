@@ -584,6 +584,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6347470004203671916}
     - target: {fileID: 1096800206034758014, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
+      propertyPath: <ObjectWidth>k__BackingField
+      value: 10.61475
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096800206034758014, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
+      propertyPath: <ObjectHeight>k__BackingField
+      value: 21.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096800206034758014, guid: 3f33991cf3fa3d34d82c2e39542cbdc1, type: 3}
       propertyPath: <BuildingWidth>k__BackingField
       value: 10.81642
       objectReference: {fileID: 0}

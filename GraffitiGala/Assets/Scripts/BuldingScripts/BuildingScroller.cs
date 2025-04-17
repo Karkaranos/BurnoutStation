@@ -25,7 +25,7 @@ namespace GraffitiGala.City
         [SerializeField, Tooltip("The Y position that all buildings should have their bottom touching, regardless of height.")] 
         private float baseline;
         [Header("Decorations")]
-        [SerializeField] private BuildingBehavior[] decorations;
+        [SerializeField] private CityBehavior[] decorations;
 
         // Called when a building goes to the back of the line.
         public static event Action<BuildingBehavior> OnBuildingToBack;
@@ -255,7 +255,7 @@ namespace GraffitiGala.City
         {
             // Out of bounds indicies get clamped.  This includes if IndexOf fails to find an index and returns -1.
             buildingIndex = Mathf.Clamp(buildingIndex, 0, scrollingBuildings.Count - 1);
-            cityIndex = Mathf.Clamp(buildingIndex, 0, scrollingCityObjs.Count - 1);
+            cityIndex = Mathf.Clamp(cityIndex, 0, scrollingCityObjs.Count - 1);
             scrollingBuildings.Insert(buildingIndex, buildingToAdd);
             scrollingCityObjs.Insert(cityIndex, buildingToAdd);
 
