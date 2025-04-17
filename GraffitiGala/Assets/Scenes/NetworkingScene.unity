@@ -180,7 +180,7 @@ MonoBehaviour:
   - {fileID: 3352363692098049808, guid: ebb3d00eb43a78140a9b1bf46c63c280, type: 3}
   - {fileID: 6597228269911822260, guid: 9cb53dceffd37054ab4f91b31bb730a7, type: 3}
   allBuildings: []
-  testFileName: GraffitiFile_638799782857885766
+  testFileName: GraffitiFile_638804440345604512
 --- !u!114 &5064376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5547,6 +5547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _manualResolution: {x: 1920, y: 1080}
+  _sidebarSize: 400
   _hiddenObjects:
   - {fileID: 1140650163}
   _saveBackup: 0
