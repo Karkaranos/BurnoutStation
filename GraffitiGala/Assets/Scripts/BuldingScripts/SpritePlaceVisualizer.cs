@@ -28,7 +28,7 @@ namespace GraffitiGala.City
             }
 
             // Creates a visualizer with a given sprite and color.
-            SpriteRenderer CreateVisualRenderer(Sprite visualizerSprite, Transform parent, Color color, int layerOffset = 0, float scaleModifier = 1f)
+            SpriteRenderer CreateVisualRenderer(Sprite visualizerSprite, Transform parent, Color color, Vector2 positionOffset, int layerOffset = 0, float scaleModifier = 1f)
             {
                 GameObject go = new GameObject();
                 go.transform.SetParent(parent, false);
@@ -42,21 +42,20 @@ namespace GraffitiGala.City
                 sRend.color = color;
                 sRend.color = sRend.color.SetAlpha(0);
 
-                go.transform.localScale = new Vector3(settings.SpriteMagnification, settings.SpriteMagnification, 1)
-    * scaleModifier;
-                go.transform.localPosition = Vector3.zero;
+                go.transform.localScale = new Vector3(settings.SpriteMagnification, settings.SpriteMagnification, 1) * scaleModifier;
+                go.transform.localPosition = positionOffset;
                 return sRend;
             }
 
             // Creates the sprite renderer object for the graffiti itself.
-            SpriteRenderer graffitiRend = CreateVisualRenderer(renderer.sprite, parentTransform, renderer.color);
+            SpriteRenderer graffitiRend = CreateVisualRenderer(renderer.sprite, parentTransform, renderer.color, settings.SpriteOffset);
             SpritePlaceVisualizer visualizer = graffitiRend.gameObject.AddComponent<SpritePlaceVisualizer>();
 
             if (settings.ShowBackground)
             {
                 // Creates the sprite renderer object for the background sprite.
                 SpriteRenderer backgroundRend = CreateVisualRenderer(settings.BackgroundSprite, graffitiRend.transform,
-                    Color.white, -1, settings.BackgroundScaleMoifier);
+                    Color.white, settings.BackgroundOffset, -1, settings.BackgroundScaleMoifier);
 
                 // This makes the assumption that the camera we are using is the main camera.
                 visualizer.Tween(renderer, new SpriteRenderer[] { graffitiRend, backgroundRend }, settings, Camera.main);

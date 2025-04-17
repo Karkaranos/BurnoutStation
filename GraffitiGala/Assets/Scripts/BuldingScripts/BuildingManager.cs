@@ -120,11 +120,12 @@ namespace GraffitiGala.City
                 }
             }
         }
+        [SerializeField] private string testFileName;
 
         [Button]
         private void SpawnTestGraffiti()
         {
-            SpawnGraffiti(ImageManagement.GetFilePath("GraffitiFile_638799782857885766"), true);
+            SpawnGraffiti(ImageManagement.GetFilePath(testFileName), true);
         }
     }
 }
