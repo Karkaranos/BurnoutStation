@@ -16,6 +16,9 @@ namespace GraffitiGala.Admin
         [SerializeField] private PlayerHiderButton[] buttons;
         [SerializeField] private GameObject hiderMenu;
         private int pointerIndex;
+        private int playersHidden;
+
+        public int PlayersHidden { get => playersHidden; set => playersHidden = value; }
 
         public static event Action<PlayerHider> LineRequest;
 
@@ -62,6 +65,14 @@ namespace GraffitiGala.Admin
             }
             GraffitiPhotographer.ScreenshotDrawing();
             AudioManager.instance.PlayOneShot(FMODEventsManager.instance.GraffitiDisplay, Vector3.zero);
+            if(playersHidden > 0)
+            {
+                AudioManager.instance.PlayCensored(Vector3.zero);
+            }
+            else
+            {
+                AudioManager.instance.PlayApproval(Vector3.zero);
+            }
             // Move to the waiting state to reset the experience for the next group.
             ExperienceManager.SetState(ExperienceState.Waiting);
         }

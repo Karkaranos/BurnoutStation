@@ -28,6 +28,7 @@ namespace GraffitiGala.Admin
         /// </summary>
         public void ToggleLines()
         {
+            FindObjectOfType<PlayerHider>().PlayersHidden += isVisible == true ? 1 : -1;
             isVisible = !isVisible;
             foreach (var line in lines)
             {
