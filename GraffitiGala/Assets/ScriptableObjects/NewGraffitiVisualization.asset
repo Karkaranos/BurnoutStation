@@ -15,7 +15,7 @@ MonoBehaviour:
   <SpriteMagnification>k__BackingField: 4
   <SortingLayerName>k__BackingField: Overlay
   <OrderInLayer>k__BackingField: 10
-  <SpriteOffset>k__BackingField: {x: 0.5, y: 0}
+  <SpriteOffset>k__BackingField: {x: 0, y: 0}
   <ShowBackground>k__BackingField: 1
   <BackgroundSprite>k__BackingField: {fileID: 21300000, guid: 8b6727b87032c724d9ac0a748d399cae, type: 3}
   <BackgroundScaleMoifier>k__BackingField: 0.1
