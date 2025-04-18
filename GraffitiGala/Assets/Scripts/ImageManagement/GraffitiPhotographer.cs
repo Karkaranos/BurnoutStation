@@ -20,6 +20,8 @@ namespace GraffitiGala
         [SerializeField, Tooltip("Sets the resolution that the capture screenshot of the graffiti will be taken in." +
             "  Set to 0, 0 to have it automatically use the camera's pixel resolution.")]
         private Vector2Int _manualResolution = new Vector2Int(1920, 1080);
+        [SerializeField, Tooltip("The size in pixels of the palyer's sidebar HUD.")] 
+        private int _sidebarSize = 400;
         [SerializeField, Tooltip("Objects that should be excluded from saved images.")]
         private GameObject[] _hiddenObjects = new GameObject[0];
         [SerializeField, Tooltip("Saves a copy of the saved image to this applications StreamingAssets folder.  " +
@@ -31,6 +33,7 @@ namespace GraffitiGala
         private static bool saveBackup;
         private static GameObject[] hiddenObjects;
         private static Vector2Int manualRes;
+        private static int sbarSize;
 
         #endregion
 
@@ -48,6 +51,7 @@ namespace GraffitiGala
                     hiddenObjects = _hiddenObjects;
                     saveBackup = _saveBackup;
                     manualRes = _manualResolution;
+                    sbarSize = _sidebarSize;
                 }
             }
             else
@@ -113,7 +117,11 @@ namespace GraffitiGala
                 go.SetActive(false);
             }
 
-            Texture2D screenshotTexture = new Texture2D(width, height, TextureFormat.ARGB32, false);
+            // Subtract the sidebar's size from the final render texture because that area should not be captured during
+            // screenshots.
+            // The Texture2D is the final texture that will be exported.
+            Texture2D screenshotTexture = new Texture2D(width - sbarSize, height, TextureFormat.ARGB32, false);
+            // The render texture is the temporary texture used to capture the screen.
             RenderTexture screenshotRenderTexture = new RenderTexture(width, height, 24);
 
             // Renders camera data to the screenshot render texture.
@@ -141,7 +149,7 @@ namespace GraffitiGala
                 go.SetActive(true);
             }
 
-            Debug.Log($"Captured screenshot with resolution {screenshotTexture.width} x {screenshotTexture.height}");
+            //Debug.Log($"Captured screenshot with resolution {screenshotTexture.width} x {screenshotTexture.height}");
 
             // Destroys extra texture objects involved in the screenshot process to ensure they don't persist and
             // take up memory.
@@ -158,7 +166,7 @@ namespace GraffitiGala
                 ImageManagement.SaveImage(imgData, "GraffitiFile_" + DateTime.Now.Ticks);
             }
 
-            Debug.Log("Sent screenshot over the network.");
+            //Debug.Log("Sent screenshot over the network.");
         }
     }
 

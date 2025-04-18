@@ -255,7 +255,7 @@ namespace GraffitiGala
                 // Dont update the timer's display if it is paused.
                 if(timer.Paused) { yield return null; }
                 displayer.LoadTime(NormalizedTime);
-                if (timer.Remaining <= WarningTime && !playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                if (timer.Remaining <= WarningTime)
                 {
                     if (!playedWarning && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
                     {

@@ -8,14 +8,14 @@ public class DecorationScroll : MonoBehaviour
     [SerializeField] GameObject point1;
     [SerializeField] GameObject point2;
     [SerializeField] private float speed;
-    private int currentIndex;
+    //private int currentIndex;
 
 
-    void Start()
-    {
-        currentIndex = 0;
-       // transform.position = point1.transform.position;
-    }
+    //void Start()
+    //{
+    //    currentIndex = 0;
+    //   // transform.position = point1.transform.position;
+    //}
 
 
     void Update()

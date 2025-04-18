@@ -43,7 +43,7 @@ namespace GraffitiGala.Admin
         private void UpdateButtonText()
         {
             string text = isVisible ? HIDE_TEXT : SHOW_TEXT;
-            text = text + " " + playerNumber.ToString() + " " + PLAYER_NAME;
+            text = $"{text} {PLAYER_NAME} {playerNumber}";
             buttonText.text = text;
         }
 
