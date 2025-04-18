@@ -279,7 +279,7 @@ namespace GraffitiGala
                 }
                 else if (timer.Remaining <= WarningTime + 1 && !startedSirens && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation && lights == null)
                 {
-                    lights = Instantiate(policeLights, new Vector3(-566,400,0), Quaternion.identity, refForPoliceLights);
+                    lights = Instantiate(policeLights, new Vector3(0,200,0), Quaternion.identity, refForPoliceLights);
                     print("ran");
                 }
 
