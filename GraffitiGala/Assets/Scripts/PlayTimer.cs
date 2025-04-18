@@ -173,6 +173,7 @@ namespace GraffitiGala
             isStarted = true;
 
             startedSirens = false;
+            playedWarningOneShot = false;
 
             if(displayUpdateRoutine != null)
             {
@@ -278,7 +279,7 @@ namespace GraffitiGala
                 }
                 else if (timer.Remaining <= WarningTime + 1 && !startedSirens && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.TabletStation && lights == null)
                 {
-                    lights = Instantiate(policeLights, refForPoliceLights);
+                    lights = Instantiate(policeLights, new Vector3(-566,400,0), Quaternion.identity, refForPoliceLights);
                     print("ran");
                 }
 

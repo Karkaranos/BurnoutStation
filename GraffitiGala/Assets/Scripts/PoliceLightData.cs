@@ -27,7 +27,15 @@ public class PoliceLightData : MonoBehaviour
         {
             ps.startColor = new Color(255, 0, 0, .7f*intensityMultiplier);
             yield return new WaitForSeconds(Random.RandomRange(.1f, .5f));
-            ps.startColor = new Color(0, 0, 255, 1f*intensityMultiplier);
+            if(gameObject.name.Contains("L"))
+            {
+                ps.startColor = new Color(0, 255, 0, 1f * intensityMultiplier);
+            }
+            else
+            {
+                ps.startColor = new Color(0, 0, 255, 1f * intensityMultiplier);
+
+            }
             yield return new WaitForSeconds(Random.RandomRange(.1f, .5f));
         }
     }
