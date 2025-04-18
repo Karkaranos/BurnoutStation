@@ -24,6 +24,8 @@ namespace GraffitiGala
 
         private EventInstance bgm;
 
+        private int personIndex;
+        private int officerIndex;
         private void Awake()
         {
             if (instance != null)
@@ -59,6 +61,36 @@ namespace GraffitiGala
             return eventInstance;
         }
 
+        private void GenerateVals()
+        {
+            personIndex = Random.Range(0, 4);
+            officerIndex = Random.Range(0, 4);
+            while(officerIndex == personIndex)
+            {
+                officerIndex = Random.Range(0, 4);
+            }
+        }
+
+        public void PlayWarning(Vector3 worldPos)
+        {
+            GenerateVals();
+            PlayOneShot(FMODEventsManager.instance.TimerWarnings[personIndex], worldPos);
+        }
+
+        public void PlayEnding(Vector3 worldPos)
+        {
+            PlayOneShot(FMODEventsManager.instance.EndingLines[officerIndex], worldPos);
+        }
+
+        public void PlayApproval(Vector3 worldPos)
+        {
+            PlayOneShot(FMODEventsManager.instance.ApprovalLines[officerIndex], worldPos);
+        }
+
+        public void PlayCensored(Vector3 worldPos)
+        {
+            PlayOneShot(FMODEventsManager.instance.CensorshipLines[officerIndex], worldPos);
+        }
         /*
         public void UpdateVolume()
         {
