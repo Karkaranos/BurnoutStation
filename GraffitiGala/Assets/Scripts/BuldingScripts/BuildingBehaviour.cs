@@ -108,7 +108,7 @@ namespace GraffitiGala.City
                     // If there are no more valid areas on this building, then it is full.
                     else
                     {
-                        Debug.Log("Building is Full");
+                        //Debug.Log("Building is Full");
                         buildingIsFull = true;
                         return false;
                     }

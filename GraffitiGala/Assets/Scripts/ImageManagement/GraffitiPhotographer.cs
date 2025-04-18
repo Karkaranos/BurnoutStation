@@ -149,7 +149,7 @@ namespace GraffitiGala
                 go.SetActive(true);
             }
 
-            Debug.Log($"Captured screenshot with resolution {screenshotTexture.width} x {screenshotTexture.height}");
+            //Debug.Log($"Captured screenshot with resolution {screenshotTexture.width} x {screenshotTexture.height}");
 
             // Destroys extra texture objects involved in the screenshot process to ensure they don't persist and
             // take up memory.
@@ -166,7 +166,7 @@ namespace GraffitiGala
                 ImageManagement.SaveImage(imgData, "GraffitiFile_" + DateTime.Now.Ticks);
             }
 
-            Debug.Log("Sent screenshot over the network.");
+            //Debug.Log("Sent screenshot over the network.");
         }
     }
 
