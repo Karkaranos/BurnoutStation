@@ -3122,7 +3122,7 @@ MonoBehaviour:
   _ipv6BindAddress: 
   _port: 7770
   _maximumClients: 4095
-  _clientAddress: 192.168.43.114
+  _clientAddress: 172.20.10.2
 --- !u!1 &567365820
 GameObject:
   m_ObjectHideFlags: 0
@@ -5525,7 +5525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 2
+  buildType: 0
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
@@ -6236,7 +6236,7 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1321683920}
   _networkObjectCache: {fileID: 0}
-  readyNumber: 1
+  readyNumber: 3
   stepThroughStates: 1
   serverEvents:
     OnDisconnect:
