@@ -1708,9 +1708,10 @@ RectTransform:
   m_GameObject: {fileID: 263622336}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -66}
-  m_LocalScale: {x: 1.2999916, y: 1.2999916, z: 1.2999916}
+  m_LocalScale: {x: 1.2999918, y: 1.2999918, z: 1.2999918}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 836887123}
   - {fileID: 282081919}
   - {fileID: 1617968447}
   - {fileID: 1273157826}
@@ -3122,7 +3123,7 @@ MonoBehaviour:
   _ipv6BindAddress: 
   _port: 7770
   _maximumClients: 4095
-  _clientAddress: 172.20.10.2
+  _clientAddress: 192.168.43.114
 --- !u!1 &567365820
 GameObject:
   m_ObjectHideFlags: 0
@@ -4010,6 +4011,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &836887122
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 836887123}
+  m_Layer: 5
+  m_Name: LightSpawnRef
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &836887123
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 836887122}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 263622337}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -127, y: -220}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &844653387
 GameObject:
   m_ObjectHideFlags: 0
@@ -5525,7 +5561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 1
+  buildType: 0
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
@@ -6645,41 +6681,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5718798ccef08042b8a77a7551e2756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1331240856
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1331240857}
-  m_Layer: 5
-  m_Name: RefForPoliceLights
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1331240857
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1331240856}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1888911170}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 3}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1341444552
 GameObject:
   m_ObjectHideFlags: 0
@@ -7448,7 +7449,7 @@ MonoBehaviour:
   warningTime: 10
   playSoundEffects: 1
   policeLights: {fileID: 5976439522674741980, guid: 2ae0cf2dd697cb04f90ae5387d395196, type: 3}
-  refForPoliceLights: {fileID: 1331240857}
+  refForPoliceLights: {fileID: 836887123}
   OnBeginClient:
     m_PersistentCalls:
       m_Calls:
@@ -9279,7 +9280,6 @@ RectTransform:
   - {fileID: 1607417037}
   - {fileID: 1475561949}
   - {fileID: 1341444553}
-  - {fileID: 1331240857}
   - {fileID: 216719888}
   - {fileID: 1007244746}
   - {fileID: 881142010}
