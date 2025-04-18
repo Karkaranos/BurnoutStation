@@ -13,20 +13,30 @@ MonoBehaviour:
   m_Name: PromptList
   m_EditorClassIdentifier: 
   prompts:
-  - Neighborhood
-  - Danger
   - Alien
   - Nature
-  - Friends
-  - Metropolis
-  - Surprise
-  - Horror
-  - Rich
   - Happiness
-  - Sadness
-  - Anger
   - Dancing
   - Cozy
   - Annoying
-  - Ancient
   - Future
+  - Fruits
+  - Farm
+  - Mystery
+  - Pirates
+  - Spooky
+  - Myths
+  - Chaos
+  - Circles
+  - Elements
+  - Funny
+  - Energy
+  - Monster
+  - Silly
+  - Random
+  - Wonder
+  - School
+  - Food
+  - Ocean
+  - Small
+  - Zoo
