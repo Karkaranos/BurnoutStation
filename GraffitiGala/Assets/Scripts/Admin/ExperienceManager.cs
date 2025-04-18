@@ -368,7 +368,7 @@ namespace GraffitiGala
         [ServerRpc(RequireOwnership = false)]
         private void Server_UnreadyClient(int readyID)
         {
-            Debug.Log("Unreadying client " + readyID);
+            //Debug.Log("Unreadying client " + readyID);
             readiedConnections.Remove(readyID);
         }
         #endregion

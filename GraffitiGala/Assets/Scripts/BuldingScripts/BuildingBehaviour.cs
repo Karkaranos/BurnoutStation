@@ -9,14 +9,10 @@ using UnityEngine;
 
 namespace GraffitiGala.City
 {
-    public class BuildingBehavior : MonoBehaviour
+    public class BuildingBehavior : CityBehavior
     {
         [field: SerializeField, Tooltip("The sprite renderer of this building.")]
         public SpriteRenderer Rend { get; private set; }
-        [field: SerializeField, Tooltip("Building Width, in Unity Units")]
-        public float BuildingWidth { get; private set; }
-        [field: SerializeField, Tooltip("Building Height, in Unity Units")]
-        public float BuildingHeight { get; private set; }
         //[SerializeField, Tooltip("All rectangles on the building that drawings can appear in")]
         //private List<DrawingArea> validAreas = new List<DrawingArea>();
         [SerializeField, Tooltip("All rectangles on the building that drawings can appear in")]
@@ -84,7 +80,7 @@ namespace GraffitiGala.City
             Vector3 checkEndPoint = localSpawningPosition;
             checkEndPoint.x += width;
             checkEndPoint.y -= height;
-            Debug.Log(new Vector2(width, height));
+            //Debug.Log(new Vector2(width, height));
             // If our end point is outside the bounds, we must find a new position to spawn at.
             while (!IsWithin(validAreas[currentSpawnArea], checkEndPoint))
             {
@@ -112,7 +108,7 @@ namespace GraffitiGala.City
                     // If there are no more valid areas on this building, then it is full.
                     else
                     {
-                        Debug.Log("Building is Full");
+                        //Debug.Log("Building is Full");
                         buildingIsFull = true;
                         return false;
                     }
@@ -139,7 +135,7 @@ namespace GraffitiGala.City
             if (displayEffects)
             {
                 // Add an outline to newly spawned graffiti.
-                g.AddComponent<GraffitiOutliner>().Initialize(graffitiSettings.OutlineMaterial, this, sRend);
+                //g.AddComponent<GraffitiOutliner>().Initialize(graffitiSettings.OutlineMaterial, this, sRend);
                 SpritePlaceVisualizer.PlaceSpriteVisual(sRend, graffitiZoomSettings);
             }
             return true;

@@ -112,7 +112,6 @@ namespace GraffitiGala.Admin
             {
                 soundCount = StartCoroutine(ConcurrentForSound());
             }
-            bool triggerShake = false;
             countdownObject.gameObject.SetActive(true);
             while (isCountdown)
             {

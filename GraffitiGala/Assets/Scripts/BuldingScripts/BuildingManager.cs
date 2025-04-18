@@ -1,6 +1,5 @@
 
 using NaughtyAttributes;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -79,7 +78,7 @@ namespace GraffitiGala.City
             if (!scroller.TargetBuilding.BuildingIsFull)
             {
                 // Attempt to spawn the drawing.
-                Debug.Log("Spawning image with path " + filePath);
+                //Debug.Log("Spawning image with path " + filePath);
                 bool placeSuccessful = scroller.TargetBuilding.SpawnDrawing(ImageManagement.LoadSprite(filePath, spriteSettings), displayEffects);
                 // Debug.Log("Spawning graffiti " + filePath + " on building " + scroller.TargetBuilding);
                 // If drawing spawning fails, then we need to continue the loop.  If spawning was sucessful, we return.
@@ -120,11 +119,12 @@ namespace GraffitiGala.City
                 }
             }
         }
+        [SerializeField] private string testFileName;
 
         [Button]
         private void SpawnTestGraffiti()
         {
-            SpawnGraffiti(ImageManagement.GetFilePath("GraffitiFile_638784273015547046"), true);
+            SpawnGraffiti(ImageManagement.GetFilePath(testFileName), true);
         }
     }
 }

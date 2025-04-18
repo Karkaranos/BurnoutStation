@@ -30,7 +30,7 @@ namespace GraffitiGala.City
         /// <param name="graffitiRenderer">The transform to track.</param>
         public static void SetHighlightedGraffiti(SpriteRenderer graffitiRenderer)
         {
-            Debug.Log("Tracked object set as " + graffitiRenderer);
+            //Debug.Log("Tracked object set as " + graffitiRenderer);
             trackedObject = graffitiRenderer;
             //targetBuilding = building;
             StartTrackingHighlight?.Invoke();
@@ -66,7 +66,7 @@ namespace GraffitiGala.City
         /// </summary>
         private void StartTracking()
         {
-            Debug.Log("Starting to Track.");
+            //Debug.Log("Starting to Track.");
             if (trackRoutine == null && trackedObject != null)
             {
                 gameObject.SetActive(true);
