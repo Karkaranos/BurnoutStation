@@ -69,6 +69,7 @@ namespace GraffitiGala.Admin
             {
                 AudioManager.instance.PlayApproval(Vector3.zero);
             }
+            playersHidden = 0;
             // Move to the waiting state to reset the experience for the next group.
             ExperienceManager.SetState(ExperienceState.Waiting);
         }
@@ -82,7 +83,7 @@ namespace GraffitiGala.Admin
 
             // Play Censorshup audio here.
             AudioManager.instance.PlayCensored(Vector3.zero);
-
+            playersHidden = 0;
 
             // Move to the waiting state to reset the experience for the next group.
             ExperienceManager.SetState(ExperienceState.Waiting);
