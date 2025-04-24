@@ -4,9 +4,9 @@ Brandon Koederitz
 3/12/2025
 Allows the admin to control which players's contributions end up being shown on the finished graffiti.
 ***************************************************/
+using FishNet;
 using FishNet.Connection;
 using GraffitiGala.Drawing;
-using System;
 using UnityEngine;
 
 namespace GraffitiGala.Admin
@@ -63,11 +63,14 @@ namespace GraffitiGala.Admin
             AudioManager.instance.PlayOneShot(FMODEventsManager.instance.GraffitiDisplay, Vector3.zero);
             if(playersHidden > 0)
             {
-                AudioManager.instance.PlayCensored(Vector3.zero);
+                CensoredAudioData audioData = new CensoredAudioData() { IsCensored = true};
+                InstanceFinder.ServerManager.Broadcast(audioData);
+                
             }
             else
             {
-                AudioManager.instance.PlayApproval(Vector3.zero);
+                CensoredAudioData audioData = new CensoredAudioData() { IsCensored = false };
+                InstanceFinder.ServerManager.Broadcast(audioData);
             }
             playersHidden = 0;
             // Move to the waiting state to reset the experience for the next group.
@@ -82,7 +85,8 @@ namespace GraffitiGala.Admin
             ToggleMenu(false);
 
             // Play Censorshup audio here.
-            AudioManager.instance.PlayCensored(Vector3.zero);
+            CensoredAudioData audioData = new CensoredAudioData() { IsCensored = true };
+            InstanceFinder.ServerManager.Broadcast(audioData);
             playersHidden = 0;
 
             // Move to the waiting state to reset the experience for the next group.
