@@ -60,7 +60,6 @@ namespace GraffitiGala.Admin
         {
             ToggleMenu(false);
             GraffitiPhotographer.ScreenshotDrawing();
-            AudioManager.instance.PlayOneShot(FMODEventsManager.instance.GraffitiDisplay, Vector3.zero);
             if(playersHidden > 0)
             {
                 CensoredAudioData audioData = new CensoredAudioData() { IsCensored = true};

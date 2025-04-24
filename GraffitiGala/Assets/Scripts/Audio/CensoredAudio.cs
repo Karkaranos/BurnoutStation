@@ -30,6 +30,8 @@ namespace GraffitiGala.Admin
         private void PlaySound(CensoredAudioData audioData, Channel channel)
         {
             if (!(FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.CityDisplay)) { return; }
+
+            AudioManager.instance.PlayOneShot(FMODEventsManager.instance.GraffitiDisplay, Vector3.zero);
             if (audioData.IsCensored)
             {
                 AudioManager.instance.PlayCensored(Vector3.zero);
