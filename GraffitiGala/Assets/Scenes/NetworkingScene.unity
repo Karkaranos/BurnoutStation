@@ -3123,7 +3123,7 @@ MonoBehaviour:
   _ipv6BindAddress: 
   _port: 7770
   _maximumClients: 4095
-  _clientAddress: 172.20.10.2
+  _clientAddress: 192.168.43.114
 --- !u!1 &567365820
 GameObject:
   m_ObjectHideFlags: 0
@@ -5560,7 +5560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e80520e184e4b47b9bcdd84b5b8f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildType: 0
+  buildType: 2
 --- !u!4 &1259247656
 Transform:
   m_ObjectHideFlags: 0
@@ -9264,6 +9264,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1925609418}
   - component: {fileID: 1925609417}
+  - component: {fileID: 1925609419}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -9303,6 +9304,18 @@ Transform:
   - {fileID: 205395871}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1925609419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1925609416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcc2280664af14c429e4544bb12cd466, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1933812519
 PrefabInstance:
   m_ObjectHideFlags: 0

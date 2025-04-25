@@ -157,7 +157,7 @@ namespace GraffitiGala
         /// </summary>
         private void Awake()
         {
-            if(FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+            if(FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.CityDisplay)
             {
                 warning = AudioManager.instance.CreateEventInstance(FMODEventsManager.instance.PoliceSirens);
             }
@@ -223,14 +223,6 @@ namespace GraffitiGala
         {
             if (asServer)
             {
-                //OnFinishServer?.Invoke();
-                //OnFinishServerStatic?.Invoke();
-                if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
-                {
-                    warning.stop(STOP_MODE.IMMEDIATE);
-                    AudioManager.instance.PlayEnding(Vector3.zero);
-                }
-
                 // Instead of the timer managing events that happen on finish, simply tell the experience manager
                 // to change to the finished state.
                 ExperienceManager.SetState(ExperienceState.Finished);
@@ -243,6 +235,13 @@ namespace GraffitiGala
                 Destroy(g);
                 lights = null;
             }*/
+            //OnFinishServer?.Invoke();
+            //OnFinishServerStatic?.Invoke();
+            if (FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.CityDisplay)
+            {
+                warning.stop(STOP_MODE.IMMEDIATE);
+                AudioManager.instance.PlayEnding(Vector3.zero);
+            }
             isStarted = false;
         }
 
@@ -259,7 +258,7 @@ namespace GraffitiGala
                 displayer.LoadTime(NormalizedTime);
                 if (timer.Remaining <= WarningTime)
                 {
-                    if (!startedSirens && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                    if (!startedSirens && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.CityDisplay)
                     {
                         print("Entered");
                         warning.start();
@@ -268,7 +267,8 @@ namespace GraffitiGala
                     }
                     displayer.Pulse(NormalizedTime);
                 }
-                else if (timer.Remaining <= 30 && !startedSirens && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                else if (timer.Remaining <= 30 && !startedSirens && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.CityDisplay
+                    )
                 {
                     if(!playedWarningOneShot)
                     {

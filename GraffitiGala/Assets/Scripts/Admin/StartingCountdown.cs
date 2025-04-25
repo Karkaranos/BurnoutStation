@@ -132,7 +132,7 @@ namespace GraffitiGala.Admin
             bool triggerShake = false;
             while (isCountdown)
             {
-                if (!triggerShake && syncedCountdown.Remaining <= 1.2 && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.Admin)
+                if (!triggerShake && syncedCountdown.Remaining <= 1.2 && FindObjectOfType<BuildManager>().BuildTypeRef == BuildType.CityDisplay)
                 {
                     AudioManager.instance.PlayOneShot(FMODEventsManager.instance.GameStart, Vector3.zero);
                     triggerShake = true;
